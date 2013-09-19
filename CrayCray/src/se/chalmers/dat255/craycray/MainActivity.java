@@ -5,6 +5,7 @@ import se.chalmers.dat255.craycray.model.NeedsModel;
 import android.os.Bundle;
 import android.app.Activity;
 import android.content.Intent;
+import android.util.Log;
 import android.view.Menu;
 import android.view.View;
 import android.widget.TextView;
@@ -21,10 +22,13 @@ public class MainActivity extends Activity {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_main);
 		feedView = (TextView)findViewById(R.id.feedTextView);
-		needs = NeedsThread.getInstance();
 		hunger = NeedsModel.getInstance();
+		needs = new NeedsThread(feedView);
+		Thread t = new Thread(needs);
+		t.start();
+		Log.w("Thread", "oncreate");
 	}
-
+	
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
 		// Inflate the menu; this adds items to the action bar if it is present.
@@ -35,6 +39,7 @@ public class MainActivity extends Activity {
 	public void feed(View view){
 		hunger.setHungerCount(hunger.getHungerCount() + 30);
 		String feed = new String("" + hunger.getHungerCount());
+		Log.w("Thread", feed);
 		feedView.setText(feed);
 	}
 

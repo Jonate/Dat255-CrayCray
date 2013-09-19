@@ -1,5 +1,7 @@
 package se.chalmers.dat255.craycray.model;
 
+import android.util.Log;
+
 public class NeedsModel {
 	
 	private static NeedsModel instance = null;
@@ -9,20 +11,21 @@ public class NeedsModel {
 		hungerCount = 100;
 	}
 	
-	public static NeedsModel getInstance(){
+	public synchronized static NeedsModel getInstance(){
 		if(instance == null){
-			return new NeedsModel();
-		
+			Log.w("Thread", "Creating model");
+			instance = new NeedsModel();
+			return instance;
 		}else{
 			return instance;
 		}
 	}
 	
-	public int getHungerCount(){
+	public synchronized int getHungerCount(){
 		return hungerCount;
 	}
 	
-	public void setHungerCount(int hunger){
+	public synchronized void setHungerCount(int hunger){
 		hungerCount = hunger;
 	}
 
