@@ -35,6 +35,7 @@ public class MainActivity extends Activity {
 		return true;
 	}
 	
+	//Changes the hungerlevel indicator int in the TextView 
 	public void feed(View view){
 		hunger.setHungerCount(hunger.getHungerCount() + 1);
 		String feed = new String("" + hunger.getHungerCount());
