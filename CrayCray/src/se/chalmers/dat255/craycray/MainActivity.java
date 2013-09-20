@@ -1,5 +1,6 @@
 package se.chalmers.dat255.craycray;
 
+//import se.chalmers.dat255.craycray.controller.NeedsThread;
 import se.chalmers.dat255.craycray.model.NeedsModel;
 import android.os.Bundle;
 import android.os.Handler;
@@ -15,8 +16,18 @@ public class MainActivity extends Activity {
 	
 
 	private TextView feedView;
+//	private NeedsThread needs;
 	private NeedsModel hunger;
-
+	
+//	Handler handler = new Handler(){
+//		
+//		@Override
+//		public void handleMessage(Message msg){
+//				
+//			feedView.setText("" + hunger.getHungerCount());
+//
+//		}
+//	};
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -25,7 +36,10 @@ public class MainActivity extends Activity {
 		feedView = (TextView)findViewById(R.id.feedTextView);
 		hunger = NeedsModel.getInstance();
 		feedView.setText("" + hunger.getHungerCount());
-
+//		needs = new NeedsThread(handler);
+//		Thread t = new Thread(needs);
+//		t.start();
+//		Log.w("Thread", "oncreate");
 	}
 	
 	@Override
@@ -37,7 +51,9 @@ public class MainActivity extends Activity {
 	
 	public void feed(View view){
 		hunger.setHungerCount(hunger.getHungerCount() + 1);
+		//handler.sendMessage(handler.obtainMessage());
 		String feed = new String("" + hunger.getHungerCount());
+		Log.w("Thread", feed);
 		feedView.setText(feed);
 	}
 
