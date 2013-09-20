@@ -8,7 +8,7 @@ public class NeedsModel {
 	private int hungerCount;
 
 	private NeedsModel(){
-		hungerCount = 100;
+		hungerCount = 0;
 	}
 	
 	public synchronized static NeedsModel getInstance(){
@@ -26,7 +26,11 @@ public class NeedsModel {
 	}
 	
 	public synchronized void setHungerCount(int hunger){
-		hungerCount = hunger;
+		if(hunger < 100){
+			hungerCount = hunger;
+		}else{
+			hungerCount = 100;
+		}
 	}
 
 }
