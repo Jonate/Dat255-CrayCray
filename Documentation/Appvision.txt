@@ -1,0 +1,16 @@
+﻿Produktvision
+
+
+CrayCray är ett spel för Androidmobiler som liknar den klassiska tamagotchin som var många 90-talisters följeslagare i lågstadieåldern. CrayCray är inspirerad av dessa barndomsminnen i form av ett virtuellt djur som användaren tar hand om. Djuret behöver mat, omsorg och kärlek för att överleva, växa och utvecklas. Den huvudsakliga målgruppen utgörs av ungdomar som söker fördriva tiden med ett färgglatt spel, samt personer som drabbas av nostalgi och vill återuppleva sin tid med tamagotchin från sin barndom. 
+
+
+Huvudsyftet med applikationen är att underhålla användaren, och utöver det bjuder spelet på nostalgitrippar samt ger användaren tillfredsställelsen som kommer av att ta hand om någon/något. Relationen mellan användaren och CrayCray liknar den mellan ett husdjur och dess skötare, och behoven som spelet tillfredsställer liknar de som finns i spel som t.ex. The Sims. 
+
+
+CrayCraydjurets behov kommer att innefatta de kroppsliga behoven som att äta, sova och ha god hälsa. Dessutom krävs användarens uppskattning av sitt djur för att denne ska vara lycklig. Vid misskötsel mår CrayCray dåligt och kommer med långvarig försummelse att dö. Dessa behov kommer illustreras i någon form, förslagsvis i stapelform eller procentuellt. Dessa ökar respektive minskar beroende på hur väl djuret tas om hand. När CrayCray behöver t.ex. mat får användaren en notifikation som påkallar dennes uppmärksamhet. Dessa notifikationer ska kunna stängas av om så önskas.
+
+
+För att kunna bland annat mata sitt djur behöver användaren virtuella pengar. En inledande buffert kommer finnas vid första uppstart av programmet, och med dessa pengar kan användaren köpa mat i en virtuell butik. 
+
+
+För att spelet ska vara roligt och beroendeframkallande kommer det kontinuerligt att belöna användaren med pengar,  Level Up och glada miner då CrayCray sköts på ett bra vis. Det måste även se trevligt ut samt innehålla små oväntade egenheter. Användare av andra spel i kategorin efterfrågar möjlighet att hälsa på andra virtuella djur. Genom nätverksteknik,  i form av open/closed principle, kommer CrayCray erbjuda detta för att klara konkurrensen. Vidare kommer man kunna interagera med djuret som hälsas på, till exempel kommer det finnas möjlighet att få avkomma ihop med detta.
