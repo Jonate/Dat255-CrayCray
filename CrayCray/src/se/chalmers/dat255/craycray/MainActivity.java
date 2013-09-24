@@ -78,5 +78,13 @@ public class MainActivity extends Activity {
 		Log.w("Thread", feed);
 		//feedView.setText(feed);
 	}
+	
+	public void clean(View view){
+		
+	}
+	
+	public void cuddle(View view){
+		
+	}
 
 }

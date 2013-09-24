@@ -3,6 +3,8 @@
 
     <string name="app_name">Cray Cray</string>
     <string name="action_settings">Settings</string>
-    <string name="feed">Feed CrayCray!</string>
+    <string name="feed">Feed</string>
+    <string name="clean">Clean</string>
+    <string name="cuddle">Cuddle</string>
 
 </resources>

@@ -1,30 +1,78 @@
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:orientation="vertical" >
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent" >
     
-    <TextView 
-        android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center"
-        android:paddingTop="100dp"
-        android:paddingBottom="200dp"
-        android:textSize="60sp"
-        android:gravity="center"
-        android:id="@+id/feedTextView"/>
-    
-    
-    <Button
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="bottom|center"
-        android:paddingLeft="5dp"
-        android:paddingRight="5dp"
-        android:id="@+id/feedButton"
-        android:text="@string/feed"
-        android:textSize="40sp"
-        android:background="#B5052E"
-        android:onClick="feed" />
+		
+        <Button
+            android:id="@+id/feedButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="#B5052E"
+            android:onClick="feed"
+            android:layout_margin="40dp"
+            android:padding="5dp"
+            android:text="@string/feed"
+            android:textSize="30sp"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentTop="true"
+            android:layout_alignBaseline="@+id/feedTextView" />
+        
+        <TextView
+            android:id="@id/feedTextView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="30sp"
+            android:layout_margin="40dp"
+            android:layout_alignParentTop="true"
+            android:layout_alignParentRight="true" />
+        
+        <Button
+            android:id="@+id/cleanButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/clean"
+            android:textSize="30sp"
+            android:background="#2B7F8A"
+            android:padding="5dp"
+            android:layout_margin="40dp"
+            android:layout_alignParentLeft="true"
+            android:layout_below="@id/feedButton"
+            android:onClick="clean" />
+        
+        <TextView
+            android:id="@+id/cleanTextView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="100"
+            android:textSize="30sp"
+            android:layout_margin="40dp"
+            android:layout_alignParentRight="true"
+            android:layout_below="@id/feedTextView"
+            android:layout_alignBaseline="@id/cleanButton" />
+        
+        <Button
+            android:id="@+id/cuddleButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/cuddle"
+            android:textSize="30sp"
+            android:background="#F2D30A"
+            android:padding="5dp"
+            android:layout_margin="40dp"
+            android:layout_alignParentLeft="true"
+            android:layout_alignBaseline="@+id/cuddleTextView"
+            android:layout_below="@id/cleanButton" 
+            android:onClick="cuddle"/>
+        
+        <TextView
+            android:id="@id/cuddleTextView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="100"
+            android:textSize="30sp"
+            android:layout_margin="40dp"
+            android:layout_alignParentRight="true"
+            android:layout_below="@id/cleanTextView" />  
 
-</LinearLayout>
+</RelativeLayout>
