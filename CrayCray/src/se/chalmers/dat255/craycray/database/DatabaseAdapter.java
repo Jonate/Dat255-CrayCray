@@ -33,6 +33,13 @@ public class DatabaseAdapter {
 		values.put(NEED_ID, id);  
 		values.put(NEED_VALUE, value);  
 		return database.insert(NEED_TABLE, null, values);  
+	}
+	
+	public long addStringValue(String id, String value){  
+		ContentValues values = new ContentValues();  
+		values.put(NEED_ID, id);  
+		values.put(NEED_VALUE, value);  
+		return database.insert(NEED_TABLE, null, values);  
 	}    
 	
 	/**
@@ -46,7 +53,13 @@ public class DatabaseAdapter {
 		ContentValues values = new ContentValues();
 		values.put(NEED_VALUE, value);  
 		return database.update(NEED_TABLE, values, NEED_ID+" =?" ,new String[]{id});  
-	}  
+	}
+	
+	public long updateStringValue(String id, String value){  
+		ContentValues values = new ContentValues();
+		values.put(NEED_VALUE, value);  
+		return database.update(NEED_TABLE, values, NEED_ID+" =?" ,new String[]{id});  
+	}
 
 	/**
 	 * 
@@ -62,11 +75,25 @@ public class DatabaseAdapter {
 			mCursor.moveToFirst();
 		}
 		try{
-			mCursor.getString(1);
+			return Integer.parseInt(mCursor.getString(1)); // iterate to get each value.
 		}catch(Exception e){
 			return -1;
 		}
+	}
+	
+	
+	public String getStringValue(String id) {
+		String[] cols = new String[] {NEED_ID, NEED_VALUE};  
+		Cursor mCursor = database.query(NEED_TABLE,cols, NEED_ID+"='"+id+"'"  
+				, null, null, null, null, null); 
 		
-		return Integer.parseInt(mCursor.getString(1)); // iterate to get each value.
+		if (mCursor != null) {
+			mCursor.moveToFirst();
+		}
+		try{
+			return mCursor.getString(1); // iterate to get each value.
+		}catch(Exception e){
+			return null;
+		}				
 	}
 }
