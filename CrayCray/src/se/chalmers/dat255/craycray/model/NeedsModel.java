@@ -2,6 +2,14 @@ package se.chalmers.dat255.craycray.model;
 
 import android.util.Log;
 
+/**
+ * 
+ *A model class for keeping track of CrayCrays needs, including hunger, cuddling and cleanness.
+ *Designpattern Singleton is used to avoid conflicts if the methods for setting the levels for 
+ *needs are used in different threads.
+ * 
+ */
+
 public class NeedsModel {
 
 	private static NeedsModel instance = null;
@@ -17,9 +25,12 @@ public class NeedsModel {
 		
 	}
 
+	/**
+	 * 
+	 * @return the single instance of NeedsModel
+	 */
 	public synchronized static NeedsModel getInstance(){
 		if(instance == null){
-			Log.w("Thread", "Creating model");
 			instance = new NeedsModel();
 			return instance;
 		}else{
@@ -40,10 +51,17 @@ public class NeedsModel {
 		return cuddleLevel;
 	}
 
+	
+	/**
+	 * Method for setting CrayCrays hunger level.
+	 * If hunger level is set to <= 0, DeadException is thrown.
+	 * Maximum hunger level is 100.
+	 * @param hunger
+	 * @throws DeadException
+	 */
 	public synchronized void setHungerLevel(int hunger) throws DeadException{
 		if(hunger <= 0){
-			hungerLevel = 0;
-			throw new DeadException("CrayCray starved to death");
+			throw new DeadException("CrayCray starved to death!");
 		}else if(hunger < 100 && hunger > 0){
 			hungerLevel = hunger;
 		}else{
@@ -51,6 +69,11 @@ public class NeedsModel {
 		}
 	}
 	
+	
+	/**
+	 * Method for setting CrayCrays cleanness level
+	 * @param clean
+	 */
 	public synchronized void setCleanLevel(int clean){
 		if(clean <= 0){
 			cleanLevel = 0;
@@ -61,6 +84,10 @@ public class NeedsModel {
 		}
 	}
 	
+	/**
+	 * Method for setting CrayCrays cuddle level
+	 * @param cuddle
+	 */
 	public synchronized void setCuddleLevel(int cuddle){
 		if(cuddle <= 0){
 			cuddleLevel = 0;
@@ -71,8 +98,5 @@ public class NeedsModel {
 		}
 	}
 
-	//	public boolean isDead(){
-	//		//if(hungerCount == 0)
-	//	}
 
 }

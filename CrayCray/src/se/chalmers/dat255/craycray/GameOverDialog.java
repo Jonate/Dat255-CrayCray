@@ -2,6 +2,7 @@ package se.chalmers.dat255.craycray;
 
 import android.os.Build;
 import android.os.Bundle;
+import android.os.Handler;
 import android.annotation.SuppressLint;
 import android.annotation.TargetApi;
 import android.app.Activity;
@@ -12,23 +13,28 @@ import android.content.DialogInterface;
 import android.view.Menu;
 
 
-public class GameOverDialog extends DialogFragment {
+public class GameOverDialog{
+	
+	AlertDialog.Builder alertDialog;
 
-	@Override
-	public Dialog onCreateDialog(Bundle savedInstanceState){
-		AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
-		builder.setTitle("Game Over").setMessage("CrayCray is dead!").setPositiveButton("New Game", new DialogInterface.OnClickListener(){
+	public GameOverDialog(Activity a, Handler handler){
+	
+		alertDialog = new AlertDialog.Builder(a);
+		alertDialog.setTitle("Game Over");
+		alertDialog.setMessage("CrayCray is dead!");
+		alertDialog.setPositiveButton("New Game", new DialogInterface.OnClickListener(){
 			public void onClick(DialogInterface dialog, int id){
 				
 			}
-		})
-		.setNegativeButton("Cancel", new DialogInterface.OnClickListener(){
+		});
+		alertDialog.setNegativeButton("Cancel", new DialogInterface.OnClickListener(){
 			public void onClick(DialogInterface dialog, int id){
 			
 			}
 		});
 		
-		return builder.create();
+		alertDialog.create();
+		
 	}
 
 }
