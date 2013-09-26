@@ -23,6 +23,10 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+        <activity
+            android:name="se.chalmers.dat255.craycray.GameOverDialog"
+            android:label="@string/title_activity_game_over_dialog" >
+        </activity>
     </application>
 
 </manifest>
