@@ -1,6 +1,8 @@
 package se.chalmers.dat255.craycray;
 
+import se.chalmers.dat255.craycray.graphics.DrawingPanel;
 import se.chalmers.dat255.craycray.model.NeedsModel;
+
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
@@ -9,6 +11,7 @@ import android.content.Intent;
 import android.util.Log;
 import android.view.Menu;
 import android.view.View;
+import android.view.View.OnClickListener;
 import android.widget.TextView;
 
 public class MainActivity extends Activity {
@@ -17,7 +20,6 @@ public class MainActivity extends Activity {
 	private TextView feedView;
 	private NeedsModel hunger;
 
-
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -25,7 +27,8 @@ public class MainActivity extends Activity {
 		feedView = (TextView)findViewById(R.id.feedTextView);
 		hunger = NeedsModel.getInstance();
 		feedView.setText("" + hunger.getHungerCount());
-
+		DrawingPanel panel = (DrawingPanel) findViewById(R.id.SurfaceView01);
+		panel.setOnClickListener(clickListener);
 	}
 	
 	@Override
@@ -41,5 +44,17 @@ public class MainActivity extends Activity {
 		String feed = new String("" + hunger.getHungerCount());
 		feedView.setText(feed);
 	}
-
+	
+	private OnClickListener clickListener = new OnClickListener(){
+		private boolean isDrawn = false;
+		
+		@Override
+		public void onClick (View view){
+			if(!isDrawn){
+				DrawingPanel panel = (DrawingPanel)findViewById(R.id.SurfaceView01);
+				panel.startDrawPanel();
+				isDrawn = true;
+			}
+		}
+	};
 }
