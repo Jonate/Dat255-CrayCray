@@ -82,8 +82,10 @@ public class MainActivity extends Activity {
 
 			@Override
 			public void run(){
+				
+				boolean isRunning = true;
 
-				while(true){
+				while(isRunning){
 					try{
 						//decrease the need levels
 						model.setHungerLevel(model.getHungerLevel()-1);
@@ -106,6 +108,7 @@ public class MainActivity extends Activity {
 							Message msg = Message.obtain();
 							msg.obj = e;
 							handler.sendMessage(msg);
+							isRunning = false;
 							break;
 						}
 					}
