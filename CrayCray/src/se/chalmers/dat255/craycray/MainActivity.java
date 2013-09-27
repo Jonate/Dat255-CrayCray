@@ -1,3 +1,29 @@
+ /*
+  * CrayCray - A game formed as a pet in you android device for the user to take care of.
+  *
+  * Copyright (C) 2013  Sofia Edstrom, Emma Gustafsson, Patricia Paulsson, 
+  * Josefin Ondrus, Hanna Materne, Elin Ljunggren & Jonathan Thunberg.
+  * 
+  * This program is free software: you can redistribute it and/or modify
+  * it under the terms of the GNU General Public License as published by
+  * the Free Software Foundation, either version 3 of the License, or
+  * (at your option) any later version.
+  * 
+  * This program is distributed in the hope that it will be useful,
+  * but WITHOUT ANY WARRANTY; without even the implied warranty of
+  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+  * GNU General Public License for more details.
+  * 
+  * You should have received a copy of the GNU General Public License
+  * along with this program.  If not, see <http://www.gnu.org/licenses/.
+  * 
+  * To contact the creators of this program, please make use of any of the email addresses below.
+  * hanna.materne@gmail.com, elin.l.ljunggren@gmail.com, sofia.edstrom@galaxen.se
+  * chorriballong@gmail.com, jonathan.thunberg@gmail.com, emma.i.gustafsson@gmail.com,
+  * josefin.ondrus@gmail.com
+  *   
+  */
+
 package se.chalmers.dat255.craycray;
 
 
