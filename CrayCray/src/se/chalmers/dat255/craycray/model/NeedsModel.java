@@ -108,7 +108,7 @@ public class NeedsModel {
 		
 		//decide whether craycray should get ill
 		if(cleanLevel<25){
-			setIllOrHealthy();
+			setIllness(true);
 		}
 	}
 	
@@ -132,7 +132,7 @@ public class NeedsModel {
 	 */
 	public synchronized void setPooLevel(int pooNeed){
 		if(pooNeed <= 0){
-			hasPooed = true;
+			setHasPooedOrNot(true);
 			cleanLevel = cleanLevel - 30;
 			pooLevel = 100;
 		}else if(pooNeed < 100 && pooNeed > 0){
@@ -143,12 +143,19 @@ public class NeedsModel {
 	}
 	
 	/**
-	 * Set if CrayCray is ill or not. If CrayCray is ill
-	 * it will be set to helathy and if CrayCray is not ill
-	 * when the method is invoked it will be set to ill.
+	 * Set if CrayCray is ill or not. 
 	 */
-	private synchronized void setIllOrHealthy(){
-		ill = !ill;
+	public synchronized void setIllness(boolean bool){
+		this.ill = ill;
 	}
+	
+	/**
+	 * Set if CrayCray has pooed or not. 
+	 */
+	public synchronized void setHasPooedOrNot(boolean bool){
+		hasPooed = bool;
+	}
+	
+	
 
 }

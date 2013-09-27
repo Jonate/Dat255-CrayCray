@@ -143,15 +143,25 @@ public class MainActivity extends Activity {
 	}
 	
 	public void clean(View view){
-		
 		model.setCleanLevel(model.getCleanLevel() + 10);
 		handler.sendMessage(handler.obtainMessage());
 		
 	}
 	
 	public void cuddle(View view){
-		
 		model.setCuddleLevel(model.getCuddleLevel() + 7);
+		handler.sendMessage(handler.obtainMessage());
+		
+	}
+	
+	public void removePoop(View view){
+		model.setHasPooedOrNot(false);
+		handler.sendMessage(handler.obtainMessage());
+		
+	}
+	
+	public void cure(View view){
+		model.setIllness(false);
 		handler.sendMessage(handler.obtainMessage());
 		
 	}
