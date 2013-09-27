@@ -23,9 +23,7 @@ public class MainActivity extends Activity {
 	private TextView feedView;
 	private TextView cuddleView;
 	private TextView cleanView;
-	
-//	private String deathCause; onödig?
-	
+		
 	private NeedsModel model;
 	private Thread t;
 	private AlertDialog.Builder alertDialog;
@@ -87,9 +85,20 @@ public class MainActivity extends Activity {
 
 				while(true){
 					try{
+						//decrease the need levels
 						model.setHungerLevel(model.getHungerLevel()-1);
 						model.setCleanLevel(model.getCleanLevel() - 3);
 						model.setCuddleLevel(model.getCuddleLevel() - 2);
+						model.setPooLevel(model.getCuddleLevel() - 9);
+						
+						if(model.hasPooed()){
+							//show poo on the screen, unimplemented
+						}
+						if(model.isIll()){
+							//show a ill craycray, unimplemented
+						}
+						
+						//tell the view to update levels
 						handler.sendMessage(handler.obtainMessage());
 						Thread.sleep(100);
 					}catch(Exception e){
