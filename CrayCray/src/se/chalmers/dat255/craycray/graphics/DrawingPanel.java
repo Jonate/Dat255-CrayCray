@@ -15,10 +15,12 @@ import android.view.SurfaceHolder.Callback;
 import android.view.SurfaceView;
 import android.view.View;
 
-public class DrawingPanel extends SurfaceView implements Callback{
+public class DrawingPanel extends SurfaceView implements Callback, View.OnTouchListener{
 	private PanelThread thread;
+	private Bitmap cray;
+	private SurfaceView view = this;
+	private Canvas can;
 	
-
 	public DrawingPanel(Context context) {
 		super(context);
 		
@@ -62,12 +64,12 @@ public class DrawingPanel extends SurfaceView implements Callback{
 	@Override
 	protected void onDraw(Canvas canvas){
 		Bitmap b = Bitmap.createBitmap(100, 100, Bitmap.Config.ARGB_8888);
-		Canvas can = new Canvas(b);
-		Bitmap cray = BitmapFactory.decodeResource(getResources(), R.drawable.happy_child);
-		Bitmap bug = BitmapFactory.decodeResource(getResources(), R.drawable.blue_bug);
+		can = new Canvas(b);
+		cray = BitmapFactory.decodeResource(getResources(), R.drawable.happy_child);
+		
 
 		canvas.drawColor(color.white);
-			canvas.drawBitmap(bug, getMatrix(), null);
+			
 
 			canvas.drawBitmap(cray, 300, 700, null);
 
@@ -75,7 +77,6 @@ public class DrawingPanel extends SurfaceView implements Callback{
 		
 	}
 	
-
 	private class PanelThread extends Thread{
 		private SurfaceHolder surfaceHolder;
 		private boolean run = false;
@@ -106,5 +107,17 @@ public class DrawingPanel extends SurfaceView implements Callback{
 				}
 			}
 		}
+	}
+
+	@Override
+		public boolean onTouch(View view, MotionEvent e){
+			this.view = (SurfaceView) view;	
+			
+			if (e.getX() >= 300 && e.getX() < (300 + cray.getWidth())
+					&& e.getY() >= 700 && e.getY() < (700 + cray.getHeight())) {
+				Bitmap bug = BitmapFactory.decodeResource(getResources(), R.drawable.blue_bug);
+				can.drawBitmap(bug, getMatrix(), null);
+			}
+				return false;
 	}
 }
