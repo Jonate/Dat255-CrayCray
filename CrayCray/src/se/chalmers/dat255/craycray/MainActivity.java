@@ -23,7 +23,9 @@ public class MainActivity extends Activity {
 	private TextView feedView;
 	private TextView cuddleView;
 	private TextView cleanView;
-	private String deathCause;
+	
+//	private String deathCause; onödig?
+	
 	private NeedsModel model;
 	private Thread t;
 	private AlertDialog.Builder alertDialog;
@@ -43,16 +45,13 @@ public class MainActivity extends Activity {
 				alertDialog.show();
 			}
 
-			//
 			feedView.setText("" + model.getHungerLevel());
 			cuddleView.setText("" + model.getCuddleLevel());
 			cleanView.setText("" + model.getCleanLevel());
 
 		}
 	};
-	
-
-	
+		
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {

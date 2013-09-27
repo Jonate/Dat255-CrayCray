@@ -14,20 +14,25 @@ import android.util.Log;
 public class NeedsModel {
 
 	private static NeedsModel instance = null;
+	
 	private int hungerLevel;
 	private int cuddleLevel;
 	private int cleanLevel;
-	private String deathCause;
+	private int pooLevel;
+	private boolean ill;
+	
+	//private String deathCause; onödig?
 
 	private NeedsModel(){
 		hungerLevel = 100;
 		cuddleLevel = 100;
 		cleanLevel = 100;
+		pooLevel = 100;
+		ill = false;
 		
 	}
 
 	/**
-	 * 
 	 * @return the single instance of NeedsModel
 	 */
 	public synchronized static NeedsModel getInstance(){
@@ -39,21 +44,32 @@ public class NeedsModel {
 		}
 	}
 
+	/*
+	 * Getters for needs.
+	 */
 	public synchronized int getHungerLevel(){
 		return hungerLevel;
 	}
-	
-	
+		
 	public synchronized int getCleanLevel(){
 		return cleanLevel;
-	}
-	
+	}	
 
 	public synchronized int getCuddleLevel(){
 		return cuddleLevel;
 	}
-
 	
+	public synchronized int getPooLevel(){
+		return pooLevel;
+	}
+	
+	public synchronized boolean isIll(){
+		return ill;
+	}
+
+	/*
+	 * Setters for needs.
+	 */
 	/**
 	 * Method for setting CrayCrays hunger level.
 	 * If hunger level is set to <= 0, DeadException is thrown.
@@ -100,6 +116,26 @@ public class NeedsModel {
 			cuddleLevel = 100;
 		}
 	}
-
+	
+	/**
+	 * Method for setting how much CrayCray needs to poo.
+	 * @param pooNeed
+	 */
+	public synchronized void setPooLevel(int pooNeed){
+		if(pooNeed <= 0){
+			pooLevel = 0;
+		}else if(pooNeed < 100 && pooNeed > 0){
+			pooLevel = pooNeed;
+		}else{
+			pooLevel = 100;
+		}
+	}
+	
+	/**
+	 * Set if CrayCray is ill or not.
+	 */
+	public synchronized void setIllorHealthy(){
+		ill = !ill;
+	}
 
 }
