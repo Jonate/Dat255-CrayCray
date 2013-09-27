@@ -19,17 +19,17 @@ public class NeedsModel {
 	private int cuddleLevel;
 	private int cleanLevel;
 	private int pooLevel;
-	private boolean ill;
 	
-	//private String deathCause; onödig?
-
+	private boolean ill;
+	private boolean hasPooed;
+	
 	private NeedsModel(){
 		hungerLevel = 100;
 		cuddleLevel = 100;
 		cleanLevel = 100;
 		pooLevel = 100;
 		ill = false;
-		
+		hasPooed = false;		
 	}
 
 	/**
@@ -66,6 +66,10 @@ public class NeedsModel {
 	public synchronized boolean isIll(){
 		return ill;
 	}
+	
+	public synchronized boolean hasPooed(){
+		return hasPooed;
+	}
 
 	/*
 	 * Setters for needs.
@@ -101,6 +105,11 @@ public class NeedsModel {
 		}else{
 			cleanLevel = 100;
 		}
+		
+		//decide whether craycray should get ill
+		if(cleanLevel<25){
+			setIllness(true);
+		}
 	}
 	
 	/**
@@ -123,7 +132,9 @@ public class NeedsModel {
 	 */
 	public synchronized void setPooLevel(int pooNeed){
 		if(pooNeed <= 0){
-			pooLevel = 0;
+			setHasPooedOrNot(true);
+			cleanLevel = cleanLevel - 30;
+			pooLevel = 100;
 		}else if(pooNeed < 100 && pooNeed > 0){
 			pooLevel = pooNeed;
 		}else{
@@ -132,10 +143,19 @@ public class NeedsModel {
 	}
 	
 	/**
-	 * Set if CrayCray is ill or not.
+	 * Set if CrayCray is ill or not. 
 	 */
-	public synchronized void setIllorHealthy(){
-		ill = !ill;
+	public synchronized void setIllness(boolean bool){
+		this.ill = ill;
 	}
+	
+	/**
+	 * Set if CrayCray has pooed or not. 
+	 */
+	public synchronized void setHasPooedOrNot(boolean bool){
+		hasPooed = bool;
+	}
+	
+	
 
 }
