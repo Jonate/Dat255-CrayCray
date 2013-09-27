@@ -24,9 +24,9 @@ public class MainActivity extends Activity {
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_main);
-		feedView = (TextView)findViewById(R.id.feedTextView);
-		hunger = NeedsModel.getInstance();
-		feedView.setText("" + hunger.getHungerCount());
+//		feedView = (TextView)findViewById(R.id.feedTextView);
+//		hunger = NeedsModel.getInstance();
+//		feedView.setText("" + hunger.getHungerCount());
 		DrawingPanel panel = (DrawingPanel) findViewById(R.id.SurfaceView01);
 		panel.setOnClickListener(clickListener);
 	}
