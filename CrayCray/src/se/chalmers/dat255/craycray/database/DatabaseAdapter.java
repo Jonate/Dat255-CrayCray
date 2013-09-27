@@ -5,6 +5,10 @@ import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 
+/**
+ * A database class called when you want to add, change or get a value in the database
+ * 
+ */
 public class DatabaseAdapter {
 
 	private DatabaseHelper dbHelper;
@@ -35,6 +39,14 @@ public class DatabaseAdapter {
 		return database.insert(NEED_TABLE, null, values);  
 	}
 	
+	/**
+	 * A method for adding values to the database
+	 * used when adding String values, for example the time
+	 * 
+	 * @param id the id the value will have in the database
+	 * @param value 
+	 * @return the rowindex of the value added
+	 */
 	public long addStringValue(String id, String value){  
 		ContentValues values = new ContentValues();  
 		values.put(NEED_ID, id);  
@@ -55,6 +67,14 @@ public class DatabaseAdapter {
 		return database.update(NEED_TABLE, values, NEED_ID+" =?" ,new String[]{id});  
 	}
 	
+	/**
+	 * A method for updating values of an id that already exists in the database 
+	 * used when adding String values, for example the time
+	 * 
+	 * @param id the id of the value that will be replaced
+	 * @param value the new value
+	 * @return the rowindex of the updated value
+	 */
 	public long updateStringValue(String id, String value){  
 		ContentValues values = new ContentValues();
 		values.put(NEED_VALUE, value);  
@@ -81,7 +101,11 @@ public class DatabaseAdapter {
 		}
 	}
 	
-	
+	/**
+	 * 
+	 * @param id
+	 * @return the value, returns null if the id does not exist
+	 */
 	public String getStringValue(String id) {
 		String[] cols = new String[] {NEED_ID, NEED_VALUE};  
 		Cursor mCursor = database.query(NEED_TABLE,cols, NEED_ID+"='"+id+"'"  

@@ -5,6 +5,10 @@ import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.util.Log;
 
+/**
+ * A class where the database is created
+ * 
+ */
 public class DatabaseHelper extends SQLiteOpenHelper {
 	
 	private static final int DATABASE_VERSION=1;
