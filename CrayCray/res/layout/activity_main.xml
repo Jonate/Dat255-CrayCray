@@ -3,14 +3,72 @@
     android:layout_width="fill_parent"
     android:layout_height="fill_parent" >
 
-	<se.chalmers.dat255.craycray.graphics.DrawingPanel
-             android:id="@+id/SurfaceView01"
-             android:layout_width="fill_parent"
-             android:layout_height="fill_parent"
-             android:layout_alignParentBottom="true">
+        <ImageButton
+            android:id="@+id/feedButton"
+            android:layout_width="57dp"
+            android:layout_height="57dp"
+            android:layout_alignBaseline="@+id/feedTextView"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentTop="true"
+            android:onClick="feed"
+            android:padding="1dp" />
+        
+        <TextView
+            android:id="@id/feedTextView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="30sp"
+            android:layout_margin="40dp"
+            android:layout_alignParentTop="true"
+            android:layout_alignParentRight="true" />
+        
+        <Button
+            android:id="@+id/cleanButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/clean"
+            android:textSize="30sp"
+            android:background="#2B7F8A"
+            android:padding="5dp"
+            android:layout_margin="40dp"
+            android:layout_alignParentLeft="true"
+            android:layout_below="@id/feedButton"
+            android:onClick="clean" />
+        
+        <TextView
+            android:id="@+id/cleanTextView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="100"
+            android:textSize="30sp"
+            android:layout_margin="40dp"
+            android:layout_alignParentRight="true"
+            android:layout_below="@id/feedTextView"
+            android:layout_alignBaseline="@id/cleanButton" />
+        
+        <Button
+            android:id="@+id/cuddleButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/cuddle"
+            android:textSize="30sp"
+            android:background="#F2D30A"
+            android:padding="5dp"
+            android:layout_margin="40dp"
+            android:layout_alignParentLeft="true"
+            android:layout_alignBaseline="@+id/cuddleTextView"
+            android:layout_below="@id/cleanButton" 
+            android:onClick="cuddle"/>
+        
+        <TextView
+            android:id="@id/cuddleTextView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="100"
+            android:textSize="30sp"
+            android:layout_margin="40dp"
+            android:layout_alignParentRight="true"
+            android:layout_below="@id/cleanTextView" />  
 
-	</se.chalmers.dat255.craycray.graphics.DrawingPanel>
-       
 </RelativeLayout>
-   
-    
+
