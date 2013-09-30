@@ -1,6 +1,6 @@
 package se.chalmers.dat255.craycray.model;
 
-import android.util.Log;
+import java.util.TimerTask;
 
 /**
  * 
@@ -133,7 +133,7 @@ public class NeedsModel {
 	public synchronized void setPooLevel(int pooNeed){
 		if(pooNeed <= 0){
 			setHasPooedOrNot(true);
-			cleanLevel = cleanLevel - 30;
+			cleanLevel = cleanLevel - 20;
 			pooLevel = 100;
 		}else if(pooNeed < 100 && pooNeed > 0){
 			pooLevel = pooNeed;
@@ -156,6 +156,21 @@ public class NeedsModel {
 		hasPooed = bool;
 	}
 	
+	/*
+	 * Nestled class for killing CrayCray when it has been ill 
+	 * long enough.
+	 */
+	private class KillWhenIllTask extends TimerTask {
+		public void run() {
+			//throw an exception with cause illness
+			//cannot do this bajs
+			//because run() is not specified that way
+		}
+	}
+	
+	private void killWhenIll() throws DeadException{
+		throw new DeadException("CrayCray died of illness!");
+	}
 	
 
 }
