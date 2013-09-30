@@ -2,16 +2,15 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="fill_parent"
     android:layout_height="fill_parent" >
-    
-	
 
-         <se.chalmers.dat255.craycray.graphics.DrawingPanel
-  	      	android:id="@+id/SurfaceView01"
-    	    android:layout_width="wrap_content"
-        	android:layout_height="wrap_content"
-        	android:layout_alignParentRight="true"
-        ></se.chalmers.dat255.craycray.graphics.DrawingPanel>
-         
+	<se.chalmers.dat255.craycray.graphics.DrawingPanel
+             android:id="@+id/SurfaceView01"
+             android:layout_width="fill_parent"
+             android:layout_height="fill_parent"
+             android:layout_alignParentBottom="true">
+
+	</se.chalmers.dat255.craycray.graphics.DrawingPanel>
+       
 </RelativeLayout>
    
     

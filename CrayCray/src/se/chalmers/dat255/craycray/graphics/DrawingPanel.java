@@ -19,34 +19,36 @@ import android.view.View;
 public class DrawingPanel extends SurfaceView implements Callback {
 	private PanelThread thread;
 	private Bitmap cray;
-	private SurfaceView view = this;
-	private Canvas can;
-	private boolean buggy = false;
+	private float x = 0;
+	private float y = 0;
+	
 	public DrawingPanel(Context context) {
 		super(context);
-
-	}
-
-	public DrawingPanel(Context context, AttributeSet attrs){
-		super(context, attrs);
+		
 		this.getHolder().addCallback(this);
 		this.thread = new PanelThread(getHolder());
 		this.setFocusable(true);
 		this.setClickable(true);
+		
 		setOnTouchListener(new View.OnTouchListener() {
 			
 			public boolean onTouch (View view, MotionEvent e){
-			
-			if (e.getX() >= 300 && e.getX() < (300 + cray.getWidth()) && e.getY() >= 700 && e.getY() < (700 + cray.getHeight())) {
-				buggy=true;
-			
+				Log.w("CrayCray", "onTouch");
+			switch(e.getAction()){
+			case MotionEvent.ACTION_MOVE:
+				x = e.getX();
+				y = e.getY();
+				break;
 			}
-				return false;
+				return true;
 			}
 		});
 	}
-	public DrawingPanel(Context context, AttributeSet attrs, int defStyle) {
-		super(context, attrs, defStyle);
+	public DrawingPanel(Context context, AttributeSet attr){
+		super(context, attr);
+	}
+	public DrawingPanel(Context context, AttributeSet attr, int defStyle){
+		super(context, attr, defStyle);
 	}
 
 	public void startDrawPanel() {
@@ -80,17 +82,15 @@ public class DrawingPanel extends SurfaceView implements Callback {
 	@Override
 	protected void onDraw(Canvas canvas) {
 		Bitmap b = Bitmap.createBitmap(100, 100, Bitmap.Config.ARGB_8888);
-		can = new Canvas(b);
-		cray = BitmapFactory.decodeResource(getResources(),
-				R.drawable.happy_child);
+		canvas = new Canvas(b);
+		cray = BitmapFactory.decodeResource(getResources(), R.drawable.happy_child);
 		canvas.drawColor(color.white);
-		canvas.drawBitmap(cray, 300, 700, null);
+		canvas.drawBitmap(cray, x, y, null);
 
 		thread.setRunning(false);
-		if(buggy == true){
 		Bitmap bug = BitmapFactory.decodeResource(getResources(), R.drawable.blue_bug);
-		can.drawBitmap(bug, 0, 0, null);
-		}
+		//canvas.drawBitmap(bug, 0, 0, null);
+
 	}
 
 	private class PanelThread extends Thread {
@@ -110,9 +110,7 @@ public class DrawingPanel extends SurfaceView implements Callback {
 			Canvas c;
 			while (run) {
 				c = null;
-
 				try {
-
 					c = this.surfaceHolder.lockCanvas(null);
 					synchronized (this.surfaceHolder) {
 

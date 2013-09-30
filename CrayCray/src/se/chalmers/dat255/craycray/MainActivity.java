@@ -19,7 +19,8 @@ public class MainActivity extends Activity {
 
 	private TextView feedView;
 	private NeedsModel hunger;
-
+	  
+	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
