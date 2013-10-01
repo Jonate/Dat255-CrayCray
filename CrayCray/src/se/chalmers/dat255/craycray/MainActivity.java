@@ -50,21 +50,27 @@ import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
 import android.widget.ImageButton;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 
 public class MainActivity extends Activity {
 
 
-	private TextView feedView;
-	private TextView cuddleView;
-	private TextView cleanView;
-	private TextView energyView;
+//	private TextView feedView;
+//	private TextView cuddleView;
+//	private TextView cleanView;
+//	private TextView energyView;
 	
 	private Button feedButton;
 	private Button cuddleButton;
 	private Button cleanButton;
 	private Button energyButton;
 	private Button removePooButton;
+	
+	private ProgressBar foodBar;
+	private ProgressBar cuddleBar;
+	private ProgressBar cleanBar;
+	private ProgressBar energyBar;
 
 	//	private String deathCause; onödig?
 
@@ -91,10 +97,15 @@ public class MainActivity extends Activity {
 
 
 
-			feedView.setText("" + model.getHungerLevel());
-			cuddleView.setText("" + model.getCuddleLevel());
-			cleanView.setText("" + model.getCleanLevel());
-			energyView.setText("" + model.getEnergyLevel());
+//			feedView.setText("" + model.getHungerLevel());
+//			energyView.setText("" + model.getEnergyLevel());
+//			cleanView.setText("" + model.getCleanLevel());
+//			cuddleView.setText("" + model.getCuddleLevel());
+			
+			foodBar.setProgress(model.getHungerLevel());
+			cuddleBar.setProgress(model.getCuddleLevel());
+			cleanBar.setProgress(model.getCleanLevel());
+			energyBar.setProgress(model.getEnergyLevel());
 
 		}
 	};
@@ -119,15 +130,27 @@ public class MainActivity extends Activity {
 			final ImageButton removePooButton = (ImageButton) findViewById(R.id.removePooButton);
 			removePooButton.setImageResource(R.drawable.button_poo);
 			
-			feedView = (TextView)findViewById(R.id.feedTextView);
-			cleanView = (TextView)findViewById(R.id.cleanTextView);
-			cuddleView = (TextView)findViewById(R.id.cuddleTextView);
-			energyView = (TextView)findViewById(R.id.energyTextView);
+			foodBar = (ProgressBar)findViewById(R.id.foodBar);
+			cuddleBar = (ProgressBar)findViewById(R.id.cuddleBar);
+			cleanBar = (ProgressBar)findViewById(R.id.cleanBar);
+			energyBar = (ProgressBar)findViewById(R.id.energyBar);
+			
+//			feedView = (TextView)findViewById(R.id.feedTextView);
+//			cleanView = (TextView)findViewById(R.id.cleanTextView);
+//			cuddleView = (TextView)findViewById(R.id.cuddleTextView);
+//			energyView = (TextView)findViewById(R.id.energyTextView);
+			
 			model = NeedsModel.getInstance();
-			feedView.setText("" + model.getHungerLevel());
-			cleanView.setText("" + model.getCleanLevel());
-			cuddleView.setText("" + model.getCuddleLevel());
-			energyView.setText("" + model.getEnergyLevel());
+			
+//			feedView.setText("" + model.getHungerLevel());
+//			cleanView.setText("" + model.getCleanLevel());
+//			cuddleView.setText("" + model.getCuddleLevel());
+//			energyView.setText("" + model.getEnergyLevel());
+			
+			foodBar.setProgress(model.getHungerLevel());
+			cuddleBar.setProgress(model.getCuddleLevel());
+			cleanBar.setProgress(model.getCleanLevel());
+			energyBar.setProgress(model.getEnergyLevel());
 			
 			alertDialog = new AlertDialog.Builder(this);
 			alertDialog.setTitle("Game Over");
@@ -206,10 +229,16 @@ public class MainActivity extends Activity {
 			}
 			
 			
-			feedView.setText("" + model.getHungerLevel());
-			cuddleView.setText("" + model.getCuddleLevel());
-			cleanView.setText("" + model.getCleanLevel());
-			energyView.setText("" + model.getEnergyLevel());
+//			feedView.setText("" + model.getHungerLevel());
+//			foodBar.setProgress(model.getHungerLevel());
+//			cuddleView.setText("" + model.getCuddleLevel());
+//			cleanView.setText("" + model.getCleanLevel());
+//			energyView.setText("" + model.getEnergyLevel());
+			
+			foodBar.setProgress(model.getHungerLevel());
+			cuddleBar.setProgress(model.getCuddleLevel());
+			cleanBar.setProgress(model.getCleanLevel());
+			energyBar.setProgress(model.getEnergyLevel());
 		}
 
 
@@ -274,7 +303,7 @@ public class MainActivity extends Activity {
 
 		}
 
-		public void removePoop(View view){
+		public void removePoo(View view){
 			model.setHasPooedOrNot(false);
 			handler.sendMessage(handler.obtainMessage());
 
