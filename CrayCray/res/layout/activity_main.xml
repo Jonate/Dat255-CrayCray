@@ -20,8 +20,7 @@
         android:layout_alignParentLeft="true"
         android:layout_below="@id/feedButton"
         android:layout_margin="1dp"
-        android:onClick="cuddle"
-        android:text="@string/cuddle" />
+        android:onClick="cuddle" />
 
     <ImageButton
         android:id="@+id/cleanButton"
@@ -30,8 +29,25 @@
         android:layout_alignParentLeft="true"
         android:layout_below="@id/cuddleButton"
         android:layout_margin="1dp"
-        android:onClick="clean"
-        android:text="@string/clean" />
+        android:onClick="clean" />
+
+    <ImageButton
+        android:id="@+id/energyButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentLeft="true"
+        android:layout_below="@id/cleanButton"
+        android:layout_margin="1dp"
+        android:onClick="sleep" />
+
+    <ImageButton
+        android:id="@+id/removePooButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentLeft="true"
+        android:layout_below="@id/energyButton"
+        android:layout_margin="1dp"
+        android:onClick="removePoo" />
 
     <TextView
         android:id="@+id/feedTextView"
@@ -60,6 +76,17 @@
         android:layout_alignBaseline="@id/cuddleButton"
         android:layout_alignParentRight="true"
         android:layout_below="@id/cleanTextView"
+        android:layout_margin="40dp"
+        android:text="100"
+        android:textSize="30sp" />
+    
+        <TextView
+        android:id="@+id/energyTextView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignBaseline="@id/energyButton"
+        android:layout_alignParentRight="true"
+        android:layout_below="@id/cuddleTextView"
         android:layout_margin="40dp"
         android:text="100"
         android:textSize="30sp" />

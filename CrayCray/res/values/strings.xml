@@ -6,6 +6,8 @@
     <string name="feed">Feed</string>
     <string name="clean">Clean</string>
     <string name="cuddle">Cuddle</string>
+    <string name="energy">Energy</string>
+    <string name="removePoo">RemovePoo</string>
     <string name="title_activity_game_over_dialog">GameOverDialog</string>
     <string name="hello_world">Hello world!</string>
 

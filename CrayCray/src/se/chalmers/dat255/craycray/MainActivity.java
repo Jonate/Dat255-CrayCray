@@ -58,8 +58,13 @@ public class MainActivity extends Activity {
 	private TextView feedView;
 	private TextView cuddleView;
 	private TextView cleanView;
+	private TextView energyView;
 	
 	private Button feedButton;
+	private Button cuddleButton;
+	private Button cleanButton;
+	private Button energyButton;
+	private Button removePooButton;
 
 	//	private String deathCause; onödig?
 
@@ -89,6 +94,7 @@ public class MainActivity extends Activity {
 			feedView.setText("" + model.getHungerLevel());
 			cuddleView.setText("" + model.getCuddleLevel());
 			cleanView.setText("" + model.getCleanLevel());
+			energyView.setText("" + model.getEnergyLevel());
 
 		}
 	};
@@ -107,13 +113,21 @@ public class MainActivity extends Activity {
 			final ImageButton cuddleButton = (ImageButton) findViewById(R.id.cuddleButton);
 			cuddleButton.setImageResource(R.drawable.button_happiness);
 			
+			final ImageButton energyButton = (ImageButton) findViewById(R.id.energyButton);
+			energyButton.setImageResource(R.drawable.button_energy);
+			
+			final ImageButton removePooButton = (ImageButton) findViewById(R.id.removePooButton);
+			removePooButton.setImageResource(R.drawable.button_poo);
+			
 			feedView = (TextView)findViewById(R.id.feedTextView);
 			cleanView = (TextView)findViewById(R.id.cleanTextView);
 			cuddleView = (TextView)findViewById(R.id.cuddleTextView);
+			energyView = (TextView)findViewById(R.id.energyTextView);
 			model = NeedsModel.getInstance();
 			feedView.setText("" + model.getHungerLevel());
 			cleanView.setText("" + model.getCleanLevel());
 			cuddleView.setText("" + model.getCuddleLevel());
+			energyView.setText("" + model.getEnergyLevel());
 			
 			alertDialog = new AlertDialog.Builder(this);
 			alertDialog.setTitle("Game Over");
@@ -141,6 +155,7 @@ public class MainActivity extends Activity {
 							model.setCleanLevel(model.getCleanLevel() - 3);
 							model.setCuddleLevel(model.getCuddleLevel() - 2);
 							model.setPooLevel(model.getPooLevel() - 9);
+							model.setEnergyLevel(model.getEnergyLevel() - 1);
 
 							if(model.hasPooed()){
 								//show poo on the screen, unimplemented
@@ -194,6 +209,7 @@ public class MainActivity extends Activity {
 			feedView.setText("" + model.getHungerLevel());
 			cuddleView.setText("" + model.getCuddleLevel());
 			cleanView.setText("" + model.getCleanLevel());
+			energyView.setText("" + model.getEnergyLevel());
 		}
 
 
@@ -248,6 +264,12 @@ public class MainActivity extends Activity {
 		public void cuddle(View view){
 
 			model.setCuddleLevel(model.getCuddleLevel() + 7);
+			handler.sendMessage(handler.obtainMessage());
+
+		}
+		
+		public void sleep(View view){
+			model.setEnergyLevel(model.getEnergyLevel() + 50);
 			handler.sendMessage(handler.obtainMessage());
 
 		}
