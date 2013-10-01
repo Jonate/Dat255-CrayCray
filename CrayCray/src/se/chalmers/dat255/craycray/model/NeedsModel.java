@@ -1,6 +1,8 @@
 package se.chalmers.dat255.craycray.model;
 
+import se.chalmers.dat255.craycray.R;
 import android.util.Log;
+import android.widget.ImageView;
 
 /**
  * 
@@ -89,7 +91,7 @@ public class NeedsModel {
 	 */
 	public synchronized void setHungerLevel(int hunger) throws DeadException{
 		if(hunger <= 0){
-			throw new DeadException("CrayCray starved to death!");
+			throw new DeadException("OMG! you killed CrayCray...");
 		}else if(hunger < 100 && hunger > 0){
 			hungerLevel = hunger;
 
@@ -177,6 +179,7 @@ public class NeedsModel {
 		hasPooed = bool;
 	}
 	
+
 	
 
 }

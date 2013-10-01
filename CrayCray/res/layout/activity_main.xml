@@ -140,4 +140,12 @@
         android:textSize="30sp" />
     -->
 
+    <ImageView
+        android:id="@+id/crayCray"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_above="@+id/removePooButton"
+        android:layout_centerHorizontal="true"
+        android:src="@drawable/regular_baby" />
+
 </RelativeLayout>
