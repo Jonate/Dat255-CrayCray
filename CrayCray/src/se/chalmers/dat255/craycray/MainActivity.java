@@ -99,7 +99,13 @@ public class MainActivity extends Activity {
 			setContentView(R.layout.activity_main);
 			
 			final ImageButton feedButton = (ImageButton) findViewById(R.id.feedButton);
-			feedButton.setImageResource(R.drawable.button_energy);
+			feedButton.setImageResource(R.drawable.button_food);
+			
+			final ImageButton cleanButton = (ImageButton) findViewById(R.id.cleanButton);
+			cleanButton.setImageResource(R.drawable.button_clean);
+			
+			final ImageButton cuddleButton = (ImageButton) findViewById(R.id.cuddleButton);
+			cuddleButton.setImageResource(R.drawable.button_happiness);
 			
 			feedView = (TextView)findViewById(R.id.feedTextView);
 			cleanView = (TextView)findViewById(R.id.cleanTextView);

@@ -1,74 +1,67 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="fill_parent"
-    android:layout_height="fill_parent" >
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content" >
 
-        <ImageButton
-            android:id="@+id/feedButton"
-            android:layout_width="57dp"
-            android:layout_height="57dp"
-            android:layout_alignBaseline="@+id/feedTextView"
-            android:layout_alignParentLeft="true"
-            android:layout_alignParentTop="true"
-            android:onClick="feed"
-            android:padding="1dp" />
-        
-        <TextView
-            android:id="@id/feedTextView"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:textSize="30sp"
-            android:layout_margin="40dp"
-            android:layout_alignParentTop="true"
-            android:layout_alignParentRight="true" />
-        
-        <Button
-            android:id="@+id/cleanButton"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@string/clean"
-            android:textSize="30sp"
-            android:background="#2B7F8A"
-            android:padding="5dp"
-            android:layout_margin="40dp"
-            android:layout_alignParentLeft="true"
-            android:layout_below="@id/feedButton"
-            android:onClick="clean" />
-        
-        <TextView
-            android:id="@+id/cleanTextView"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="100"
-            android:textSize="30sp"
-            android:layout_margin="40dp"
-            android:layout_alignParentRight="true"
-            android:layout_below="@id/feedTextView"
-            android:layout_alignBaseline="@id/cleanButton" />
-        
-        <Button
-            android:id="@+id/cuddleButton"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@string/cuddle"
-            android:textSize="30sp"
-            android:background="#F2D30A"
-            android:padding="5dp"
-            android:layout_margin="40dp"
-            android:layout_alignParentLeft="true"
-            android:layout_alignBaseline="@+id/cuddleTextView"
-            android:layout_below="@id/cleanButton" 
-            android:onClick="cuddle"/>
-        
-        <TextView
-            android:id="@id/cuddleTextView"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="100"
-            android:textSize="30sp"
-            android:layout_margin="40dp"
-            android:layout_alignParentRight="true"
-            android:layout_below="@id/cleanTextView" />  
+    <ImageButton
+        android:id="@+id/feedButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentLeft="true"
+        android:layout_margin="1dp"
+        android:maxHeight="57dp"
+        android:maxWidth="57dp"
+        android:onClick="feed" />
+
+    <ImageButton
+        android:id="@+id/cuddleButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentLeft="true"
+        android:layout_below="@id/feedButton"
+        android:layout_margin="1dp"
+        android:onClick="cuddle"
+        android:text="@string/cuddle" />
+
+    <ImageButton
+        android:id="@+id/cleanButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentLeft="true"
+        android:layout_below="@id/cuddleButton"
+        android:layout_margin="1dp"
+        android:onClick="clean"
+        android:text="@string/clean" />
+
+    <TextView
+        android:id="@+id/feedTextView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentTop="true"
+        android:layout_margin="40dp"
+        android:textSize="30sp" />
+
+    <TextView
+        android:id="@+id/cleanTextView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignBaseline="@id/cleanButton"
+        android:layout_alignParentRight="true"
+        android:layout_below="@id/feedTextView"
+        android:layout_margin="40dp"
+        android:text="100"
+        android:textSize="30sp" />
+
+    <TextView
+        android:id="@+id/cuddleTextView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignBaseline="@id/cuddleButton"
+        android:layout_alignParentRight="true"
+        android:layout_below="@id/cleanTextView"
+        android:layout_margin="40dp"
+        android:text="100"
+        android:textSize="30sp" />
 
 </RelativeLayout>
-
