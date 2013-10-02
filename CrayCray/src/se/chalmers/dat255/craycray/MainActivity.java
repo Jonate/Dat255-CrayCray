@@ -51,6 +51,7 @@ public class MainActivity extends Activity {
 	private TextView cleanView;
 
 	private NeedsModel model;
+	private String deathCause = "";
 	private Thread t;
 	private AlertDialog.Builder alertDialog;
 
@@ -67,12 +68,11 @@ public class MainActivity extends Activity {
 
 			if(msg.obj instanceof DeadException){
 				DeadException exception = (DeadException)msg.obj;
-				String message = exception.getDeathCause();
-				alertDialog.setMessage(message);
-				alertDialog.show();
+				deathCause = exception.getDeathCause();				
+				
+//				alertDialog.setMessage(message);
+//				alertDialog.show();
 			}
-
-
 
 			feedView.setText("" + model.getHungerLevel());
 			cuddleView.setText("" + model.getCuddleLevel());
@@ -93,20 +93,18 @@ public class MainActivity extends Activity {
 			cleanView.setText("" + model.getCleanLevel());
 			cuddleView.setText("" + model.getCuddleLevel());
 
-			alertDialog = new AlertDialog.Builder(this);
-			alertDialog.setTitle("Game Over");
-			alertDialog.setPositiveButton("New Game", new DialogInterface.OnClickListener(){
-				public void onClick(DialogInterface dialog, int id){
-
-				}
-			});
-			alertDialog.setNegativeButton("Cancel", new DialogInterface.OnClickListener(){
-				public void onClick(DialogInterface dialog, int id){
-
-				}
-			});
-
-
+//			alertDialog = new AlertDialog.Builder(this);
+//			alertDialog.setTitle("Game Over");
+//			alertDialog.setPositiveButton("New Game", new DialogInterface.OnClickListener(){
+//				public void onClick(DialogInterface dialog, int id){
+//
+//				}
+//			});
+//			alertDialog.setNegativeButton("Cancel", new DialogInterface.OnClickListener(){
+//				public void onClick(DialogInterface dialog, int id){
+//
+//				}
+//			});
 
 			t = new Thread(new Runnable(){
 
@@ -130,6 +128,7 @@ public class MainActivity extends Activity {
 							Thread.sleep(100);
 						}catch(Exception e){
 							if(e instanceof DeadException){
+								notifications.sendDeadNotification();
 								Message msg = Message.obtain();
 								msg.obj = e;
 								handler.sendMessage(msg);
@@ -201,6 +200,7 @@ public class MainActivity extends Activity {
 			dbA.updateValue(DatabaseConstants.POO, model.getPooLevel());
 			dbA.updateStringValue(DatabaseConstants.TIME, TimeUtil.getCurrentTime());
 			super.onDestroy();
+			//varför superanropet sist, ska det inte vara först?
 		}
 
 
@@ -209,7 +209,7 @@ public class MainActivity extends Activity {
 			try{
 				model.setHungerLevel(model.getHungerLevel() + 5);
 			}catch(DeadException e){
-
+				//Do nothing, handled elsewhere?
 			}
 			handler.sendMessage(handler.obtainMessage());
 			String feed = new String("" + model.getHungerLevel());

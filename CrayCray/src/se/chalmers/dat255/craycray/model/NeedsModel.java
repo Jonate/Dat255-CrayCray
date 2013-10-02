@@ -28,6 +28,7 @@ public class NeedsModel {
 		cuddleLevel = 100;
 		cleanLevel = 100;
 		pooLevel = 100;
+		
 		ill = false;
 		hasPooed = false;		
 	}
