@@ -107,6 +107,8 @@ public class MainActivity extends Activity {
 			cleanBar.setProgress(model.getCleanLevel());
 			energyBar.setProgress(model.getEnergyLevel());
 
+			crayCray.invalidate();
+
 		}
 	};
 
@@ -155,8 +157,8 @@ public class MainActivity extends Activity {
 		cleanBar.setProgress(model.getCleanLevel());
 		energyBar.setProgress(model.getEnergyLevel());
 		
-		getCrayExpression(1, model.getCleanLevel());
-		getCrayExpression(2, model.getHungerLevel());
+//		setCrayExpression(1, model.getCleanLevel());
+//		setCrayExpression(2, model.getHungerLevel());
 		
 		alertDialog = new AlertDialog.Builder(this);
 		alertDialog.setTitle("Game Over");
@@ -193,8 +195,8 @@ public class MainActivity extends Activity {
 							// show a ill craycray, unimplemented
 						}
 						
-						getCrayExpression(1, model.getCleanLevel());
-						getCrayExpression(2, model.getHungerLevel());
+						setCrayExpression(1, model.getCleanLevel());
+						setCrayExpression(2, model.getHungerLevel());
 						
 						handler.sendMessage(handler.obtainMessage());
 						Thread.sleep(1000);
@@ -293,7 +295,7 @@ public class MainActivity extends Activity {
 
 		}
 		handler.sendMessage(handler.obtainMessage());
-		String feed = new String("" + model.getHungerLevel());
+//		String feed = new String("" + model.getHungerLevel());
 
 	}
 
@@ -337,7 +339,7 @@ public class MainActivity extends Activity {
 	 * @param level
 	 *            the value of the level
 	 */
-	public void getCrayExpression(int mode, int level) {
+	public void setCrayExpression(int mode, int level) {
 		int expression;
 		switch (mode) {
 
@@ -347,6 +349,7 @@ public class MainActivity extends Activity {
 				System.out.println("inside case 1 (dirty)" + level);
 				expression = R.drawable.dirty_baby;
 				crayCray.setImageResource(expression);
+				handler.sendMessage(handler.obtainMessage());
 			}
 			break;
 		// hungryLvl
@@ -354,16 +357,19 @@ public class MainActivity extends Activity {
 			if (level == 0) {
 				expression = R.drawable.dead_baby;
 				crayCray.setImageResource(expression);
+				handler.sendMessage(handler.obtainMessage());
 			} else if (level < 50) {
 				System.out.println("inside case 1 (hungry)" + level);
 				expression = R.drawable.feed_baby;
 				crayCray.setImageResource(expression);
+				handler.sendMessage(handler.obtainMessage());
 			}
 			break;
 		default:
 			System.out.println("inside base-case" + level);
 			expression = R.drawable.regular_baby;
 			crayCray.setImageResource(expression);
+			handler.sendMessage(handler.obtainMessage());
 		}
 	}
 
