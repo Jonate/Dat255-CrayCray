@@ -33,11 +33,8 @@ public class NeedsModel {
 		cuddleLevel = 100;
 		cleanLevel = 100;
 		pooLevel = 100;
-<<<<<<< HEAD
-		
-=======
 		energyLevel = 100;
->>>>>>> origin/Dev
+		
 		ill = false;
 		hasPooed = false;		
 	}

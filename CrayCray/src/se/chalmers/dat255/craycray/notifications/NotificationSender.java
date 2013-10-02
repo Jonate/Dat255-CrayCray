@@ -1,5 +1,6 @@
 package se.chalmers.dat255.craycray.notifications;
 
+import se.chalmers.dat255.craycray.MainActivity;
 import se.chalmers.dat255.craycray.R;
 import android.app.Notification;
 import android.app.NotificationManager;
@@ -21,7 +22,7 @@ public class NotificationSender {
 	
 	public void sendDeadNotification(){
 		//Set activity shown when clicked.
-		Intent intent = new Intent();
+		Intent intent = new Intent(ctx, MainActivity.class);
 		PendingIntent pIntent = PendingIntent.getActivity(ctx, 0, intent, Intent.FLAG_ACTIVITY_NEW_TASK );
 		
 		//Make notification.

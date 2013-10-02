@@ -28,10 +28,9 @@ package se.chalmers.dat255.craycray;
 
 import se.chalmers.dat255.craycray.database.DatabaseAdapter;
 import se.chalmers.dat255.craycray.database.DatabaseConstants;
-<<<<<<< HEAD
-=======
 
->>>>>>> origin/Dev
+
+
 import se.chalmers.dat255.craycray.model.DeadException;
 import se.chalmers.dat255.craycray.model.NeedsModel;
 import se.chalmers.dat255.craycray.notifications.NotificationSender;
@@ -39,15 +38,12 @@ import se.chalmers.dat255.craycray.util.TimeUtil;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
-<<<<<<< HEAD
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
-=======
 import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.PorterDuff.Mode;
->>>>>>> origin/Dev
 import android.util.Log;
 import android.view.Menu;
 import android.view.View;
@@ -75,11 +71,6 @@ public class MainActivity extends Activity {
 
 	private ImageView crayCray;
 
-<<<<<<< HEAD
-=======
-	// private String deathCause; onödig?
-
->>>>>>> origin/Dev
 	private NeedsModel model;
 	private String deathCause = "";
 	private Thread t;
@@ -96,76 +87,6 @@ public class MainActivity extends Activity {
 		public void handleMessage(Message msg) {
 			super.handleMessage(msg);
 
-<<<<<<< HEAD
-			if(msg.obj instanceof DeadException){
-				DeadException exception = (DeadException)msg.obj;
-				deathCause = exception.getDeathCause();				
-				
-//				alertDialog.setMessage(message);
-//				alertDialog.show();
-			}
-
-			feedView.setText("" + model.getHungerLevel());
-			cuddleView.setText("" + model.getCuddleLevel());
-			cleanView.setText("" + model.getCleanLevel());
-
-		}
-	};
-
-		@Override
-		protected void onCreate(Bundle savedInstanceState) {
-			super.onCreate(savedInstanceState);
-			setContentView(R.layout.activity_main);
-			feedView = (TextView)findViewById(R.id.feedTextView);
-			cleanView = (TextView)findViewById(R.id.cleanTextView);
-			cuddleView = (TextView)findViewById(R.id.cuddleTextView);
-			model = NeedsModel.getInstance();
-			feedView.setText("" + model.getHungerLevel());
-			cleanView.setText("" + model.getCleanLevel());
-			cuddleView.setText("" + model.getCuddleLevel());
-
-//			alertDialog = new AlertDialog.Builder(this);
-//			alertDialog.setTitle("Game Over");
-//			alertDialog.setPositiveButton("New Game", new DialogInterface.OnClickListener(){
-//				public void onClick(DialogInterface dialog, int id){
-//
-//				}
-//			});
-//			alertDialog.setNegativeButton("Cancel", new DialogInterface.OnClickListener(){
-//				public void onClick(DialogInterface dialog, int id){
-//
-//				}
-//			});
-
-			t = new Thread(new Runnable(){
-
-				@Override
-				public void run(){
-
-					while(true){
-						try{
-							model.setHungerLevel(model.getHungerLevel()-1);
-							model.setCleanLevel(model.getCleanLevel() - 3);
-							model.setCuddleLevel(model.getCuddleLevel() - 2);
-							model.setPooLevel(model.getPooLevel() - 9);
-
-							if(model.hasPooed()){
-								//show poo on the screen, unimplemented
-							}
-							if(model.isIll()){
-								//show a ill craycray, unimplemented
-							}
-							handler.sendMessage(handler.obtainMessage());
-							Thread.sleep(100);
-						}catch(Exception e){
-							if(e instanceof DeadException){
-								notifications.sendDeadNotification();
-								Message msg = Message.obtain();
-								msg.obj = e;
-								handler.sendMessage(msg);
-								break;
-							}
-=======
 			//sets/updates the values of the progressbars
 			foodBar.setProgress(model.getHungerLevel());
 			cuddleBar.setProgress(model.getCuddleLevel());
@@ -178,8 +99,8 @@ public class MainActivity extends Activity {
 			if (msg.obj instanceof DeadException) {
 				DeadException exception = (DeadException) msg.obj;
 				String message = exception.getDeathCause();
-				alertDialog.setMessage(message);
-				alertDialog.show();
+//				alertDialog.setMessage(message);
+//				alertDialog.show();
 			}
 
 		}
@@ -221,20 +142,20 @@ public class MainActivity extends Activity {
 		cleanBar.setProgress(model.getCleanLevel());
 		energyBar.setProgress(model.getEnergyLevel());
 		
-		alertDialog = new AlertDialog.Builder(this);
-		alertDialog.setTitle("Game Over");
-		alertDialog.setPositiveButton("New Game",
-				new DialogInterface.OnClickListener() {
-					public void onClick(DialogInterface dialog, int id) {
-
-					}
-				});
-		alertDialog.setNegativeButton("Cancel",
-				new DialogInterface.OnClickListener() {
-					public void onClick(DialogInterface dialog, int id) {
-
-					}
-				});
+//		alertDialog = new AlertDialog.Builder(this);
+//		alertDialog.setTitle("Game Over");
+//		alertDialog.setPositiveButton("New Game",
+//				new DialogInterface.OnClickListener() {
+//					public void onClick(DialogInterface dialog, int id) {
+//
+//					}
+//				});
+//		alertDialog.setNegativeButton("Cancel",
+//				new DialogInterface.OnClickListener() {
+//					public void onClick(DialogInterface dialog, int id) {
+//
+//					}
+//				});
 
 		t = new Thread(new Runnable() {
 
@@ -264,11 +185,11 @@ public class MainActivity extends Activity {
 						Thread.sleep(1000);
 					} catch (Exception e) {
 						if (e instanceof DeadException) {
+							notifications.sendDeadNotification();
 							Message msg = Message.obtain();
 							msg.obj = e;
 							handler.sendMessage(msg);
 							break;
->>>>>>> origin/Dev
 						}
 					}
 
@@ -302,6 +223,7 @@ public class MainActivity extends Activity {
 				model.setPooLevel(dbA.getValue(DatabaseConstants.POO));
 			} catch (DeadException e) {
 				if (e instanceof DeadException) {
+					notifications.sendDeadNotification();
 					Message msg = Message.obtain();
 					msg.obj = e;
 					handler.sendMessage(msg);
@@ -341,23 +263,9 @@ public class MainActivity extends Activity {
 		dbA.updateValue(DatabaseConstants.POO, model.getPooLevel());
 		dbA.updateStringValue(DatabaseConstants.TIME, TimeUtil.getCurrentTime());
 		super.onDestroy();
+		//varför superanropet sist, ska det inte vara först?
 	}
 
-<<<<<<< HEAD
-		/**
-		 * Updates the database if the application is shut down
-		 */
-		@Override
-		public void onDestroy(){
-			dbA.updateValue(DatabaseConstants.HUNGER, model.getHungerLevel());
-			dbA.updateValue(DatabaseConstants.CUDDLE, model.getCuddleLevel());
-			dbA.updateValue(DatabaseConstants.CLEAN, model.getCleanLevel());
-			dbA.updateValue(DatabaseConstants.POO, model.getPooLevel());
-			dbA.updateStringValue(DatabaseConstants.TIME, TimeUtil.getCurrentTime());
-			super.onDestroy();
-			//varför superanropet sist, ska det inte vara först?
-		}
-=======
 	/**
 	 * increases hungerlevel by 5
 	 */
@@ -365,33 +273,19 @@ public class MainActivity extends Activity {
 		try {
 			model.setHungerLevel(model.getHungerLevel() + 5);
 		} catch (DeadException e) {
->>>>>>> origin/Dev
-
+			//handled elsewhere?
 		}
 		if(model.getHungerLevel()>50){
 			setCrayExpression(-1, -1);
 		}
 		handler.sendMessage(handler.obtainMessage());
 //		String feed = new String("" + model.getHungerLevel());
-
-<<<<<<< HEAD
-		//Changes the hungerlevel indicator int in the TextView 
-		public void feed(View view){
-			try{
-				model.setHungerLevel(model.getHungerLevel() + 5);
-			}catch(DeadException e){
-				//Do nothing, handled elsewhere?
-			}
-			handler.sendMessage(handler.obtainMessage());
-			String feed = new String("" + model.getHungerLevel());
-=======
 	}
 
 	/**
 	 * increases cleanlevel by 10
 	 */
 	public void clean(View view) {
->>>>>>> origin/Dev
 
 		model.setCleanLevel(model.getCleanLevel() + 10);
 		if(model.getCleanLevel()>50){
@@ -400,6 +294,7 @@ public class MainActivity extends Activity {
 		handler.sendMessage(handler.obtainMessage());
 
 	}
+	
 	/**
 	 * increases cuddlelevel by 7
 	 */
