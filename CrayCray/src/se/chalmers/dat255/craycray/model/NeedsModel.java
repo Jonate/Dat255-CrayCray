@@ -1,6 +1,10 @@
 package se.chalmers.dat255.craycray.model;
 
+
 import java.util.TimerTask;
+import se.chalmers.dat255.craycray.R;
+import android.util.Log;
+import android.widget.ImageView;
 
 /**
  * 
@@ -19,6 +23,7 @@ public class NeedsModel {
 	private int cuddleLevel;
 	private int cleanLevel;
 	private int pooLevel;
+	private int energyLevel;
 	
 	private boolean ill;
 	private boolean hasPooed;
@@ -28,6 +33,7 @@ public class NeedsModel {
 		cuddleLevel = 100;
 		cleanLevel = 100;
 		pooLevel = 100;
+		energyLevel = 100;
 		ill = false;
 		hasPooed = false;		
 	}
@@ -63,6 +69,10 @@ public class NeedsModel {
 		return pooLevel;
 	}
 	
+	public synchronized int getEnergyLevel(){
+		return energyLevel;
+	}
+	
 	public synchronized boolean isIll(){
 		return ill;
 	}
@@ -83,7 +93,7 @@ public class NeedsModel {
 	 */
 	public synchronized void setHungerLevel(int hunger) throws DeadException{
 		if(hunger <= 0){
-			throw new DeadException("CrayCray starved to death!");
+			throw new DeadException("OMG! you killed CrayCray...");
 		}else if(hunger < 100 && hunger > 0){
 			hungerLevel = hunger;
 
@@ -127,6 +137,20 @@ public class NeedsModel {
 	}
 	
 	/**
+	 * Method for setting CrayCrays energy level
+	 * @param energy
+	 */
+	public synchronized void setEnergyLevel(int energy){
+		if(energy <= 0){
+			energyLevel = 0;
+		}else if(energy < 100 && energy > 0){
+			energyLevel = energy;
+		}else{
+			energyLevel = 100;
+		}
+	}
+	
+	/**
 	 * Method for setting how much CrayCray needs to poo.
 	 * @param pooNeed
 	 */
@@ -141,6 +165,7 @@ public class NeedsModel {
 			pooLevel = 100;
 		}
 	}
+	
 	
 	/**
 	 * Set if CrayCray is ill or not. 
