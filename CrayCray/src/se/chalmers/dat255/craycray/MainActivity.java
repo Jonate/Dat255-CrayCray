@@ -45,7 +45,9 @@ import android.app.FragmentManager;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Color;
+import android.graphics.LightingColorFilter;
 import android.graphics.PorterDuff.Mode;
+import android.graphics.drawable.Drawable;
 import android.util.Log;
 import android.view.Menu;
 import android.view.View;
@@ -135,6 +137,13 @@ public class MainActivity extends Activity {
 		cleanBar = (ProgressBar) findViewById(R.id.cleanBar);
 		energyBar = (ProgressBar) findViewById(R.id.energyBar);
 		crayCray = (ImageView) findViewById(R.id.crayCray);
+	
+		//Sets the color of the progressbar
+		foodBar.getProgressDrawable().setColorFilter(Color.RED, Mode.MULTIPLY);
+		cuddleBar.getProgressDrawable().setColorFilter(Color.YELLOW, Mode.MULTIPLY);
+		cleanBar.getProgressDrawable().setColorFilter(Color.GREEN, Mode.MULTIPLY);
+		energyBar.getProgressDrawable().setColorFilter(Color.BLUE, Mode.MULTIPLY);
+		
 		
 		model = NeedsModel.getInstance();
 
