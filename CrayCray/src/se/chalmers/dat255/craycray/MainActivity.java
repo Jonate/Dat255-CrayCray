@@ -26,25 +26,18 @@
 
 package se.chalmers.dat255.craycray;
 
-import java.util.Calendar;
-
 import se.chalmers.dat255.craycray.database.DatabaseAdapter;
 import se.chalmers.dat255.craycray.database.DatabaseConstants;
-
-
 import se.chalmers.dat255.craycray.model.DeadException;
-
 import se.chalmers.dat255.craycray.model.NeedsModel;
+import se.chalmers.dat255.craycray.notifications.NotificationSender;
 import se.chalmers.dat255.craycray.util.TimeUtil;
+import android.app.Activity;
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
-import android.app.Activity;
-import android.app.AlertDialog;
-import android.app.DialogFragment;
-import android.app.FragmentManager;
-import android.content.DialogInterface;
-import android.content.Intent;
 import android.util.Log;
 import android.view.Menu;
 import android.view.View;
@@ -57,13 +50,12 @@ public class MainActivity extends Activity {
 	private TextView cuddleView;
 	private TextView cleanView;
 
-	//	private String deathCause; onödig?
-
 	private NeedsModel model;
 	private Thread t;
 	private AlertDialog.Builder alertDialog;
 
 	private DatabaseAdapter dbA;
+	NotificationSender notifications = new NotificationSender(this);
 
 	//A Handler to take care of updates in UI-thread
 	//When sendMessage method is called, this is where the message is sent
@@ -135,7 +127,7 @@ public class MainActivity extends Activity {
 								//show a ill craycray, unimplemented
 							}
 							handler.sendMessage(handler.obtainMessage());
-							Thread.sleep(1000);
+							Thread.sleep(100);
 						}catch(Exception e){
 							if(e instanceof DeadException){
 								Message msg = Message.obtain();
