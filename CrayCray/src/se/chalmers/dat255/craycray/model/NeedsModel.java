@@ -157,7 +157,7 @@ public class NeedsModel {
 	public synchronized void setPooLevel(int pooNeed){
 		if(pooNeed <= 0){
 			setHasPooedOrNot(true);
-			cleanLevel = cleanLevel - 20;
+//			cleanLevel = cleanLevel - 20;
 			pooLevel = 100;
 		}else if(pooNeed < 100 && pooNeed > 0){
 			pooLevel = pooNeed;

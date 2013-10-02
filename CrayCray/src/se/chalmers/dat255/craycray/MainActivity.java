@@ -266,7 +266,7 @@ public class MainActivity extends Activity {
 	/**
 	 * increases hungerlevel by 5
 	 */
-	public void feed() {
+	public void feed(View view) {
 		try {
 			model.setHungerLevel(model.getHungerLevel() + 5);
 		} catch (DeadException e) {
@@ -283,7 +283,7 @@ public class MainActivity extends Activity {
 	/**
 	 * increases cleanlevel by 10
 	 */
-	public void clean() {
+	public void clean(View view) {
 
 		model.setCleanLevel(model.getCleanLevel() + 10);
 		if(model.getCleanLevel()>50){
@@ -295,7 +295,7 @@ public class MainActivity extends Activity {
 	/**
 	 * increases cuddlelevel by 7
 	 */
-	public void cuddle() {
+	public void cuddle(View view) {
 
 		model.setCuddleLevel(model.getCuddleLevel() + 7);
 		handler.sendMessage(handler.obtainMessage());
@@ -305,20 +305,20 @@ public class MainActivity extends Activity {
 	/**
 	 * increases energylevel by 50
 	 */
-	public void sleep() {
+	public void sleep(View view) {
 		model.setEnergyLevel(model.getEnergyLevel() + 50);
 		handler.sendMessage(handler.obtainMessage());
 
 	}
 
 
-	public void removePoo() {
+	public void removePoo(View view) {
 		model.setHasPooedOrNot(false);
 		handler.sendMessage(handler.obtainMessage());
 
 	}
 
-	public void cure() {
+	public void cure(View view) {
 		model.setIllness(false);
 		handler.sendMessage(handler.obtainMessage());
 
