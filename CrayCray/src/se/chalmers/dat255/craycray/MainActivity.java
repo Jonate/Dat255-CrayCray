@@ -44,6 +44,8 @@ import android.app.DialogFragment;
 import android.app.FragmentManager;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.graphics.Color;
+import android.graphics.PorterDuff.Mode;
 import android.util.Log;
 import android.view.Menu;
 import android.view.View;
@@ -133,7 +135,7 @@ public class MainActivity extends Activity {
 		cleanBar = (ProgressBar) findViewById(R.id.cleanBar);
 		energyBar = (ProgressBar) findViewById(R.id.energyBar);
 		crayCray = (ImageView) findViewById(R.id.crayCray);
-
+		
 		model = NeedsModel.getInstance();
 
 		//sets the latest values of the progressbars
