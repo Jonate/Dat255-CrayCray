@@ -77,7 +77,7 @@ public class NeedsModel {
 		return ill;
 	}
 	
-	public synchronized boolean hasPooed(){
+	public synchronized boolean getHasPooed(){
 		return hasPooed;
 	}
 
@@ -155,15 +155,22 @@ public class NeedsModel {
 	 * @param pooNeed
 	 */
 	public synchronized void setPooLevel(int pooNeed){
-		if(pooNeed <= 0){
-			setHasPooedOrNot(true);
-//			cleanLevel = cleanLevel - 20;
-			pooLevel = 100;
-		}else if(pooNeed < 100 && pooNeed > 0){
+		
+		
+		if(pooNeed <=0){
+			//throw new IllegalArgumentException();
+			pooLevel = 0;
+		}else if(pooNeed < 100 && pooNeed >0){
 			pooLevel = pooNeed;
 		}else{
 			pooLevel = 100;
 		}
+//		}else if(pooNeed >= 5){
+//			pooLevel = 5;
+//			hasPooed =true;
+//		}
+//		
+//			cleanLevel = cleanLevel - 20;
 	}
 	
 	
@@ -177,7 +184,7 @@ public class NeedsModel {
 	/**
 	 * Set if CrayCray has pooed or not. 
 	 */
-	public synchronized void setHasPooedOrNot(boolean bool){
+	public synchronized void setHasPooed(boolean bool){
 		hasPooed = bool;
 	}
 	
