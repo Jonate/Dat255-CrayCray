@@ -72,7 +72,7 @@ public class MainActivity extends Activity {
 	private ImageView crayCray;
 
 	private NeedsModel model;
-	private String deathCause = "";
+	private boolean isDead = false;
 	private Thread t;
 	private AlertDialog.Builder alertDialog;
 
@@ -98,7 +98,8 @@ public class MainActivity extends Activity {
 			
 			if (msg.obj instanceof DeadException) {
 				DeadException exception = (DeadException) msg.obj;
-				String message = exception.getDeathCause();
+				isDead = true;
+//				String message = exception.getDeathCause();
 //				alertDialog.setMessage(message);
 //				alertDialog.show();
 			}
@@ -181,8 +182,13 @@ public class MainActivity extends Activity {
 						setCrayExpression(1, model.getCleanLevel());
 						setCrayExpression(2, model.getHungerLevel());
 						
+						//if he is dirty send a dirty-notification
+						if(model.getCleanLevel()==0){
+							notifications.sendDirtyNotification();
+						}
+						
 						handler.sendMessage(handler.obtainMessage());
-						Thread.sleep(1000);
+						Thread.sleep(100);
 					} catch (Exception e) {
 						if (e instanceof DeadException) {
 							notifications.sendDeadNotification();
@@ -223,6 +229,7 @@ public class MainActivity extends Activity {
 				model.setPooLevel(dbA.getValue(DatabaseConstants.POO));
 			} catch (DeadException e) {
 				if (e instanceof DeadException) {
+					setCrayExpression(2,0);
 					notifications.sendDeadNotification();
 					Message msg = Message.obtain();
 					msg.obj = e;

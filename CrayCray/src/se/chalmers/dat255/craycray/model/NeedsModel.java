@@ -94,7 +94,7 @@ public class NeedsModel {
 	 */
 	public synchronized void setHungerLevel(int hunger) throws DeadException{
 		if(hunger <= 0){
-			throw new DeadException("OMG! you killed CrayCray...");
+			throw new DeadException("OMG! CrayCray starved to death");
 		}else if(hunger < 100 && hunger > 0){
 			hungerLevel = hunger;
 
