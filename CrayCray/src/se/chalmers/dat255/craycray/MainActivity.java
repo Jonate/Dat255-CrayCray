@@ -191,12 +191,14 @@ public class MainActivity extends Activity {
 						//check if pooImage should be drawn or not
 						drawPooImage(model.getPooLevel());
 						
+						cleanButton.setClickable(cleanability);
+						
 						//update the expression of CrayCray
 						setCrayExpression(1, model.getCleanLevel());
 						setCrayExpression(2, model.getHungerLevel());
 						
 						handler.sendMessage(handler.obtainMessage());
-						Thread.sleep(1000);
+						Thread.sleep(2000);
 					} catch (Exception e) {
 						if (e instanceof DeadException) {
 							Message msg = Message.obtain();
@@ -357,12 +359,11 @@ public class MainActivity extends Activity {
 
 		pooImage = (ImageView) findViewById(R.id.pooImage);
 		if(level <= 100 && level > 50 ){
-			
-			pooImage.setVisibility(ImageView.INVISIBLE);
+			setPoo(2);
 			handler.sendMessage(handler.obtainMessage());
 		}else if(level<=50 && level >= 20){
 			System.out.println("Pooped!!!!!");
-			pooImage.setVisibility(ImageView.VISIBLE);
+			setPoo(1);
 			cleanability = false;
 			handler.sendMessage(handler.obtainMessage());
 		}else if(level < 20){
@@ -415,6 +416,26 @@ public class MainActivity extends Activity {
 			System.out.println("inside base-case" + level);
 			expression = R.drawable.regular_baby;
 			crayCray.setImageResource(expression);
+		}
+	}
+	
+	public void setPoo(int pooOrNot){
+		int image;
+		switch (pooOrNot){
+		
+		case 1:
+			image = R.drawable.poo;
+			pooImage.setImageResource(image);
+			break;
+		
+		case 2:
+			image = R.drawable.invisible;
+			pooImage.setImageResource(image);
+			break;
+		
+		default:
+			image = R.drawable.invisible;
+			pooImage.setImageResource(image);
 		}
 	}
 
