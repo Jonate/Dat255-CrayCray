@@ -76,7 +76,9 @@ public class MainActivity extends Activity {
 	private NeedsModel model;
 	private Thread t;
 	private AlertDialog.Builder alertDialog;
-
+	
+	private boolean cleanability = true;
+	
 	private DatabaseAdapter dbA;
 	
 	// A Handler to take care of updates in UI-thread
@@ -167,8 +169,8 @@ public class MainActivity extends Activity {
 				while (true) {
 					try {
 						model.setHungerLevel(model.getHungerLevel()-1);
-						model.setCleanLevel(model.getCleanLevel() - 1);
-						model.setCuddleLevel(model.getCuddleLevel() - 2);
+						model.setCleanLevel(model.getCleanLevel() - 3);
+						model.setCuddleLevel(model.getCuddleLevel() - 1);
 						model.setPooLevel(model.getPooLevel() -10);
 						model.setEnergyLevel(model.getEnergyLevel() - 1);
 						
@@ -299,13 +301,14 @@ public class MainActivity extends Activity {
 	 * increases cleanlevel by 10
 	 */
 	public void clean(View view) {
-
-		model.setCleanLevel(model.getCleanLevel() + 10);
-		if(model.getCleanLevel()>50){
-			setCrayExpression(-1, -1);
-		}
+		if(cleanability){
+			model.setCleanLevel(model.getCleanLevel() + 10);
+			if(model.getCleanLevel()>50){
+				setCrayExpression(-1, -1);
+			}
+		
 		handler.sendMessage(handler.obtainMessage());
-
+		}
 	}
 	/**
 	 * increases cuddlelevel by 7
@@ -332,9 +335,9 @@ public class MainActivity extends Activity {
 	 * @param view
 	 */
 	public void removePoo(View view) {
-		//model.setHasPooed(false);
 		model.setPooLevel(model.getPooLevel() + 50);
 		drawPooImage(model.getPooLevel());
+		cleanability = true;
 		handler.sendMessage(handler.obtainMessage());
 
 	}
@@ -345,6 +348,7 @@ public class MainActivity extends Activity {
 
 	}
 	
+	
 	/**
 	 * Check if pooImage should be drawn or not.
 	 * @param level
@@ -352,17 +356,22 @@ public class MainActivity extends Activity {
 	public void drawPooImage(int level){
 
 		pooImage = (ImageView) findViewById(R.id.pooImage);
-		if(level < 100 && level > 50 ){
+		if(level <= 100 && level > 50 ){
 			
 			pooImage.setVisibility(ImageView.INVISIBLE);
-		
-		}else if(level<=50){
-			Log.w("CrayCray", "pooImage");
+			handler.sendMessage(handler.obtainMessage());
+		}else if(level<=50 && level >= 20){
+			System.out.println("Pooped!!!!!");
 			pooImage.setVisibility(ImageView.VISIBLE);
-
+			cleanability = false;
+			handler.sendMessage(handler.obtainMessage());
+		}else if(level < 20){
+			model.setCleanLevel(model.getCleanLevel() - 5);
 		}
 		
 	}
+	
+
 	
 	/**
 	 * set correct image of craycray based on the different levels.
@@ -382,7 +391,11 @@ public class MainActivity extends Activity {
 				System.out.println("inside case 1 (dirty)" + level);
 				expression = R.drawable.dirty_baby;
 				crayCray.setImageResource(expression);
-
+				
+			}if( level <= 20){
+				expression = R.drawable.sick_baby;		//If CrayCray has too low cleanLevel he will
+				crayCray.setImageResource(expression); 	// become sick and show a pic of a sick CrayCray
+				model.setIllness(true);
 			}
 			break;
 		// check hungryLvl
