@@ -1,6 +1,7 @@
 package se.chalmers.dat255.craycray.model;
 
 
+
 import java.util.TimerTask;
 import se.chalmers.dat255.craycray.R;
 import android.util.Log;
@@ -27,6 +28,9 @@ public class NeedsModel {
 	
 	private boolean ill;
 	private boolean hasPooed;
+	private boolean isAlive;
+	
+	private String deathCause;
 	
 	private NeedsModel(){
 		hungerLevel = 100;
@@ -36,7 +40,8 @@ public class NeedsModel {
 		energyLevel = 100;
 		
 		ill = false;
-		hasPooed = false;		
+		hasPooed = false;
+		isAlive = true;
 	}
 
 	/**
@@ -74,6 +79,10 @@ public class NeedsModel {
 		return energyLevel;
 	}
 	
+	public synchronized String getDeathCause(){
+		return deathCause;
+	}
+	
 	public synchronized boolean isIll(){
 		return ill;
 	}
@@ -81,6 +90,11 @@ public class NeedsModel {
 	public synchronized boolean hasPooed(){
 		return hasPooed;
 	}
+	
+	public synchronized boolean isAlive(){
+		return isAlive;
+	}
+	
 
 	/*
 	 * Setters for needs.
@@ -94,7 +108,9 @@ public class NeedsModel {
 	 */
 	public synchronized void setHungerLevel(int hunger) throws DeadException{
 		if(hunger <= 0){
-			throw new DeadException("OMG! CrayCray starved to death");
+			isAlive = false;
+			deathCause = "OMG! CrayCray starved to death";
+			throw new DeadException(deathCause);
 		}else if(hunger < 100 && hunger > 0){
 			hungerLevel = hunger;
 
@@ -195,7 +211,9 @@ public class NeedsModel {
 	}
 	
 	private void killWhenIll() throws DeadException{
-		throw new DeadException("CrayCray died of illness!");
+		isAlive = false;
+		deathCause = "CrayCray died of illness!";
+		throw new DeadException(deathCause);
 	}
 	
 
