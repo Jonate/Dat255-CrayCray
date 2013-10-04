@@ -108,7 +108,9 @@ public class MainActivity extends Activity{
 			crayView.invalidate();
 
 			if(msg.obj instanceof DeadException){
-				announceDeath();
+
+				DeadException e = (DeadException)msg.obj;
+				announceDeath(e);
 
 			}
 
@@ -483,12 +485,12 @@ public class MainActivity extends Activity{
 	 * if the window is in focus a pop-up with a death announcement shows up
 	 * if the window is not in focus a notification with a death announcement shows up
 	 */
-	public void announceDeath(){
+	public void announceDeath(DeadException e){
 		setCrayExpression(2,0);
 		if(!hasWindowFocus()){
 			notifications.sendDeadNotification();
 		} else{
-			String message = model.getDeathCause();
+			String message = e.getDeathCause();
 			createDeathAlert().setMessage(message).show();
 		}
 	}
