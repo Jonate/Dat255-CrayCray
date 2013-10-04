@@ -432,6 +432,12 @@ public class MainActivity extends Activity {
 			crayCray.setImageResource(expression);
 		}
 	}
+	
+	/**
+	 * set image of poo or an "invisible" picture 
+	 * to visualize removing the poopicture
+	 * @param pooOrNot
+	 */
 	public void setPoo(int pooOrNot){
 		int image;
 		switch (pooOrNot){
