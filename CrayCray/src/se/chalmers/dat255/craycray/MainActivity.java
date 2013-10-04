@@ -73,7 +73,6 @@ public class MainActivity extends Activity {
 	private ProgressBar energyBar;
 
 	private ImageView crayCray;
-
 	private ImageView pooImage;
 	// private String deathCause; onödig?
 
@@ -81,6 +80,11 @@ public class MainActivity extends Activity {
 	private boolean isDead = false;
 	private Thread t;
 	private AlertDialog.Builder alertDialog;
+	
+	private final int HUNGER = 1;
+	private final int CLEANNESS = 2;
+	private final int HAPPINESS = 3;
+	private final int ENERGY = 4;
 
 	private boolean cleanability = true;
 
@@ -192,10 +196,13 @@ public class MainActivity extends Activity {
 						// check if pooImage should be drawn or not
 						cleanButton.setClickable(cleanability);
 						
+						
 						// update the expression of CrayCray
-						setCrayExpression(1, model.getCleanLevel());
-						setCrayExpression(2, model.getHungerLevel());
-
+						setCrayExpression(CLEANNESS, model.getCleanLevel());
+						setCrayExpression(HUNGER, model.getHungerLevel());
+//						setCrayExpression(HAPPINESS, model.getCuddleLevel());
+//						setCrayExpression(ENERGY, model.getEnergyLevel());
+						drawPooImage(model.getPooLevel());
 						// if he is dirty send a dirty-notification
 						if (model.getCleanLevel() == 0) {
 							notifications.sendDirtyNotification();
@@ -394,7 +401,7 @@ public class MainActivity extends Activity {
 		switch (mode) {
 
 		// check dirtyLvl
-		case 1:
+		case CLEANNESS:
 			if (level < 50) {
 				System.out.println("inside case 1 (dirty)" + level);
 				expression = R.drawable.dirty_baby;
@@ -408,12 +415,10 @@ public class MainActivity extends Activity {
 				crayCray.setImageResource(expression); // become sick and show a
 														// pic of a sick
 														// CrayCray
-				model.setIllness(true);
-				cleanButton.setClickable(false);
 			}
 			break;
 		// check hungryLvl
-		case 2:
+		case HUNGER:
 			if (level == 0) {
 				expression = R.drawable.dead_baby;
 				crayCray.setImageResource(expression);
@@ -425,6 +430,19 @@ public class MainActivity extends Activity {
 
 			}
 			break;
+//			// check hungryLvl
+//			case HAPPINESS:
+//				if (level == 0) {
+//					expression = R.drawable.dead_baby;
+//					crayCray.setImageResource(expression);
+//
+//				} else if (level < 50) {
+//					System.out.println("inside case 1 (hungry)" + level);
+//					expression = R.drawable.feed_baby; 
+//					crayCray.setImageResource(expression);
+//
+//				}
+//				break;
 		default:
 			System.out.println("inside base-case" + level);
 			expression = R.drawable.regular_baby;

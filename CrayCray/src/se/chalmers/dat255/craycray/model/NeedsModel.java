@@ -106,15 +106,11 @@ public class NeedsModel {
 	public synchronized void setCleanLevel(int clean){
 		if(clean <= 0){
 			cleanLevel = 0;
+			setIllness(true);
 		}else if(clean < 100 && clean > 0){
 			cleanLevel = clean;
 		}else{
 			cleanLevel = 100;
-		}
-		
-		//decide whether craycray should get ill
-		if(cleanLevel<25){
-			setIllness(true);
 		}
 	}
 	
