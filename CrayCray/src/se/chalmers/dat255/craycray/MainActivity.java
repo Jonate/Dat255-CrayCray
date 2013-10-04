@@ -47,6 +47,7 @@ import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.LightingColorFilter;
 import android.graphics.PorterDuff.Mode;
+import android.graphics.Rect;
 import android.graphics.drawable.Drawable;
 import android.util.Log;
 import android.view.Menu;
@@ -56,7 +57,9 @@ import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
-import android.widget.TextView;
+
+
+
 
 public class MainActivity extends Activity {
 
@@ -139,12 +142,12 @@ public class MainActivity extends Activity {
 		crayCray = (ImageView) findViewById(R.id.crayCray);
 	
 		//Sets the color of the progressbar
-		foodBar.getProgressDrawable().setColorFilter(Color.RED, Mode.MULTIPLY);
-		cuddleBar.getProgressDrawable().setColorFilter(Color.YELLOW, Mode.MULTIPLY);
-		cleanBar.getProgressDrawable().setColorFilter(Color.GREEN, Mode.MULTIPLY);
-		energyBar.getProgressDrawable().setColorFilter(Color.BLUE, Mode.MULTIPLY);
-		
-		
+		foodBar.getProgressDrawable().setColorFilter(Color.parseColor("#33FF99"), Mode.MULTIPLY);
+		cuddleBar.getProgressDrawable().setColorFilter(Color.parseColor("#FF3366"), Mode.MULTIPLY);
+		cleanBar.getProgressDrawable().setColorFilter(Color.parseColor("#66FFFF"), Mode.MULTIPLY);
+		energyBar.getProgressDrawable().setColorFilter(Color.parseColor("#FFFF66"), Mode.MULTIPLY);
+
+	
 		model = NeedsModel.getInstance();
 
 		//sets the latest values of the progressbars
