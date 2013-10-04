@@ -175,7 +175,12 @@ public class MainActivity extends Activity{
 						model.setCleanLevel(model.getCleanLevel() - 3);
 						model.setCuddleLevel(model.getCuddleLevel() - 1);
 						model.setPooLevel(model.getPooLevel() - 10);
-						model.setEnergyLevel(model.getEnergyLevel() - 1);
+						
+						if(model.isSleeping()){
+							model.setEnergyLevel(model.getEnergyLevel() + 5);
+						}else{
+							model.setEnergyLevel(model.getEnergyLevel() - 1);
+						}
 
 						// check if pooImage should be drawn or not
 						cleanButton.setClickable(cleanability);
@@ -185,7 +190,7 @@ public class MainActivity extends Activity{
 						setCrayExpression(CLEANNESS, model.getCleanLevel());
 						setCrayExpression(HUNGER, model.getHungerLevel());
 						setCrayExpression(HAPPINESS, model.getCuddleLevel());
-//						setCrayExpression(ENERGY, model.getEnergyLevel());
+						setCrayExpression(ENERGY, model.getEnergyLevel());
 						drawPooImage(model.getPooLevel());
 						// if he is dirty send a dirty-notification
 						if (model.getCleanLevel() == 0) {
@@ -324,8 +329,8 @@ public class MainActivity extends Activity{
 	 * increases energylevel by 50
 	 */
 	public void sleep(View view) {
-		model.setEnergyLevel(model.getEnergyLevel() + 50);
 		handler.sendMessage(handler.obtainMessage());
+		model.setSleep(true);
 
 	}
 
@@ -384,6 +389,28 @@ public class MainActivity extends Activity{
 	public void setCrayExpression(int mode, int level) {
 		int expression;
 		switch (mode) {
+		
+		case ENERGY:
+			if (level == 0) {
+				model.setSleep(true);
+				expression = R.drawable.sleeping_baby;
+				crayView.setImageResource(expression);
+				
+				feedButton.setActivated(false);
+				cuddleButton.setActivated(false);
+				cleanButton.setActivated(false);
+				energyButton.setActivated(false);
+				removePooButton.setActivated(false);
+				
+			}else if(level == 100){
+				model.setSleep(false);
+				feedButton.setActivated(true);
+				cuddleButton.setActivated(true);
+				cleanButton.setActivated(true);
+				energyButton.setActivated(true);
+				removePooButton.setActivated(true);
+			}
+			break;
 
 		// check dirtyLvl
 		case CLEANNESS:
@@ -414,6 +441,7 @@ public class MainActivity extends Activity{
 
 				}
 				break;
+			
 		default:
 			System.out.println("inside base-case" + level);
 			expression = R.drawable.regular_baby;
