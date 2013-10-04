@@ -5,6 +5,12 @@ import se.chalmers.dat255.craycray.model.NeedsModel;
 import android.test.AndroidTestCase;
 import junit.framework.TestCase;
 	
+
+	/**
+	 * 
+	 * A class for testing NeedsModel class.
+	 *
+	 */
 	public class NeedsModelTest extends AndroidTestCase{
 		
 		public void singletonTest(){
