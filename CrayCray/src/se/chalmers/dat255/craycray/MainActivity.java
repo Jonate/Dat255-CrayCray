@@ -76,7 +76,6 @@ public class MainActivity extends Activity{
 
 	private NeedsModel model;
 	private Thread t;
-	private AlertDialog.Builder alertDialog;
 
 	private DatabaseAdapter dbA;
 	NotificationSender notifications = new NotificationSender(this);
@@ -98,6 +97,9 @@ public class MainActivity extends Activity{
 			//force imageview to update
 			crayView.invalidate();
 
+			if(msg.obj instanceof DeadException){
+				announceDeath();
+			}
 
 		}
 	};
@@ -170,7 +172,9 @@ public class MainActivity extends Activity{
 						Thread.sleep(100);
 					} catch (Exception e) {
 						if (e instanceof DeadException) {
-							announceDeath();
+							Message msg = Message.obtain();
+							msg.obj = e;
+							handler.sendMessage(msg);
 							break;
 						}
 					}
@@ -207,8 +211,9 @@ public class MainActivity extends Activity{
 				model.setPooLevel(dbA.getValue(DatabaseConstants.POO));
 			} catch (DeadException e) {
 				if (e instanceof DeadException) {
-					announceDeath();
-					
+					Message msg = Message.obtain();
+					msg.obj = e;
+					handler.sendMessage(msg);
 				}
 			}
 
@@ -353,9 +358,9 @@ public class MainActivity extends Activity{
 	/**
 	 * Creates a pop-up with a death announcement
 	 */
-	public void createDeathAlert(){
+	public AlertDialog.Builder createDeathAlert(){
 		
-		alertDialog = new AlertDialog.Builder(this);
+		AlertDialog.Builder alertDialog = new AlertDialog.Builder(this);
 		alertDialog.setTitle("Game Over");
 		alertDialog.setPositiveButton("New Game",
 				new DialogInterface.OnClickListener() {
@@ -370,6 +375,8 @@ public class MainActivity extends Activity{
 			}
 		});
 		
+		return alertDialog;
+		
 	}
 	
 	/**
@@ -383,8 +390,7 @@ public class MainActivity extends Activity{
 			notifications.sendDeadNotification();
 		} else{
 			String message = model.getDeathCause();
-			alertDialog.setMessage(message);
-			alertDialog.show();
+			createDeathAlert().setMessage(message).show();
 		}
 	}
 	
