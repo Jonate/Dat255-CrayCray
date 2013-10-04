@@ -180,6 +180,11 @@ public class MainActivity extends Activity{
 						// check if pooImage should be drawn or not
 						cleanButton.setClickable(cleanability);
 						
+						System.out.println("Hunger" +model.getHungerLevel());
+						System.out.println("Clean" + model.getCleanLevel());
+						System.out.println("Cuddle" + model.getCuddleLevel());
+						System.out.println("Energy" + model.getEnergyLevel());
+						
 						
 						// update the expression of CrayCray
 						setCrayExpression(CLEANNESS, model.getCleanLevel());
