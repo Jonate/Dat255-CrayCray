@@ -166,7 +166,7 @@ public class MainActivity extends Activity{
 			public void run() {
 				while (true) {
 					try {
-						model.setHungerLevel(model.getHungerLevel()-1);
+						model.setHungerLevel(model.getHungerLevel()-10);
 						model.setCleanLevel(model.getCleanLevel() - 3);
 						model.setCuddleLevel(model.getCuddleLevel() - 1);
 						model.setPooLevel(model.getPooLevel() -10);
