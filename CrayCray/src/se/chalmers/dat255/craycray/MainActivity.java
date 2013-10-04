@@ -138,23 +138,6 @@ public class MainActivity extends Activity{
 		cleanBar.setProgress(model.getCleanLevel());
 		energyBar.setProgress(model.getEnergyLevel());
 
-		
-		alertDialog = new AlertDialog.Builder(this);
-		alertDialog.setTitle("Game Over");
-		alertDialog.setPositiveButton("New Game",
-				new DialogInterface.OnClickListener() {
-			public void onClick(DialogInterface dialog, int id) {
-
-			}
-		});
-		alertDialog.setNegativeButton("Cancel",
-				new DialogInterface.OnClickListener() {
-			public void onClick(DialogInterface dialog, int id) {
-
-			}
-		});
-
-
 		t = new Thread(new Runnable() {
 
 			@Override
@@ -264,7 +247,7 @@ public class MainActivity extends Activity{
 		dbA.updateValue(DatabaseConstants.POO, model.getPooLevel());
 		dbA.updateStringValue(DatabaseConstants.TIME, TimeUtil.getCurrentTime());
 	}
-
+	
 	/**
 	 * increases hungerlevel by 5
 	 */
@@ -367,6 +350,33 @@ public class MainActivity extends Activity{
 		}
 	}
 
+	/**
+	 * Creates a pop-up with a death announcement
+	 */
+	public void createDeathAlert(){
+		
+		alertDialog = new AlertDialog.Builder(this);
+		alertDialog.setTitle("Game Over");
+		alertDialog.setPositiveButton("New Game",
+				new DialogInterface.OnClickListener() {
+			public void onClick(DialogInterface dialog, int id) {
+
+			}
+		});
+		alertDialog.setNegativeButton("Cancel",
+				new DialogInterface.OnClickListener() {
+			public void onClick(DialogInterface dialog, int id) {
+
+			}
+		});
+		
+	}
+	
+	/**
+	 * Checks if the window is in focus,
+	 * if the window is in focus a pop-up with a death announcement shows up
+	 * if the window is not in focus a notification with a death announcement shows up
+	 */
 	public void announceDeath(){
 		setCrayExpression(2,0);
 		if(!hasWindowFocus()){
