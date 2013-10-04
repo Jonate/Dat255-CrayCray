@@ -27,6 +27,7 @@ public class NeedsModel {
 	private int energyLevel;
 	
 	private boolean ill;
+	private boolean sleeping;
 	
 	private NeedsModel(){
 		hungerLevel = 100;
@@ -76,6 +77,10 @@ public class NeedsModel {
 	
 	public synchronized boolean isIll(){
 		return ill;
+	}
+	
+	public synchronized boolean isSleeping(){
+		return sleeping;
 	}
 	
 
@@ -165,8 +170,15 @@ public class NeedsModel {
 	/**
 	 * Set if CrayCray is ill or not. 
 	 */
-	public synchronized void setIllness(boolean bool){
-		this.ill = bool;
+	public synchronized void setIllness(boolean state){
+		this.ill = state;
+	}
+	
+	/**
+	 * Set if CrayCray is asleep or not. 
+	 */
+	public synchronized void setSleep(boolean state){
+		this.sleeping = state;
 	}
 	
 
