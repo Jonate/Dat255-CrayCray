@@ -172,11 +172,6 @@ public class MainActivity extends Activity{
 						Thread.sleep(100);
 					} catch (Exception e) {
 						if (e instanceof DeadException) {
-<<<<<<< HEAD
-=======
-							setCrayExpression(2,0);
-							notifications.sendDeadNotification();
->>>>>>> Dev
 							Message msg = Message.obtain();
 							msg.obj = e;
 							handler.sendMessage(msg);
