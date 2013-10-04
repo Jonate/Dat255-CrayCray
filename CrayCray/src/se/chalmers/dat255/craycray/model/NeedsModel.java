@@ -115,7 +115,7 @@ public class NeedsModel {
 	public synchronized void setCleanLevel(int clean){
 		if(clean <= 0){
 			cleanLevel = 0;
-			setIllness(true);
+//			setIllness(true);
 		}else if(clean < 100 && clean > 0){
 			cleanLevel = clean;
 		}else{
@@ -182,10 +182,10 @@ public class NeedsModel {
 	}
 	
 
-	private void killWhenIll() throws DeadException{
-		String deathCause = "CrayCray died of illness!";
-		throw new DeadException(deathCause);
-	}
+//	private void killWhenIll() throws DeadException{
+//		String deathCause = "CrayCray died of illness!";
+//		throw new DeadException(deathCause);
+//	}
 	
 
 }

@@ -112,10 +112,6 @@ public class MainActivity extends Activity{
 
 				DeadException e = (DeadException)msg.obj;
 				announceDeath(e);
-<<<<<<< HEAD
-=======
-
->>>>>>> fe226eb43a3640bab5ff123ecda39258203dfbd9
 			}
 
 		}
@@ -157,9 +153,10 @@ public class MainActivity extends Activity{
 		cuddleBar.getProgressDrawable().setColorFilter(Color.parseColor("#FF3366"), Mode.MULTIPLY);
 		cleanBar.getProgressDrawable().setColorFilter(Color.parseColor("#66FFFF"), Mode.MULTIPLY);
 		energyBar.getProgressDrawable().setColorFilter(Color.parseColor("#FFFF66"), Mode.MULTIPLY);
-
+		
 		model = NeedsModel.getInstance();
-
+		cureButton.setVisibility(ImageView.INVISIBLE);
+		
 		// sets the latest values of the progressbars
 		foodBar.setProgress(model.getHungerLevel());
 		cuddleBar.setProgress(model.getCuddleLevel());
@@ -222,7 +219,7 @@ public class MainActivity extends Activity{
 //						}
 						
 						//if CrayCray is dirty send a dirty-notification
-						if(model.getCleanLevel()==1){
+						if(model.getCleanLevel()<20){
 							if(!hasWindowFocus()){
 								notifications.sendDirtyNotification();
 							}
@@ -440,6 +437,7 @@ public class MainActivity extends Activity{
 			if (level < 50) {
 				System.out.println("inside case 1 (dirty)" + level);
 				expression = R.drawable.dirty_baby;
+				crayView.setImageResource(expression);
 			}
 		// check hungryLvl
 		case HUNGER:
