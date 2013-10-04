@@ -26,7 +26,6 @@ public class NeedsModel {
 	private int energyLevel;
 	
 	private boolean ill;
-	private boolean hasPooed;
 	
 	private NeedsModel(){
 		hungerLevel = 100;
@@ -34,8 +33,8 @@ public class NeedsModel {
 		cleanLevel = 100;
 		pooLevel = 100;
 		energyLevel = 100;
+		
 		ill = false;
-		hasPooed = false;		
 	}
 
 	/**
@@ -77,9 +76,6 @@ public class NeedsModel {
 		return ill;
 	}
 	
-	public synchronized boolean hasPooed(){
-		return hasPooed;
-	}
 
 	/*
 	 * Setters for needs.
@@ -93,7 +89,7 @@ public class NeedsModel {
 	 */
 	public synchronized void setHungerLevel(int hunger) throws DeadException{
 		if(hunger <= 0){
-			throw new DeadException("OMG! you killed CrayCray...");
+			throw new DeadException("OMG! CrayCray starved to death");
 		}else if(hunger < 100 && hunger > 0){
 			hungerLevel = hunger;
 
@@ -155,11 +151,10 @@ public class NeedsModel {
 	 * @param pooNeed
 	 */
 	public synchronized void setPooLevel(int pooNeed){
-		if(pooNeed <= 0){
-			setHasPooedOrNot(true);
-//			cleanLevel = cleanLevel - 20;
-			pooLevel = 100;
-		}else if(pooNeed < 100 && pooNeed > 0){
+		
+		if(pooNeed <=0){
+			pooLevel = 0;
+		}else if(pooNeed < 100 && pooNeed >0){
 			pooLevel = pooNeed;
 		}else{
 			pooLevel = 100;
@@ -171,15 +166,15 @@ public class NeedsModel {
 	 * Set if CrayCray is ill or not. 
 	 */
 	public synchronized void setIllness(boolean bool){
-		this.ill = ill;
+		this.ill = bool;
 	}
 	
-	/**
-	 * Set if CrayCray has pooed or not. 
-	 */
-	public synchronized void setHasPooedOrNot(boolean bool){
-		hasPooed = bool;
-	}
+//	/**
+//	 * Set if CrayCray has pooed or not. 
+//	 */
+//	public synchronized void setHasPooed(boolean bool){
+//		hasPooed = bool;
+//	}
 	
 	/*
 	 * Nestled class for killing CrayCray when it has been ill 
