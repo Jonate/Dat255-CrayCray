@@ -41,7 +41,10 @@ import android.os.Handler;
 import android.os.Message;
 import android.content.Intent;
 import android.graphics.Color;
+import android.graphics.LightingColorFilter;
 import android.graphics.PorterDuff.Mode;
+import android.graphics.Rect;
+import android.graphics.drawable.Drawable;
 import android.util.Log;
 import android.view.Menu;
 import android.view.View;
@@ -50,7 +53,9 @@ import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
-import android.widget.TextView;
+
+
+
 
 public class MainActivity extends Activity {
 
@@ -141,6 +146,12 @@ public class MainActivity extends Activity {
 		cleanBar = (ProgressBar) findViewById(R.id.cleanBar);
 		energyBar = (ProgressBar) findViewById(R.id.energyBar);
 		crayCray = (ImageView) findViewById(R.id.crayCray);
+
+		//Sets the color of the progressbar
+		foodBar.getProgressDrawable().setColorFilter(Color.parseColor("#33FF99"), Mode.MULTIPLY);
+		cuddleBar.getProgressDrawable().setColorFilter(Color.parseColor("#FF3366"), Mode.MULTIPLY);
+		cleanBar.getProgressDrawable().setColorFilter(Color.parseColor("#66FFFF"), Mode.MULTIPLY);
+		energyBar.getProgressDrawable().setColorFilter(Color.parseColor("#FFFF66"), Mode.MULTIPLY);
 
 		model = NeedsModel.getInstance();
 
@@ -421,7 +432,13 @@ public class MainActivity extends Activity {
 		}
 	}
 
-	public void setPoo(int pooOrNot) {
+	
+	/**
+	 * set image of poo or an "invisible" picture 
+	 * to visualize removing the poopicture
+	 * @param pooOrNot
+	 */
+	public void setPoo(int pooOrNot){
 		int image;
 		switch (pooOrNot) {
 
