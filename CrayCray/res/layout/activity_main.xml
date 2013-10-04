@@ -1,0 +1,125 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content" >
+
+    <ProgressBar
+        android:id="@+id/foodBar"
+        style="?android:attr/progressBarStyleHorizontal"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentTop="true"
+        android:max="100" />
+
+    <ProgressBar
+        android:id="@+id/cuddleBar"
+        style="?android:attr/progressBarStyleHorizontal"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentLeft="true"
+        android:layout_below="@id/foodBar"
+        android:max="100" />
+
+    <ProgressBar
+        android:id="@+id/cleanBar"
+        style="?android:attr/progressBarStyleHorizontal"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentLeft="true"
+        android:layout_below="@id/cuddleBar"
+        android:max="100" />
+
+    <ProgressBar
+        android:id="@+id/energyBar"
+        style="?android:attr/progressBarStyleHorizontal"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentLeft="true"
+        android:layout_below="@id/cleanBar"
+        android:max="100" />
+
+    <ImageView
+        android:id="@+id/foodIcon"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignLeft="@id/foodBar"
+        android:layout_alignParentTop="true"
+        android:minHeight="20dp"
+        android:minWidth="20dp"
+        android:src="@drawable/icon_food" />
+
+    <ImageButton
+        android:id="@+id/feedButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentLeft="true"
+        android:layout_below="@id/energyBar"
+        android:layout_marginTop="50dp"
+        android:maxHeight="57dp"
+        android:maxWidth="57dp"
+        android:onClick="feed" />
+
+    <ImageButton
+        android:id="@+id/cuddleButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentLeft="true"
+        android:layout_below="@id/feedButton"
+        android:layout_margin="1dp"
+        android:onClick="cuddle" />
+
+    <ImageButton
+        android:id="@+id/cleanButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentLeft="true"
+        android:layout_below="@id/cuddleButton"
+        android:layout_margin="1dp"
+        android:onClick="clean" />
+
+    <ImageButton
+        android:id="@+id/energyButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentLeft="true"
+        android:layout_below="@id/cleanButton"
+        android:layout_margin="1dp"
+        android:onClick="sleep" />
+
+    <ImageButton
+        android:id="@+id/removePooButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentLeft="true"
+        android:layout_below="@id/energyButton"
+        android:layout_margin="1dp"
+        android:onClick="removePoo" />
+
+    <ImageButton
+        android:id="@+id/cureButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentLeft="true"
+        android:layout_below="@id/removePooButton"
+        android:layout_margin="1dp"
+        android:onClick="cure" />
+
+    <ImageView
+        android:id="@+id/crayCray"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_above="@+id/removePooButton"
+        android:layout_centerHorizontal="true"
+        android:src="@drawable/regular_baby" />
+
+    <ImageView
+        android:id="@+id/pooImage"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/crayCray"
+        android:layout_toRightOf="@id/crayCray"
+        android:src="@drawable/poo" />
+
+
+</RelativeLayout>
