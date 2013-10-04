@@ -17,6 +17,7 @@ public class NotificationSender {
 
 	private final int DEAD_NOTI = 0;
 	private final int DIRTY_NOTI = 1;
+	private final int ILL_NOTI = 2;
 
 	/**
 	 * Creates a NotificationSender with the given Context.
@@ -69,6 +70,27 @@ public class NotificationSender {
 		//Send notification.
 		NotificationManager notificationManager = (NotificationManager) ctx.getSystemService(Context.NOTIFICATION_SERVICE);
 		notificationManager.notify(DIRTY_NOTI, noti);
+	}
+	
+	/**
+	 * Creates and sends a notification telling the user
+	 * CrayCray is Ill.
+	 */
+	public void sendIllNotification(){
+		//Set activity shown when clicked.
+		Intent intent = new Intent(ctx, MainActivity.class);
+		PendingIntent pIntent = PendingIntent.getActivity(ctx, ILL_NOTI, intent, Intent.FLAG_ACTIVITY_NEW_TASK );
+		//Make notification.
+		Notification noti = new Notification.Builder(ctx)
+		.setContentTitle("I'm feeling sick :(")
+		.setContentText("Please, please cuuuuuure me!")
+		.setSmallIcon(R.drawable.sick_baby)
+		.setContentIntent(pIntent)
+		.build();		
+
+		//Send notification.
+		NotificationManager notificationManager = (NotificationManager) ctx.getSystemService(Context.NOTIFICATION_SERVICE);
+		notificationManager.notify(ILL_NOTI, noti);
 	}
 
 }

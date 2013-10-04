@@ -176,18 +176,29 @@ public class MainActivity extends Activity{
 						
 						cleanButton.setClickable(cleanability);
 						
-						//if he is dirty send a dirty-notification
-						if(model.getCleanLevel()==0){
-							notifications.sendDirtyNotification();
+						
+						//if CrayCray is sick send an ill-notification
+						if(model.getCleanLevel()==50){
+							if(!hasWindowFocus()){
+								notifications.sendIllNotification();
+							}
 						}
 						
+						//if CrayCray is dirty send a dirty-notification
+						if(model.getCleanLevel()==0){
+							if(!hasWindowFocus()){
+								notifications.sendDirtyNotification();
+							}
+						}
+						
+					
 						//update the expression of CrayCray
 						setCrayExpression(1, model.getCleanLevel());
 						setCrayExpression(2, model.getHungerLevel());
 
 						handler.sendMessage(handler.obtainMessage());
 
-						Thread.sleep(2000);
+						Thread.sleep(200);
 
 					} catch (Exception e) {
 						if (e instanceof DeadException) {
