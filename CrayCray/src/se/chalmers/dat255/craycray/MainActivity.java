@@ -112,10 +112,7 @@ public class MainActivity extends Activity{
 
 				DeadException e = (DeadException)msg.obj;
 				announceDeath(e);
-<<<<<<< HEAD
-=======
 
->>>>>>> fe226eb43a3640bab5ff123ecda39258203dfbd9
 			}
 
 		}
