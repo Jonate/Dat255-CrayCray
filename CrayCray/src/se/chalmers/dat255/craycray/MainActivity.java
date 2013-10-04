@@ -1,3 +1,4 @@
+package se.chalmers.dat255.craycray;
 /*
  * CrayCray - A game formed as a pet in you android device for the user to take care of.
  *
@@ -24,7 +25,7 @@
  *   
  */
 
-package se.chalmers.dat255.craycray;
+
 
 import se.chalmers.dat255.craycray.database.DatabaseAdapter;
 import se.chalmers.dat255.craycray.database.DatabaseConstants;
@@ -38,6 +39,7 @@ import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.os.Bundle;
 import android.os.Handler;
+import android.os.Looper;
 import android.os.Message;
 import android.content.Intent;
 import android.graphics.Color;
@@ -49,6 +51,7 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.View;
 import android.view.View.OnClickListener;
+import android.view.View.OnFocusChangeListener;
 import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.ImageView;
@@ -57,7 +60,7 @@ import android.widget.ProgressBar;
 
 
 
-public class MainActivity extends Activity {
+public class MainActivity extends Activity{
 
 	// The buttons of the application
 	private Button feedButton;
@@ -71,15 +74,13 @@ public class MainActivity extends Activity {
 	private ProgressBar cuddleBar;
 	private ProgressBar cleanBar;
 	private ProgressBar energyBar;
+	private ImageView crayView;
 
-	private ImageView crayCray;
 	private ImageView pooImage;
 	// private String deathCause; onödig?
 
 	private NeedsModel model;
-	private boolean isDead = false;
 	private Thread t;
-	private AlertDialog.Builder alertDialog;
 	
 	private final int HUNGER = 1;
 	private final int CLEANNESS = 2;
@@ -106,15 +107,12 @@ public class MainActivity extends Activity {
 			cleanBar.setProgress(model.getCleanLevel());
 			energyBar.setProgress(model.getEnergyLevel());
 
-			// force imageview to update
-			crayCray.invalidate();
+			//force imageview to update
+			crayView.invalidate();
 
-			if (msg.obj instanceof DeadException) {
-				DeadException exception = (DeadException) msg.obj;
-				isDead = true;
-				// String message = exception.getDeathCause();
-				// alertDialog.setMessage(message);
-				// alertDialog.show();
+			if(msg.obj instanceof DeadException){
+				announceDeath();
+
 			}
 
 		}
@@ -144,13 +142,13 @@ public class MainActivity extends Activity {
 		final ImageButton cureButton = (ImageButton) findViewById(R.id.cureButton);
 		cureButton.setImageResource(R.drawable.button_cure);
 
-		// Bar - variables set to xml ID
+		//Bar - variables set to xml ID
 		foodBar = (ProgressBar) findViewById(R.id.foodBar);
 		cuddleBar = (ProgressBar) findViewById(R.id.cuddleBar);
 		cleanBar = (ProgressBar) findViewById(R.id.cleanBar);
 		energyBar = (ProgressBar) findViewById(R.id.energyBar);
-		crayCray = (ImageView) findViewById(R.id.crayCray);
-
+		crayView = (ImageView) findViewById(R.id.crayCray);
+	
 		//Sets the color of the progressbar
 		foodBar.getProgressDrawable().setColorFilter(Color.parseColor("#33FF99"), Mode.MULTIPLY);
 		cuddleBar.getProgressDrawable().setColorFilter(Color.parseColor("#FF3366"), Mode.MULTIPLY);
@@ -165,20 +163,6 @@ public class MainActivity extends Activity {
 		cleanBar.setProgress(model.getCleanLevel());
 		energyBar.setProgress(model.getEnergyLevel());
 
-		// alertDialog = new AlertDialog.Builder(this);
-		// alertDialog.setTitle("Game Over");
-		// alertDialog.setPositiveButton("New Game",
-		// new DialogInterface.OnClickListener() {
-		// public void onClick(DialogInterface dialog, int id) {
-		//
-		// }
-		// });
-		// alertDialog.setNegativeButton("Cancel",
-		// new DialogInterface.OnClickListener() {
-		// public void onClick(DialogInterface dialog, int id) {
-		//
-		// }
-		// });
 
 		t = new Thread(new Runnable() {
 
@@ -214,8 +198,6 @@ public class MainActivity extends Activity {
 
 					} catch (Exception e) {
 						if (e instanceof DeadException) {
-							setCrayExpression(2, 0);
-							notifications.sendDeadNotification();
 							Message msg = Message.obtain();
 							msg.obj = e;
 							handler.sendMessage(msg);
@@ -227,6 +209,8 @@ public class MainActivity extends Activity {
 			}
 
 		});
+
+
 
 		dbA = new DatabaseAdapter(getBaseContext());
 		// checks if the database exists
@@ -254,8 +238,6 @@ public class MainActivity extends Activity {
 				model.setPooLevel(dbA.getValue(DatabaseConstants.POO));
 			} catch (DeadException e) {
 				if (e instanceof DeadException) {
-					setCrayExpression(2, 0);
-					notifications.sendDeadNotification();
 					Message msg = Message.obtain();
 					msg.obj = e;
 					handler.sendMessage(msg);
@@ -269,6 +251,7 @@ public class MainActivity extends Activity {
 		cleanBar.setProgress(model.getCleanLevel());
 		energyBar.setProgress(model.getEnergyLevel());
 	}
+
 
 	@Override
 	public void onStart() {
@@ -289,15 +272,14 @@ public class MainActivity extends Activity {
 	 */
 	@Override
 	public void onDestroy() {
+		super.onDestroy();
 		dbA.updateValue(DatabaseConstants.HUNGER, model.getHungerLevel());
 		dbA.updateValue(DatabaseConstants.CUDDLE, model.getCuddleLevel());
 		dbA.updateValue(DatabaseConstants.CLEAN, model.getCleanLevel());
 		dbA.updateValue(DatabaseConstants.POO, model.getPooLevel());
 		dbA.updateStringValue(DatabaseConstants.TIME, TimeUtil.getCurrentTime());
-		super.onDestroy();
-		// varför superanropet sist, ska det inte vara först?
 	}
-
+	
 	/**
 	 * increases hungerlevel by 5
 	 */
@@ -312,8 +294,6 @@ public class MainActivity extends Activity {
 			setCrayExpression(-1, -1);
 		}
 		handler.sendMessage(handler.obtainMessage());
-
-		// String feed = new String("" + model.getHungerLevel());
 	}
 
 	/**
@@ -405,28 +385,19 @@ public class MainActivity extends Activity {
 			if (level < 50) {
 				System.out.println("inside case 1 (dirty)" + level);
 				expression = R.drawable.dirty_baby;
-				crayCray.setImageResource(expression);
-
 			}
-			if (level == 0) {
-				cleanability=false;
-				expression = R.drawable.sick_baby; // If CrayCray has too low
-														// cleanLevel he will
-				crayCray.setImageResource(expression); // become sick and show a
-														// pic of a sick
-														// CrayCray
-			}
-			break;
 		// check hungryLvl
 		case HUNGER:
+
 			if (level == 0) {
 				expression = R.drawable.dead_baby;
-				crayCray.setImageResource(expression);
+				crayView.setImageResource(expression);
 
 			} else if (level < 50) {
 				System.out.println("inside case 1 (hungry)" + level);
-				expression = R.drawable.feed_baby; 
-				crayCray.setImageResource(expression);
+
+				expression = R.drawable.feed_baby;
+				crayView.setImageResource(expression);
 
 			}
 			break;
@@ -446,9 +417,10 @@ public class MainActivity extends Activity {
 		default:
 			System.out.println("inside base-case" + level);
 			expression = R.drawable.regular_baby;
-			crayCray.setImageResource(expression);
+			crayView.setImageResource(expression);
 		}
-	}
+	}	
+	
 
 	
 	/**
@@ -473,6 +445,45 @@ public class MainActivity extends Activity {
 		default:
 			image = R.drawable.invisible;
 			pooImage.setImageResource(image);
+		}
+	}
+
+	/**
+	 * Creates a pop-up with a death announcement
+	 */
+	public AlertDialog.Builder createDeathAlert(){
+		
+		AlertDialog.Builder alertDialog = new AlertDialog.Builder(this);
+		alertDialog.setTitle("Game Over");
+		alertDialog.setPositiveButton("New Game",
+				new DialogInterface.OnClickListener() {
+			public void onClick(DialogInterface dialog, int id) {
+
+			}
+		});
+		alertDialog.setNegativeButton("Cancel",
+				new DialogInterface.OnClickListener() {
+			public void onClick(DialogInterface dialog, int id) {
+
+			}
+		});
+		
+		return alertDialog;
+		
+	}
+	
+	/**
+	 * Checks if the window is in focus,
+	 * if the window is in focus a pop-up with a death announcement shows up
+	 * if the window is not in focus a notification with a death announcement shows up
+	 */
+	public void announceDeath(){
+		setCrayExpression(2,0);
+		if(!hasWindowFocus()){
+			notifications.sendDeadNotification();
+		} else{
+			String message = model.getDeathCause();
+			createDeathAlert().setMessage(message).show();
 		}
 	}
 
