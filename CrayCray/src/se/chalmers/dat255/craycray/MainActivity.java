@@ -184,7 +184,7 @@ public class MainActivity extends Activity{
 						// update the expression of CrayCray
 						setCrayExpression(CLEANNESS, model.getCleanLevel());
 						setCrayExpression(HUNGER, model.getHungerLevel());
-//						setCrayExpression(HAPPINESS, model.getCuddleLevel());
+						setCrayExpression(HAPPINESS, model.getCuddleLevel());
 //						setCrayExpression(ENERGY, model.getEnergyLevel());
 						drawPooImage(model.getPooLevel());
 						// if he is dirty send a dirty-notification
@@ -347,6 +347,11 @@ public class MainActivity extends Activity{
 			cleanability=true;
 			model.setIllness(false);
 			handler.sendMessage(handler.obtainMessage());
+			
+			setCrayExpression(CLEANNESS, model.getCleanLevel());
+			setCrayExpression(HUNGER, model.getHungerLevel());
+			setCrayExpression(HAPPINESS, model.getCuddleLevel());
+			
 		}
 	}
 	
@@ -401,19 +406,14 @@ public class MainActivity extends Activity{
 
 			}
 			break;
-//			// check hungryLvl
-//			case HAPPINESS:
-//				if (level == 0) {
-//					expression = R.drawable.dead_baby;
-//					crayCray.setImageResource(expression);
-//
-//				} else if (level < 50) {
-//					System.out.println("inside case 1 (hungry)" + level);
-//					expression = R.drawable.feed_baby; 
-//					crayCray.setImageResource(expression);
-//
-//				}
-//				break;
+			// check hungryLvl
+			case HAPPINESS:
+				if (level > 70) {
+					expression = R.drawable.happy_baby;
+					crayView.setImageResource(expression);
+
+				}
+				break;
 		default:
 			System.out.println("inside base-case" + level);
 			expression = R.drawable.regular_baby;
