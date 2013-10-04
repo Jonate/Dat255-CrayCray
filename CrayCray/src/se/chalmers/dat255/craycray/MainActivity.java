@@ -349,7 +349,14 @@ public class MainActivity extends Activity{
 			handler.sendMessage(handler.obtainMessage());
 		}
 	}
-	
+	public void makeIll(){
+		int illImage;
+		if(model.isIll()){
+			illImage = R.drawable.sick_baby;
+			crayView.setImageResource(illImage);
+			handler.sendMessage(handler.obtainMessage());
+		}
+	}
 	/**
 	 * Check if pooImage should be drawn or not
 	 * @param level
@@ -386,13 +393,17 @@ public class MainActivity extends Activity{
 				System.out.println("inside case 1 (dirty)" + level);
 				expression = R.drawable.dirty_baby;
 			}
+			if(level < 20){
+				makeIll();
+				System.out.println("makeIll has been runned" + level);
+			}
 		// check hungryLvl
 		case HUNGER:
 
 			if (level == 0) {
 				expression = R.drawable.dead_baby;
 				crayView.setImageResource(expression);
-
+				System.out.println("cray starved to death");
 			} else if (level < 50) {
 				System.out.println("inside case 1 (hungry)" + level);
 
