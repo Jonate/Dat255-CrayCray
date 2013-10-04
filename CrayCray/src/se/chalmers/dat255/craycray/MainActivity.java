@@ -388,7 +388,7 @@ public class MainActivity extends Activity{
 	 * @param level
 	 *            the value of the level
 	 */
-	public void setCrayExpression(int mode, int level) {
+	public synchronized void setCrayExpression(int mode, int level) {
 		int expression;
 		switch (mode) {
 
