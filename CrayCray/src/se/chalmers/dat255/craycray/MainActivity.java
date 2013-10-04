@@ -78,10 +78,7 @@ public class MainActivity extends Activity{
 	private ProgressBar energyBar;
 
 	private ImageView crayView;
-
 	private ImageView pooImage;
-	// private String deathCause; onödig?
-
 
 	private NeedsModel model;
 	private Thread t;
@@ -89,8 +86,7 @@ public class MainActivity extends Activity{
 	private boolean cleanability = true;
 	
 	private DatabaseAdapter dbA;
-
-	NotificationSender notifications = new NotificationSender(this);
+	private NotificationSender notifications = new NotificationSender(this);
 
 	// A Handler to take care of updates in UI-thread
 	// When sendMessage method is called, this is where the message is sent
@@ -178,19 +174,19 @@ public class MainActivity extends Activity{
 						
 						
 						//if CrayCray is sick send an ill-notification
-						if(model.getCleanLevel()==50){
-							if(!hasWindowFocus()){
-								notifications.sendIllNotification();
-							}
-						}
+//						if(model.isIll()){
+//							if(!hasWindowFocus()){
+//								notifications.sendIllNotification();
+//							}
+//						}
 						
 						//if CrayCray is dirty send a dirty-notification
-						if(model.getCleanLevel()==0){
+						if(model.getCleanLevel()==1){
 							if(!hasWindowFocus()){
 								notifications.sendDirtyNotification();
 							}
 						}
-						
+			
 					
 						//update the expression of CrayCray
 						setCrayExpression(1, model.getCleanLevel());
