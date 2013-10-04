@@ -96,6 +96,15 @@
         android:layout_margin="1dp"
         android:onClick="removePoo" />
 
+    <ImageButton
+        android:id="@+id/cureButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentLeft="true"
+        android:layout_below="@id/removePooButton"
+        android:layout_margin="1dp"
+        android:onClick="cure" />
+
     <ImageView
         android:id="@+id/crayCray"
         android:layout_width="wrap_content"
@@ -103,14 +112,14 @@
         android:layout_above="@+id/removePooButton"
         android:layout_centerHorizontal="true"
         android:src="@drawable/regular_baby" />
-    
-    <ImageView 
+
+    <ImageView
         android:id="@+id/pooImage"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_toRightOf="@id/crayCray"
         android:layout_below="@id/crayCray"
-        android:src="@drawable/poo"
-        />
+        android:layout_toRightOf="@id/crayCray"
+        android:src="@drawable/poo" />
+
 
 </RelativeLayout>
