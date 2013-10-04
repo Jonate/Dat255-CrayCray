@@ -174,7 +174,7 @@ public class MainActivity extends Activity{
 						model.setHungerLevel(model.getHungerLevel() - 1);
 						model.setCleanLevel(model.getCleanLevel() - 3);
 						model.setCuddleLevel(model.getCuddleLevel() - 1);
-						model.setPooLevel(model.getPooLevel() - 10);
+						model.setPooLevel(model.getPooLevel() - 1);
 						model.setEnergyLevel(model.getEnergyLevel() - 1);
 
 						// check if pooImage should be drawn or not
