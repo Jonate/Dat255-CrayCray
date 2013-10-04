@@ -29,8 +29,6 @@ public class NeedsModel {
 	private boolean ill;
 	private boolean sleeping;
 	
-	private String deathCause;
-	
 	private NeedsModel(){
 		hungerLevel = 100;
 		cuddleLevel = 100;
@@ -77,10 +75,6 @@ public class NeedsModel {
 		return energyLevel;
 	}
 	
-	public synchronized String getDeathCause(){
-		return deathCause;
-	}
-	
 	public synchronized boolean isIll(){
 		return ill;
 	}
@@ -102,7 +96,8 @@ public class NeedsModel {
 	 */
 	public synchronized void setHungerLevel(int hunger) throws DeadException{
 		if(hunger <= 0){
-			deathCause = "OMG! CrayCray starved to death";
+			hunger = 0;
+			String deathCause = "OMG! CrayCray starved to death";
 			throw new DeadException(deathCause);
 		}else if(hunger < 100 && hunger > 0){
 			hungerLevel = hunger;
@@ -186,27 +181,9 @@ public class NeedsModel {
 		this.sleeping = state;
 	}
 	
-//	/**
-//	 * Set if CrayCray has pooed or not. 
-//	 */
-//	public synchronized void setHasPooed(boolean bool){
-//		hasPooed = bool;
-//	}
-	
-	/*
-	 * Nestled class for killing CrayCray when it has been ill 
-	 * long enough.
-	 */
-	private class KillWhenIllTask extends TimerTask {
-		public void run() {
-			//throw an exception with cause illness
-			//cannot do this bajs
-			//because run() is not specified that way
-		}
-	}
-	
+
 	private void killWhenIll() throws DeadException{
-		deathCause = "CrayCray died of illness!";
+		String deathCause = "CrayCray died of illness!";
 		throw new DeadException(deathCause);
 	}
 	
