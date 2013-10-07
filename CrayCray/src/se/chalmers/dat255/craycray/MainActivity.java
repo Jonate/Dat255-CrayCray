@@ -39,7 +39,6 @@ import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.os.Bundle;
 import android.os.Handler;
-import android.os.Looper;
 import android.os.Message;
 import android.content.Intent;
 import android.graphics.Color;
@@ -50,8 +49,6 @@ import android.graphics.drawable.Drawable;
 import android.util.Log;
 import android.view.Menu;
 import android.view.View;
-import android.view.View.OnClickListener;
-import android.view.View.OnFocusChangeListener;
 import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.ImageView;
@@ -454,12 +451,15 @@ public class MainActivity extends Activity{
 
 			}
 			break;
-			// check hungryLvl
+			// check cuddleLvl
 			case HAPPINESS:
 				if (level > 70) {
 					expression = R.drawable.happy_baby;
 					crayView.setImageResource(expression);
 
+				} else if(level < 10){
+					expression = R.drawable.crying_baby;
+					crayView.setImageResource(expression);
 				}
 				break;
 			
