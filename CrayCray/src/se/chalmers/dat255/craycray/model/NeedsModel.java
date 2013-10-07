@@ -28,7 +28,7 @@ public class NeedsModel {
 	
 	private boolean ill;
 	private boolean sleeping;
-	
+	private boolean hasPooped;
 	private NeedsModel(){
 		hungerLevel = 100;
 		cuddleLevel = 100;
@@ -81,6 +81,9 @@ public class NeedsModel {
 	
 	public synchronized boolean isSleeping(){
 		return sleeping;
+	}
+	public synchronized boolean hasPooped(){
+		return hasPooped;
 	}
 	
 
@@ -180,6 +183,14 @@ public class NeedsModel {
 	public synchronized void setSleep(boolean state){
 		this.sleeping = state;
 	}
+	/**
+	 * Set if CrayCray has pooped
+	 * @param state
+	 */
+	public synchronized void setHasPooped(boolean state){
+		this.hasPooped = state;
+	}
+	
 	
 
 //	private void killWhenIll() throws DeadException{
