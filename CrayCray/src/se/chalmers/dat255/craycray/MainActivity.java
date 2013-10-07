@@ -460,13 +460,17 @@ public class MainActivity extends Activity {
 
 			}
 			break;
-		// check hungryLvl
-		case HAPPINESS:
-			if (level > 70) {
-				crayView.setImageResource(R.drawable.happy_baby);
-			}
-			break;
 
+			// check cuddleLvl
+			case HAPPINESS:
+				if (level > 70) {
+					crayView.setImageResource(R.drawable.happy_baby);
+
+				} else if(level < 10){
+					crayView.setImageResource(R.drawable.crying_baby);
+				}
+				break;
+			
 		default:
 			System.out.println("inside base-case" + level);
 			crayView.setImageResource(R.drawable.regular_baby);
