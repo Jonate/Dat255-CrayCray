@@ -27,8 +27,7 @@ public class NeedsModel {
 	private int energyLevel;
 	
 	private boolean ill;
-	
-	private String deathCause;
+	private boolean sleeping;
 	
 	private NeedsModel(){
 		hungerLevel = 100;
@@ -76,12 +75,12 @@ public class NeedsModel {
 		return energyLevel;
 	}
 	
-	public synchronized String getDeathCause(){
-		return deathCause;
-	}
-	
 	public synchronized boolean isIll(){
 		return ill;
+	}
+	
+	public synchronized boolean isSleeping(){
+		return sleeping;
 	}
 	
 
@@ -97,7 +96,8 @@ public class NeedsModel {
 	 */
 	public synchronized void setHungerLevel(int hunger) throws DeadException{
 		if(hunger <= 0){
-			deathCause = "OMG! CrayCray starved to death";
+			hunger = 0;
+			String deathCause = "OMG! CrayCray starved to death";
 			throw new DeadException(deathCause);
 		}else if(hunger < 100 && hunger > 0){
 			hungerLevel = hunger;
@@ -115,7 +115,7 @@ public class NeedsModel {
 	public synchronized void setCleanLevel(int clean){
 		if(clean <= 0){
 			cleanLevel = 0;
-			setIllness(true);
+//			setIllness(true);
 		}else if(clean < 100 && clean > 0){
 			cleanLevel = clean;
 		}else{
@@ -170,33 +170,22 @@ public class NeedsModel {
 	/**
 	 * Set if CrayCray is ill or not. 
 	 */
-	public synchronized void setIllness(boolean bool){
-		this.ill = bool;
+	public synchronized void setIllness(boolean state){
+		this.ill = state;
 	}
 	
-//	/**
-//	 * Set if CrayCray has pooed or not. 
-//	 */
-//	public synchronized void setHasPooed(boolean bool){
-//		hasPooed = bool;
-//	}
-	
-	/*
-	 * Nestled class for killing CrayCray when it has been ill 
-	 * long enough.
+	/**
+	 * Set if CrayCray is asleep or not. 
 	 */
-	private class KillWhenIllTask extends TimerTask {
-		public void run() {
-			//throw an exception with cause illness
-			//cannot do this bajs
-			//because run() is not specified that way
-		}
+	public synchronized void setSleep(boolean state){
+		this.sleeping = state;
 	}
 	
-	private void killWhenIll() throws DeadException{
-		deathCause = "CrayCray died of illness!";
-		throw new DeadException(deathCause);
-	}
+
+//	private void killWhenIll() throws DeadException{
+//		String deathCause = "CrayCray died of illness!";
+//		throw new DeadException(deathCause);
+//	}
 	
 
 }
