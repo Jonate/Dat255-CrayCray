@@ -26,6 +26,8 @@ public class NeedsModel {
 	private int pooLevel;
 	private int energyLevel;
 	
+	private int illCount;
+	
 	private boolean ill;
 	private boolean sleeping;
 	private boolean hasPooped;
@@ -177,12 +179,17 @@ public class NeedsModel {
 		this.ill = state;
 	}
 	
+	public synchronized void addToIllCount(){
+		illCount++;
+	}
+	
 	/**
 	 * Set if CrayCray is asleep or not. 
 	 */
 	public synchronized void setSleep(boolean state){
 		this.sleeping = state;
 	}
+	
 	/**
 	 * Set if CrayCray has pooped
 	 * @param state
@@ -193,10 +200,12 @@ public class NeedsModel {
 	
 	
 
-//	private void killWhenIll() throws DeadException{
-//		String deathCause = "CrayCray died of illness!";
-//		throw new DeadException(deathCause);
-//	}
+	public void killWhenIll() throws DeadException{
+		if(illCount >= 50){
+			String deathCause = "CrayCray died of illness!";
+			throw new DeadException(deathCause);
+		}
+	}
 	
 
 }

@@ -68,6 +68,8 @@ public class MainActivity extends Activity {
 
 	private NeedsModel model;
 	private Thread t;
+	
+	private int illCount;
 
 	private final int HUNGER = 1;
 	private final int CLEANNESS = 2;
@@ -155,6 +157,8 @@ public class MainActivity extends Activity {
 		cleanBar.setProgress(model.getCleanLevel());
 		energyBar.setProgress(model.getEnergyLevel());
 
+		illCount = 0;
+		
 		t = new Thread(new Runnable() {
 
 			@Override
@@ -194,6 +198,21 @@ public class MainActivity extends Activity {
 							activatedButtons(true);
 
 						}
+						
+						// add 1 to illCount. Then checks if the count has reached 100 and 
+						//in that case CrayCray dies.
+						try{
+							model.addToIllCount();
+							model.killWhenIll();
+						} catch(Exception e){
+							if (e instanceof DeadException) {
+								System.out.println("DEAD BY ILLNESS");
+								Message msg = Message.obtain();
+								msg.obj = e;
+								handler.sendMessage(msg);
+								break;
+							}
+						}
 
 
 						System.out.println("PRINT IN THREAD:");
@@ -216,7 +235,7 @@ public class MainActivity extends Activity {
 							}
 						}
 
-						Thread.sleep(2000);
+						Thread.sleep(800);
 
 					} catch (Exception e) {
 						if (e instanceof DeadException) {
@@ -255,10 +274,9 @@ public class MainActivity extends Activity {
 				model.setPooLevel(dbA.getValue(DatabaseConstants.POO));
 			} catch (DeadException e) {
 				if (e instanceof DeadException) {
-					announceDeath(e);
-//					Message msg = Message.obtain();
-//					msg.obj = e;
-//					handler.sendMessage(msg);
+					Message msg = Message.obtain();
+					msg.obj = e;
+					handler.sendMessage(msg);
 				}
 			}
 
@@ -446,13 +464,19 @@ public class MainActivity extends Activity {
 				crayView.setImageResource(R.drawable.dirty_baby);
 			}
 			if (level <= 20) {
+				System.out.println("baby sick");
 				crayView.setImageResource(R.drawable.sick_baby);
+				model.setIllness(true);
 			}
+			break;
 			
 		// check hungryLvl
 		case HUNGER:
 			if (level == 0) {
 				crayView.setImageResource(R.drawable.dead_baby);
+				
+			} else if (model.isIll()) {
+				crayView.setImageResource(R.drawable.sick_baby);
 				
 			} else if (level < 50) {
 				System.out.println("inside case 1 (hungry)" + level);
