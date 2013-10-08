@@ -65,6 +65,7 @@ public class MainActivity extends Activity {
 	private ProgressBar energyBar;
 	private ImageView crayView;
 	private ImageView pooImage;
+	private View fade;
 
 	private NeedsModel model;
 	private Thread t;
@@ -113,6 +114,7 @@ public class MainActivity extends Activity {
 		super.onCreate(savedInstanceState);
 
 		setContentView(R.layout.activity_main);
+		fade=(View) findViewById(R.id.fade);
 		model = NeedsModel.getInstance();
 		dbA = new DatabaseAdapter(getBaseContext());
 
@@ -165,11 +167,11 @@ public class MainActivity extends Activity {
 						
 						handler.sendMessage(handler.obtainMessage());
 						
-						model.setHungerLevel(model.getHungerLevel() - 1);
+						model.setHungerLevel(model.getHungerLevel() - 5);
 						
-						model.setCleanLevel(model.getCleanLevel() - 1);
-						model.setCuddleLevel(model.getCuddleLevel() - 1);
-						model.setPooLevel(model.getPooLevel() - 1);
+						model.setCleanLevel(model.getCleanLevel() - 5);
+						model.setCuddleLevel(model.getCuddleLevel() - 5);
+						model.setPooLevel(model.getPooLevel() - 5);
 
 						setCrayExpression(ENERGY, model.getEnergyLevel());
 						
@@ -180,13 +182,15 @@ public class MainActivity extends Activity {
 						//deactivate buttons if CrayCray is sleeping
 						//increase energy level when sleeping
 						if (model.isSleeping()) {
-							
-							model.setEnergyLevel(model.getEnergyLevel() + 10);
+							fade.setVisibility(View.VISIBLE);
+							fade.requestLayout();
+							model.setEnergyLevel(model.getEnergyLevel() + 15);
 							activatedButtons(false);
 						
 						} else {
-							
-							model.setEnergyLevel(model.getEnergyLevel() - 1);
+							fade.setVisibility(View.INVISIBLE);
+//							fade.requestLayout();
+							model.setEnergyLevel(model.getEnergyLevel() - 5);
 							
 							setCrayExpression(HAPPINESS, model.getCuddleLevel());
 							setCrayExpression(HUNGER, model.getHungerLevel());
@@ -305,7 +309,7 @@ public class MainActivity extends Activity {
 			// handled elsewhere?
 		}
 		if (model.getHungerLevel() > 50) {
-//			setCrayExpression(-1, -1);
+			setCrayExpression(-1, -1);
 		}
 		handler.sendMessage(handler.obtainMessage());
 	}
@@ -317,7 +321,7 @@ public class MainActivity extends Activity {
 		if (cleanability) {
 			model.setCleanLevel(model.getCleanLevel() + 10);
 			if (model.getCleanLevel() > 50) {
-//				setCrayExpression(-1, -1);
+				setCrayExpression(-1, -1);
 			}
 
 			handler.sendMessage(handler.obtainMessage());
@@ -465,6 +469,8 @@ public class MainActivity extends Activity {
 		case HAPPINESS:
 			if (level > 70) {
 				crayView.setImageResource(R.drawable.happy_baby);
+			}else{
+				crayView.setImageResource(R.drawable.regular_baby);
 			}
 			break;
 
