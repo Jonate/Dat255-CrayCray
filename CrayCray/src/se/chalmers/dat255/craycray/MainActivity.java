@@ -166,6 +166,7 @@ public class MainActivity extends Activity {
 						handler.sendMessage(handler.obtainMessage());
 						
 						model.setHungerLevel(model.getHungerLevel() - 1);
+						
 						model.setCleanLevel(model.getCleanLevel() - 1);
 						model.setCuddleLevel(model.getCuddleLevel() - 1);
 						model.setPooLevel(model.getPooLevel() - 1);
@@ -304,7 +305,7 @@ public class MainActivity extends Activity {
 			// handled elsewhere?
 		}
 		if (model.getHungerLevel() > 50) {
-			setCrayExpression(-1, -1);
+//			setCrayExpression(-1, -1);
 		}
 		handler.sendMessage(handler.obtainMessage());
 	}
@@ -316,7 +317,7 @@ public class MainActivity extends Activity {
 		if (cleanability) {
 			model.setCleanLevel(model.getCleanLevel() + 10);
 			if (model.getCleanLevel() > 50) {
-				setCrayExpression(-1, -1);
+//				setCrayExpression(-1, -1);
 			}
 
 			handler.sendMessage(handler.obtainMessage());
@@ -363,9 +364,9 @@ public class MainActivity extends Activity {
 			model.setIllness(false);
 			handler.sendMessage(handler.obtainMessage());
 
-			setCrayExpression(CLEANNESS, model.getCleanLevel());
-			setCrayExpression(HUNGER, model.getHungerLevel());
-			setCrayExpression(HAPPINESS, model.getCuddleLevel());
+//			setCrayExpression(CLEANNESS, model.getCleanLevel());
+//			setCrayExpression(HUNGER, model.getHungerLevel());
+//			setCrayExpression(HAPPINESS, model.getCuddleLevel());
 
 		}
 	}
@@ -504,7 +505,7 @@ public class MainActivity extends Activity {
 	 * notification with a death announcement shows up
 	 */
 	public void announceDeath(DeadException e) {
-		setCrayExpression(2, 0);
+//		setCrayExpression(2, 0);
 		if (!hasWindowFocus()) {
 			notifications.sendDeadNotification();
 		} else {
