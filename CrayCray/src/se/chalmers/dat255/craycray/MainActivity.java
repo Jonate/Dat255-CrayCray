@@ -70,8 +70,6 @@ public class MainActivity extends Activity {
 	private NeedsModel model;
 	private Thread t;
 	
-	private int illCount;
-
 	private final int HUNGER = 5;
 	private final int CLEANNESS = 2;
 	private final int HAPPINESS = 3;
@@ -158,8 +156,6 @@ public class MainActivity extends Activity {
 		cuddleBar.setProgress(model.getCuddleLevel());
 		cleanBar.setProgress(model.getCleanLevel());
 		energyBar.setProgress(model.getEnergyLevel());
-
-		illCount = 0;
 		
 		t = new Thread(new Runnable() {
 
@@ -171,11 +167,11 @@ public class MainActivity extends Activity {
 						
 						handler.sendMessage(handler.obtainMessage());
 						
-						model.setHungerLevel(model.getHungerLevel() - 5);
+						model.setHungerLevel(model.getHungerLevel() - 1);
 						
-						model.setCleanLevel(model.getCleanLevel() - 5);
-						model.setCuddleLevel(model.getCuddleLevel() - 5);
-						model.setPooLevel(model.getPooLevel() - 5);
+						model.setCleanLevel(model.getCleanLevel() - 1);
+						model.setCuddleLevel(model.getCuddleLevel() - 1);
+						model.setPooLevel(model.getPooLevel() - 1);
 
 						setCrayExpression(ENERGY, model.getEnergyLevel());
 						
@@ -194,7 +190,7 @@ public class MainActivity extends Activity {
 						} else {
 							fade.setVisibility(View.INVISIBLE);
 //							fade.requestLayout();
-							model.setEnergyLevel(model.getEnergyLevel() - 5);
+							model.setEnergyLevel(model.getEnergyLevel() - 1 );
 							
 							setCrayExpression(HAPPINESS, model.getCuddleLevel());
 							setCrayExpression(HUNGER, model.getHungerLevel());
@@ -204,20 +200,28 @@ public class MainActivity extends Activity {
 
 						}
 						
-						// add 1 to illCount. Then checks if the count has reached 100 and 
-						//in that case CrayCray dies.
-						try{
-							model.addToIllCount();
+						// If window does not have focus an ill notification is send.
+						// remove 1 from illCount. 
+						// Then checks if the count has reached zero and in that case CrayCray dies.
+						if(model.isIll()){
+							if(!hasWindowFocus()){
+								 notifications.sendIllNotification();
+							}
+							
+							try{
+							model.setIllCount(model.getIllCount() - 1);
 							model.killWhenIll();
-						} catch(Exception e){
-							if (e instanceof DeadException) {
-								System.out.println("DEAD BY ILLNESS");
-								Message msg = Message.obtain();
-								msg.obj = e;
-								handler.sendMessage(msg);
-								break;
+							} catch(Exception e){
+								if (e instanceof DeadException) {
+									System.out.println("DEAD BY ILLNESS");
+									Message msg = Message.obtain();
+									msg.obj = e;
+									handler.sendMessage(msg);
+									break;
+								}
 							}
 						}
+						
 
 
 						System.out.println("PRINT IN THREAD:");
@@ -226,12 +230,6 @@ public class MainActivity extends Activity {
 						System.out.println("Cuddle" + model.getCuddleLevel());
 						System.out.println("Energy" + model.getEnergyLevel());
 
-						// if CrayCray is sick send an ill-notification
-						// if(model.isIll()){
-						// if(!hasWindowFocus()){
-						// notifications.sendIllNotification();
-						// }
-						// }
 
 						// if CrayCray is dirty send a dirty-notification
 						if (model.getCleanLevel() < 50) {
@@ -384,6 +382,7 @@ public class MainActivity extends Activity {
 		if (model.isIll()) {
 			cleanability = true;
 			model.setIllness(false);
+			model.setIllCount(30);
 			handler.sendMessage(handler.obtainMessage());
 
 //			setCrayExpression(CLEANNESS, model.getCleanLevel());

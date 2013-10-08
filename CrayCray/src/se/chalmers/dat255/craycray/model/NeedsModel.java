@@ -38,6 +38,8 @@ public class NeedsModel {
 		pooLevel = 100;
 		energyLevel = 100;
 		
+		illCount = 30;
+		
 		ill = false;
 
 	}
@@ -71,6 +73,10 @@ public class NeedsModel {
 	
 	public synchronized int getPooLevel(){
 		return pooLevel;
+	}
+	
+	public synchronized int getIllCount(){
+		return illCount;
 	}
 	
 	public synchronized int getEnergyLevel(){
@@ -179,8 +185,13 @@ public class NeedsModel {
 		this.ill = state;
 	}
 	
-	public synchronized void addToIllCount(){
-		illCount++;
+	/**
+	 * 
+	 * @param count the new value of the illCount
+	 */
+	public synchronized void setIllCount(int count){
+		illCount = count;
+		
 	}
 	
 	/**
@@ -201,7 +212,7 @@ public class NeedsModel {
 	
 
 	public void killWhenIll() throws DeadException{
-		if(illCount >= 50){
+		if(illCount == 0){
 			String deathCause = "CrayCray died of illness!";
 			throw new DeadException(deathCause);
 		}
