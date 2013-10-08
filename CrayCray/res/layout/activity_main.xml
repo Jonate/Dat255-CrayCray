@@ -120,6 +120,17 @@
         android:layout_below="@id/crayCray"
         android:layout_toRightOf="@id/crayCray"
         android:src="@drawable/poo" />
+    
+    <Button
+        android:id="@+id/russianButton"
+        android:text="@string/russian_roulette"
+        android:textSize="15sp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentRight="true"
+        android:layout_margin="1dp"
+        android:onClick="playRussianRoulette" />
 
 
 </RelativeLayout>

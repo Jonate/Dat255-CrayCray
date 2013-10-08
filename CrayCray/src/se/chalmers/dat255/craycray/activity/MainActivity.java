@@ -28,30 +28,23 @@ package se.chalmers.dat255.craycray.activity;
 
 
 import se.chalmers.dat255.craycray.R;
-import se.chalmers.dat255.craycray.R.drawable;
-import se.chalmers.dat255.craycray.R.id;
-import se.chalmers.dat255.craycray.R.layout;
-import se.chalmers.dat255.craycray.R.menu;
 import se.chalmers.dat255.craycray.database.DatabaseAdapter;
 import se.chalmers.dat255.craycray.database.DatabaseConstants;
-
 import se.chalmers.dat255.craycray.model.DeadException;
 import se.chalmers.dat255.craycray.model.NeedsModel;
-import se.chalmers.dat255.craycray.model.RussianRouletteModel;
 import se.chalmers.dat255.craycray.notifications.NotificationSender;
+import se.chalmers.dat255.craycray.util.Constants;
 import se.chalmers.dat255.craycray.util.TimeUtil;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
+import android.content.Intent;
+import android.graphics.Color;
+import android.graphics.PorterDuff.Mode;
+import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
-import android.content.Intent;
-import android.graphics.Color;
-import android.graphics.LightingColorFilter;
-import android.graphics.PorterDuff.Mode;
-import android.graphics.Rect;
-import android.graphics.drawable.Drawable;
 import android.util.Log;
 import android.view.Menu;
 import android.view.View;
@@ -64,6 +57,8 @@ import android.widget.ProgressBar;
 
 
 public class MainActivity extends Activity{
+	
+	MainActivity main = this;
 
 	// The buttons of the application
 	private Button feedButton;
@@ -528,6 +523,41 @@ public class MainActivity extends Activity{
 	}
 	
 	/**
+	 * Creates a pop-up asking if the user really wants to
+	 * play Russian Roulette.
+	 */
+	public AlertDialog.Builder createRussianAlert(){
+		
+		AlertDialog.Builder alertDialog = new AlertDialog.Builder(this);
+		alertDialog.setTitle("Russian Roulette");
+		alertDialog.setMessage("Do you really want to play? No turning back...");
+		alertDialog.setPositiveButton("Hell Yeah!",
+				new DialogInterface.OnClickListener() {
+			public void onClick(DialogInterface dialog, int id) {
+				Intent rusIntent = new Intent(main, RussianActivity.class);
+				startActivityForResult(rusIntent, Constants.RUSSIAN_REQUEST_CODE);
+			}
+		});
+		alertDialog.setNegativeButton("God no!",
+				new DialogInterface.OnClickListener() {
+			public void onClick(DialogInterface dialog, int id) {
+
+			}
+		});
+		
+		return alertDialog;
+		
+	}
+	
+	/**
+	 * Called when user wants to play russian roulette
+	 * @param view
+	 */
+	public void playRussianRoulette(View view){
+		createRussianAlert().show();
+	}
+	
+	/**
 	 * Checks if the window is in focus,
 	 * if the window is in focus a pop-up with a death announcement shows up
 	 * if the window is not in focus a notification with a death announcement shows up
@@ -540,6 +570,21 @@ public class MainActivity extends Activity{
 			String message = e.getDeathCause();
 			createDeathAlert().setMessage(message).show();
 		}
+	}
+	
+	@Override
+	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+	    // Check which request we're responding to
+	    if (requestCode == Constants.RUSSIAN_REQUEST_CODE) {
+	        if (resultCode == RESULT_OK) {
+	        	Bundle bundle = data.getExtras();
+//	        	boolean result = bundle.getBooleanExtra("key");
+	            // The user picked a contact.
+	            // The Intent's data Uri identifies which contact was selected.
+
+	            // Do something with the contact here (bigger example below)
+	        }
+	    }
 	}
 	
 
