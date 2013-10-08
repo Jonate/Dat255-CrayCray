@@ -69,7 +69,7 @@ public class MainActivity extends Activity {
 	private NeedsModel model;
 	private Thread t;
 
-	private final int HUNGER = 1;
+	private final int HUNGER = 5;
 	private final int CLEANNESS = 2;
 	private final int HAPPINESS = 3;
 	private final int ENERGY = 4;
@@ -87,7 +87,7 @@ public class MainActivity extends Activity {
 	Handler handler = new Handler() {
 
 		@Override
-		public void handleMessage(Message msg) {
+		public synchronized void handleMessage(Message msg) {
 			super.handleMessage(msg);
 
 			// sets/updates the values of the progressbars
@@ -449,7 +449,7 @@ public class MainActivity extends Activity {
 			if (level <= 20) {
 				crayView.setImageResource(R.drawable.sick_baby);
 			}
-			
+			break;
 		// check hungryLvl
 		case HUNGER:
 			if (level == 0) {
