@@ -65,13 +65,14 @@ public class MainActivity extends Activity {
 	private ProgressBar energyBar;
 	private ImageView crayView;
 	private ImageView pooImage;
+	private View fade;
 
 	private NeedsModel model;
 	private Thread t;
 	
 	private int illCount;
 
-	private final int HUNGER = 1;
+	private final int HUNGER = 5;
 	private final int CLEANNESS = 2;
 	private final int HAPPINESS = 3;
 	private final int ENERGY = 4;
@@ -89,7 +90,7 @@ public class MainActivity extends Activity {
 	Handler handler = new Handler() {
 
 		@Override
-		public void handleMessage(Message msg) {
+		public synchronized void handleMessage(Message msg) {
 			super.handleMessage(msg);
 
 			// sets/updates the values of the progressbars
@@ -115,6 +116,7 @@ public class MainActivity extends Activity {
 		super.onCreate(savedInstanceState);
 
 		setContentView(R.layout.activity_main);
+		fade=(View) findViewById(R.id.fade);
 		model = NeedsModel.getInstance();
 		dbA = new DatabaseAdapter(getBaseContext());
 
@@ -169,10 +171,11 @@ public class MainActivity extends Activity {
 						
 						handler.sendMessage(handler.obtainMessage());
 						
-						model.setHungerLevel(model.getHungerLevel() - 1);
-						model.setCleanLevel(model.getCleanLevel() - 1);
-						model.setCuddleLevel(model.getCuddleLevel() - 1);
-						model.setPooLevel(model.getPooLevel() - 1);
+						model.setHungerLevel(model.getHungerLevel() - 5);
+						
+						model.setCleanLevel(model.getCleanLevel() - 5);
+						model.setCuddleLevel(model.getCuddleLevel() - 5);
+						model.setPooLevel(model.getPooLevel() - 5);
 
 						setCrayExpression(ENERGY, model.getEnergyLevel());
 						
@@ -183,13 +186,15 @@ public class MainActivity extends Activity {
 						//deactivate buttons if CrayCray is sleeping
 						//increase energy level when sleeping
 						if (model.isSleeping()) {
-							
-							model.setEnergyLevel(model.getEnergyLevel() + 10);
+							fade.setVisibility(View.VISIBLE);
+							fade.requestLayout();
+							model.setEnergyLevel(model.getEnergyLevel() + 15);
 							activatedButtons(false);
 						
 						} else {
-							
-							model.setEnergyLevel(model.getEnergyLevel() - 1);
+							fade.setVisibility(View.INVISIBLE);
+//							fade.requestLayout();
+							model.setEnergyLevel(model.getEnergyLevel() - 5);
 							
 							setCrayExpression(HAPPINESS, model.getCuddleLevel());
 							setCrayExpression(HUNGER, model.getHungerLevel());
@@ -381,9 +386,9 @@ public class MainActivity extends Activity {
 			model.setIllness(false);
 			handler.sendMessage(handler.obtainMessage());
 
-			setCrayExpression(CLEANNESS, model.getCleanLevel());
-			setCrayExpression(HUNGER, model.getHungerLevel());
-			setCrayExpression(HAPPINESS, model.getCuddleLevel());
+//			setCrayExpression(CLEANNESS, model.getCleanLevel());
+//			setCrayExpression(HUNGER, model.getHungerLevel());
+//			setCrayExpression(HAPPINESS, model.getCuddleLevel());
 
 		}
 	}
@@ -492,6 +497,8 @@ public class MainActivity extends Activity {
 
 				} else if(level < 10){
 					crayView.setImageResource(R.drawable.crying_baby);
+				}else{
+					crayView.setImageResource(R.drawable.regular_baby);
 				}
 				break;
 			
@@ -532,7 +539,7 @@ public class MainActivity extends Activity {
 	 * notification with a death announcement shows up
 	 */
 	public void announceDeath(DeadException e) {
-		setCrayExpression(2, 0);
+//		setCrayExpression(2, 0);
 		if (!hasWindowFocus()) {
 			notifications.sendDeadNotification();
 		} else {
