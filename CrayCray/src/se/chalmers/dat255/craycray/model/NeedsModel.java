@@ -4,6 +4,7 @@ package se.chalmers.dat255.craycray.model;
 
 import java.util.TimerTask;
 import se.chalmers.dat255.craycray.R;
+import se.chalmers.dat255.craycray.util.Constants;
 import android.util.Log;
 import android.widget.ImageView;
 
@@ -30,13 +31,7 @@ public class NeedsModel {
 	private boolean sleeping;
 	
 	private NeedsModel(){
-		hungerLevel = 100;
-		cuddleLevel = 100;
-		cleanLevel = 100;
-		pooLevel = 100;
-		energyLevel = 100;
-		
-		ill = false;
+		maxAllNeeds();
 
 	}
 
@@ -99,11 +94,11 @@ public class NeedsModel {
 			hunger = 0;
 			String deathCause = "OMG! CrayCray starved to death";
 			throw new DeadException(deathCause);
-		}else if(hunger < 100 && hunger > 0){
+		}else if(hunger < Constants.NEED_LEVEL_FULL && hunger > 0){
 			hungerLevel = hunger;
 
 		}else{
-			hungerLevel = 100;
+			hungerLevel = Constants.NEED_LEVEL_FULL;
 		}
 	}
 	
@@ -116,10 +111,10 @@ public class NeedsModel {
 		if(clean <= 0){
 			cleanLevel = 0;
 //			setIllness(true);
-		}else if(clean < 100 && clean > 0){
+		}else if(clean < Constants.NEED_LEVEL_FULL && clean > 0){
 			cleanLevel = clean;
 		}else{
-			cleanLevel = 100;
+			cleanLevel = Constants.NEED_LEVEL_FULL;
 		}
 	}
 	
@@ -130,10 +125,10 @@ public class NeedsModel {
 	public synchronized void setCuddleLevel(int cuddle){
 		if(cuddle <= 0){
 			cuddleLevel = 0;
-		}else if(cuddle < 100 && cuddle > 0){
+		}else if(cuddle < Constants.NEED_LEVEL_FULL && cuddle > 0){
 			cuddleLevel = cuddle;
 		}else{
-			cuddleLevel = 100;
+			cuddleLevel = Constants.NEED_LEVEL_FULL;
 		}
 	}
 	
@@ -144,10 +139,10 @@ public class NeedsModel {
 	public synchronized void setEnergyLevel(int energy){
 		if(energy <= 0){
 			energyLevel = 0;
-		}else if(energy < 100 && energy > 0){
+		}else if(energy < Constants.NEED_LEVEL_FULL && energy > 0){
 			energyLevel = energy;
 		}else{
-			energyLevel = 100;
+			energyLevel = Constants.NEED_LEVEL_FULL;
 		}
 	}
 	
@@ -159,10 +154,10 @@ public class NeedsModel {
 		
 		if(pooNeed <=0){
 			pooLevel = 0;
-		}else if(pooNeed < 100 && pooNeed >0){
+		}else if(pooNeed < Constants.NEED_LEVEL_FULL && pooNeed >0){
 			pooLevel = pooNeed;
 		}else{
-			pooLevel = 100;
+			pooLevel = Constants.NEED_LEVEL_FULL;
 		}
 	}
 	
@@ -179,6 +174,20 @@ public class NeedsModel {
 	 */
 	public synchronized void setSleep(boolean state){
 		this.sleeping = state;
+	}
+	
+	/**
+	 * Maximize all needs.
+	 */
+	public void maxAllNeeds(){
+		hungerLevel = Constants.NEED_LEVEL_FULL;
+		cuddleLevel = Constants.NEED_LEVEL_FULL;
+		cleanLevel = Constants.NEED_LEVEL_FULL;
+		pooLevel = Constants.NEED_LEVEL_FULL;
+		energyLevel =Constants.NEED_LEVEL_FULL;
+		
+		ill = false;
+		
 	}
 	
 

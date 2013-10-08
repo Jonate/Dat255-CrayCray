@@ -1,4 +1,4 @@
-package se.chalmers.dat255.craycray;
+package se.chalmers.dat255.craycray.activity;
 /*
  * CrayCray - A game formed as a pet in you android device for the user to take care of.
  *
@@ -27,11 +27,17 @@ package se.chalmers.dat255.craycray;
 
 
 
+import se.chalmers.dat255.craycray.R;
+import se.chalmers.dat255.craycray.R.drawable;
+import se.chalmers.dat255.craycray.R.id;
+import se.chalmers.dat255.craycray.R.layout;
+import se.chalmers.dat255.craycray.R.menu;
 import se.chalmers.dat255.craycray.database.DatabaseAdapter;
 import se.chalmers.dat255.craycray.database.DatabaseConstants;
 
 import se.chalmers.dat255.craycray.model.DeadException;
 import se.chalmers.dat255.craycray.model.NeedsModel;
+import se.chalmers.dat255.craycray.model.RussianRouletteModel;
 import se.chalmers.dat255.craycray.notifications.NotificationSender;
 import se.chalmers.dat255.craycray.util.TimeUtil;
 import android.app.Activity;
@@ -159,7 +165,6 @@ public class MainActivity extends Activity{
 		cuddleBar.setProgress(model.getCuddleLevel());
 		cleanBar.setProgress(model.getCleanLevel());
 		energyBar.setProgress(model.getEnergyLevel());
-
 
 		t = new Thread(new Runnable() {
 
@@ -536,5 +541,6 @@ public class MainActivity extends Activity{
 			createDeathAlert().setMessage(message).show();
 		}
 	}
+	
 
 }
