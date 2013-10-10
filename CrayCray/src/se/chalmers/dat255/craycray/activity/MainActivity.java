@@ -63,12 +63,15 @@ public class MainActivity extends Activity{
 	private boolean isActive;
 
 	// The buttons of the application
-	private Button feedButton;
-	private Button cuddleButton;
-	private Button cleanButton;
-	private Button energyButton;
-	private Button removePooButton;
-	private Button cureButton;
+	private ImageButton  feedButton;
+	private ImageButton  cuddleButton;
+	private ImageButton  cleanButton;
+	private ImageButton  energyButton;
+	private ImageButton  removePooButton;
+	private ImageButton  cureButton;
+	
+	private ImageButton happypotionButton;
+	private ImageButton russianButton;
 
 	// The bars of the application
 	private ProgressBar foodBar;
@@ -112,6 +115,7 @@ public class MainActivity extends Activity{
 
 				DeadException e = (DeadException)msg.obj;
 				announceDeath(e);
+				disableInteractions();
 			}
 
 		}
@@ -126,23 +130,28 @@ public class MainActivity extends Activity{
 		Log.w("russian", "testing testing");
 
 		// Button - variables set to xml ID
-		final ImageButton feedButton = (ImageButton) findViewById(R.id.feedButton);
+		feedButton = (ImageButton) findViewById(R.id.feedButton);
 		feedButton.setImageResource(R.drawable.button_food);
 
-		final ImageButton cleanButton = (ImageButton) findViewById(R.id.cleanButton);
+		cleanButton = (ImageButton) findViewById(R.id.cleanButton);
 		cleanButton.setImageResource(R.drawable.button_clean);
 
-		final ImageButton cuddleButton = (ImageButton) findViewById(R.id.cuddleButton);
+		cuddleButton = (ImageButton) findViewById(R.id.cuddleButton);
 		cuddleButton.setImageResource(R.drawable.button_happiness);
 
-		final ImageButton energyButton = (ImageButton) findViewById(R.id.energyButton);
+		energyButton = (ImageButton) findViewById(R.id.energyButton);
 		energyButton.setImageResource(R.drawable.button_energy);
 
-		final ImageButton removePooButton = (ImageButton) findViewById(R.id.removePooButton);
+		removePooButton = (ImageButton) findViewById(R.id.removePooButton);
 		removePooButton.setImageResource(R.drawable.button_poo);
 
-		final ImageButton cureButton = (ImageButton) findViewById(R.id.cureButton);
+		cureButton = (ImageButton) findViewById(R.id.cureButton);
 		cureButton.setImageResource(R.drawable.button_cure);
+		
+//		final ImageButton happypotionButton = (ImageButton) findViewById(R.id.happypotionButton);
+//		
+//		final ImageButton russianButton = (ImageButton) findViewById(R.id.russianButton);
+//		
 
 		//Bar - variables set to xml ID
 		foodBar = (ProgressBar) findViewById(R.id.foodBar);
@@ -234,7 +243,7 @@ public class MainActivity extends Activity{
 
 							handler.sendMessage(handler.obtainMessage());
 
-							Thread.sleep(2000);
+							Thread.sleep(1000);
 
 						} catch (Exception e) {
 							if (e instanceof DeadException) {
@@ -578,9 +587,9 @@ public class MainActivity extends Activity{
 	}
 
 	/**
-	 * Checks if the window is in focus,
-	 * if the window is in focus a pop-up with a death announcement shows up
-	 * if the window is not in focus a notification with a death announcement shows up
+	 * Tells the user CrayCray has died, usually by a pop-up. 
+	 * If the the program is not active a notification will
+	 * be sent instead.
 	 */
 	public void announceDeath(DeadException e){
 		setCrayExpression(2,0);
@@ -590,7 +599,22 @@ public class MainActivity extends Activity{
 			String message = e.getDeathCause();
 			createDeathAlert().setMessage(message).show();
 		}
-//		model.minAllNeeds();
+		model.minAllNeeds();
+	}
+	
+	/**
+	 * Disables all buttons etc and thereby makes it unable
+	 * to interact with CrayCray.
+	 */
+	public void disableInteractions(){
+		feedButton.setClickable(false);
+		cuddleButton.setClickable(false);
+		cleanButton.setClickable(false);
+		energyButton.setClickable(false);
+		removePooButton.setClickable(false);
+		cureButton.setClickable(false); 
+//		happypotionButton.setClickable(true);
+//		russianButton.setClickable(true);
 	}
 
 	@Override
