@@ -6,6 +6,7 @@ public class DeadException extends Exception {
 
 	public DeadException(String deathCause){
 		cause = deathCause;
+		
 	}
 
 	public String getDeathCause(){
