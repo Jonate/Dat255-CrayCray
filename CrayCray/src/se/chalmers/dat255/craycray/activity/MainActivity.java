@@ -399,11 +399,20 @@ public class MainActivity extends Activity{
 	}
 
 	/**
-	 * Called when user wants to play russian roulette
+	 * Called when user clicks to play russian roulette
 	 * @param view
 	 */
 	public void playRussianRoulette(View view){
 		createRussianAlert().show();
+	}
+	
+	/**
+	 * Called when user clicks to drink Happy Potion
+	 * @param view
+	 */
+	public void happyPotion(View view){
+		//setDrunkExpression for some period of time
+		model.setCuddleLevel(model.getCuddleLevel()+17);
 	}
 
 	/**
