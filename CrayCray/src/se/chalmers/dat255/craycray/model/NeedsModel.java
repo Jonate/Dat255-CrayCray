@@ -92,7 +92,7 @@ public class NeedsModel {
 	public synchronized void setHungerLevel(int hunger) throws DeadException{
 		if(hunger <= 0){
 			hunger = 0;
-			String deathCause = "OMG! CrayCray starved to death";
+			String deathCause = Constants.HUNGER_DEATH;
 			throw new DeadException(deathCause);
 		}else if(hunger < Constants.NEED_LEVEL_MAX && hunger > 0){
 			hungerLevel = hunger;

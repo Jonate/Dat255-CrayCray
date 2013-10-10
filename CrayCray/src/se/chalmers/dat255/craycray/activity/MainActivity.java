@@ -601,7 +601,7 @@ public class MainActivity extends Activity{
 				boolean result = bundle.getBoolean("key");
 				if(result == Constants.RUSSIAN_LOOSE){
 					Log.w("russian", "result = loose in onactivityres");
-					DeadException e = new DeadException("CrayCray died of Russian Roulette");
+					DeadException e = new DeadException(Constants.RUSSIAN_DEATH);
 					Message msg = Message.obtain();
 					msg.obj = e;
 					handler.sendMessage(msg);
