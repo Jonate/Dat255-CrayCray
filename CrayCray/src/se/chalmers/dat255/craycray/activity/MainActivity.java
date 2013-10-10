@@ -148,10 +148,10 @@ public class MainActivity extends Activity{
 		cureButton = (ImageButton) findViewById(R.id.cureButton);
 		cureButton.setImageResource(R.drawable.button_cure);
 		
-//		final ImageButton happypotionButton = (ImageButton) findViewById(R.id.happypotionButton);
-//		
-//		final ImageButton russianButton = (ImageButton) findViewById(R.id.russianButton);
-//		
+		happypotionButton = (ImageButton) findViewById(R.id.happypotionButton);
+		
+		russianButton = (ImageButton) findViewById(R.id.russianButton);
+		
 
 		//Bar - variables set to xml ID
 		foodBar = (ProgressBar) findViewById(R.id.foodBar);
@@ -613,8 +613,8 @@ public class MainActivity extends Activity{
 		energyButton.setClickable(false);
 		removePooButton.setClickable(false);
 		cureButton.setClickable(false); 
-//		happypotionButton.setClickable(true);
-//		russianButton.setClickable(true);
+		happypotionButton.setClickable(false);
+		russianButton.setClickable(false);
 	}
 
 	@Override
