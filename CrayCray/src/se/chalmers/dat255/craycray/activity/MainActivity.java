@@ -590,6 +590,7 @@ public class MainActivity extends Activity{
 			String message = e.getDeathCause();
 			createDeathAlert().setMessage(message).show();
 		}
+//		model.minAllNeeds();
 	}
 
 	@Override

@@ -26,8 +26,8 @@ public class RussianRouletteModel {
 	public void play(){
 		int random = this.getRandom();
 		if(random == 0){
+			needsModel.diedOfRussian();
 			needsModel.minAllNeeds();
-			
 		}else{
 			needsModel.maxAllNeeds();
 		}

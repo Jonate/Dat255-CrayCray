@@ -29,6 +29,8 @@ public class NeedsModel {
 	
 	private boolean ill;
 	private boolean sleeping;
+
+	private boolean diedOfRussian = false;
 	
 	private NeedsModel(){
 		maxAllNeeds();
@@ -92,8 +94,14 @@ public class NeedsModel {
 	public synchronized void setHungerLevel(int hunger) throws DeadException{
 		if(hunger <= 0){
 			hunger = 0;
-			String deathCause = Constants.HUNGER_DEATH;
-			throw new DeadException(deathCause);
+			String deathCause;
+			if(!diedOfRussian){
+				deathCause = Constants.HUNGER_DEATH;
+				throw new DeadException(deathCause);
+			}else{
+				deathCause = Constants.RUSSIAN_DEATH;
+				throw new DeadException(deathCause);
+			}
 		}else if(hunger < Constants.NEED_LEVEL_MAX && hunger > 0){
 			hungerLevel = hunger;
 
@@ -177,6 +185,14 @@ public class NeedsModel {
 	}
 	
 	/**
+	 * @throws DeadException 
+	 * 
+	 */
+	public void diedOfRussian(){
+		diedOfRussian = true;
+	}
+	
+	/**
 	 * Maximize all needs.
 	 */
 	public void maxAllNeeds(){
@@ -192,6 +208,7 @@ public class NeedsModel {
 	
 	/**
 	 * Minimize all needs.
+	 * @throws DeadException 
 	 */
 	public void minAllNeeds(){
 		hungerLevel = Constants.NEED_LEVEL_MIN;
