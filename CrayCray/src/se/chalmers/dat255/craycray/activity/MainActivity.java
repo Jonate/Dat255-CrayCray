@@ -180,7 +180,6 @@ public class MainActivity extends Activity {
 				Color.parseColor("#FFFF66"), Mode.MULTIPLY);
 
 		model = NeedsModel.getInstance();
-		cureButton.setVisibility(ImageView.INVISIBLE);
 
 		// sets the latest values of the progressbars
 		foodBar.setProgress(model.getHungerLevel());
@@ -202,7 +201,6 @@ public class MainActivity extends Activity {
 								// check if pooImage should be drawn or not
 
 								model.setHungerLevel(model.getHungerLevel() - 1);
-
 								model.setCleanLevel(model.getCleanLevel() - 1);
 								model.setCuddleLevel(model.getCuddleLevel() - 1);
 								model.setPooLevel(model.getPooLevel() - 1);
@@ -270,7 +268,7 @@ public class MainActivity extends Activity {
 								}
 
 								handler.sendMessage(handler.obtainMessage());
-								Thread.sleep(1000);
+								Thread.sleep(800);
 							}
 						} catch (Exception e) {
 							if (e instanceof DeadException) {
@@ -651,7 +649,7 @@ public class MainActivity extends Activity {
 	 * be sent instead.
 	 */
 	public void announceDeath(DeadException e) {
-		//		setCrayExpression(2, 0);
+		setCrayExpression(HUNGER, 0);
 		if (!hasWindowFocus()) {
 			notifications.sendDeadNotification();
 		} else {
@@ -685,25 +683,14 @@ public class MainActivity extends Activity {
 	}
 
 	public synchronized void activatedButtons(boolean state){
-		if(state){
-			feedButton.setClickable(true);
-			cuddleButton.setClickable(true);
-			cleanButton.setClickable(true);
-			energyButton.setClickable(true);
-			removePooButton.setClickable(true);
-			cureButton.setClickable(true);
-			happypotionButton.setClickable(true);
-			russianButton.setClickable(true);
-		}else{
-			feedButton.setClickable(false);
-			cuddleButton.setClickable(false);
-			cleanButton.setClickable(false);
-			energyButton.setClickable(false);
-			removePooButton.setClickable(false);
-			cureButton.setClickable(false);
-			happypotionButton.setClickable(false);
-			russianButton.setClickable(false);
-		}
+			feedButton.setClickable(state);
+			cuddleButton.setClickable(state);
+			cleanButton.setClickable(state);
+			energyButton.setClickable(state);
+			removePooButton.setClickable(state);
+			cureButton.setClickable(state);
+			happypotionButton.setClickable(state);
+			russianButton.setClickable(state);
 	}
 }
 
