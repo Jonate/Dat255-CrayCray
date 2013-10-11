@@ -10,16 +10,20 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.Menu;
 import android.view.View;
+import android.widget.ImageView;
 
 public class RussianActivity extends Activity {
 
 	RussianRouletteModel rModel;
+	
+	ImageView crayView;
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		rModel = new RussianRouletteModel();
 		setContentView(R.layout.activity_russian);
+		crayView = (ImageView) findViewById(R.id.scaredCrayCray);
 	}
 
 	@Override
