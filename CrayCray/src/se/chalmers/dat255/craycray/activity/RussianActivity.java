@@ -44,6 +44,7 @@ public class RussianActivity extends Activity {
 	public void playRussian(View view){
 		Log.w("russian", "inside playrussian");
 		Intent intent = new Intent();
+
 		rModel.play();
 		Log.w("russian", "efter rModel.play()");
 		intent.putExtra(Constants.RUSSIAN_KEY, Constants.RUSSIAN_WIN);

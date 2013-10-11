@@ -619,6 +619,7 @@ public class MainActivity extends Activity{
 
 	@Override
 	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+
 		// Check which request we're responding to
 		if (requestCode == Constants.RUSSIAN_REQUEST_CODE) {
 			if (resultCode == RESULT_OK) {
