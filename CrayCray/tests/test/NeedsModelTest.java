@@ -2,9 +2,7 @@ package test;
 
 import se.chalmers.dat255.craycray.model.DeadException;
 import se.chalmers.dat255.craycray.model.NeedsModel;
-import android.test.AndroidTestCase;
-import junit.framework.TestCase;
-	
+import android.test.AndroidTestCase;	
 
 	/**
 	 * 

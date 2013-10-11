@@ -4,6 +4,7 @@ package se.chalmers.dat255.craycray.model;
 
 import java.util.TimerTask;
 import se.chalmers.dat255.craycray.R;
+import se.chalmers.dat255.craycray.util.Constants;
 import android.util.Log;
 import android.widget.ImageView;
 
@@ -26,18 +27,15 @@ public class NeedsModel {
 	private int pooLevel;
 	private int energyLevel;
 	
+	private int illCount;
+	
 	private boolean ill;
+	private boolean pooped;
 	private boolean sleeping;
+	private boolean diedOfRussian = false;
 	
 	private NeedsModel(){
-		hungerLevel = 100;
-		cuddleLevel = 100;
-		cleanLevel = 100;
-		pooLevel = 100;
-		energyLevel = 100;
-		
-		ill = false;
-
+		maxAllNeeds();
 	}
 
 	/**
@@ -71,6 +69,10 @@ public class NeedsModel {
 		return pooLevel;
 	}
 	
+	public synchronized int getIllCount(){
+		return illCount;
+	}
+	
 	public synchronized int getEnergyLevel(){
 		return energyLevel;
 	}
@@ -81,6 +83,10 @@ public class NeedsModel {
 	
 	public synchronized boolean isSleeping(){
 		return sleeping;
+	}
+	
+	public boolean hasPooped(){
+		return pooped;
 	}
 	
 
@@ -97,14 +103,24 @@ public class NeedsModel {
 	public synchronized void setHungerLevel(int hunger) throws DeadException{
 		if(hunger <= 0){
 			hunger = 0;
-			String deathCause = "OMG! CrayCray starved to death";
-			throw new DeadException(deathCause);
-		}else if(hunger < 100 && hunger > 0){
+			String deathCause;
+			if(!diedOfRussian){
+				deathCause = Constants.HUNGER_DEATH;
+				throw new DeadException(deathCause);
+			}else{
+				deathCause = Constants.RUSSIAN_DEATH;
+				throw new DeadException(deathCause);
+			}
+		}else if(hunger < Constants.NEED_LEVEL_MAX && hunger > 0){
 			hungerLevel = hunger;
 
 		}else{
-			hungerLevel = 100;
+			hungerLevel = Constants.NEED_LEVEL_MAX;
 		}
+	}
+	
+	public synchronized void setHasPooped(boolean state){
+		pooped=state;
 	}
 	
 	
@@ -116,10 +132,10 @@ public class NeedsModel {
 		if(clean <= 0){
 			cleanLevel = 0;
 //			setIllness(true);
-		}else if(clean < 100 && clean > 0){
+		}else if(clean < Constants.NEED_LEVEL_MAX && clean > 0){
 			cleanLevel = clean;
 		}else{
-			cleanLevel = 100;
+			cleanLevel = Constants.NEED_LEVEL_MAX;
 		}
 	}
 	
@@ -130,10 +146,10 @@ public class NeedsModel {
 	public synchronized void setCuddleLevel(int cuddle){
 		if(cuddle <= 0){
 			cuddleLevel = 0;
-		}else if(cuddle < 100 && cuddle > 0){
+		}else if(cuddle < Constants.NEED_LEVEL_MAX && cuddle > 0){
 			cuddleLevel = cuddle;
 		}else{
-			cuddleLevel = 100;
+			cuddleLevel = Constants.NEED_LEVEL_MAX;
 		}
 	}
 	
@@ -144,10 +160,10 @@ public class NeedsModel {
 	public synchronized void setEnergyLevel(int energy){
 		if(energy <= 0){
 			energyLevel = 0;
-		}else if(energy < 100 && energy > 0){
+		}else if(energy < Constants.NEED_LEVEL_MAX && energy > 0){
 			energyLevel = energy;
 		}else{
-			energyLevel = 100;
+			energyLevel = Constants.NEED_LEVEL_MAX;
 		}
 	}
 	
@@ -159,13 +175,12 @@ public class NeedsModel {
 		
 		if(pooNeed <=0){
 			pooLevel = 0;
-		}else if(pooNeed < 100 && pooNeed >0){
+		}else if(pooNeed < Constants.NEED_LEVEL_MAX && pooNeed >0){
 			pooLevel = pooNeed;
 		}else{
-			pooLevel = 100;
+			pooLevel = Constants.NEED_LEVEL_MAX;
 		}
 	}
-	
 	
 	/**
 	 * Set if CrayCray is ill or not. 
@@ -175,17 +190,66 @@ public class NeedsModel {
 	}
 	
 	/**
+	 * 
+	 * @param count the new value of the illCount
+	 */
+	public synchronized void setIllCount(int count){
+		illCount = count;
+		
+	}
+	
+	/**
 	 * Set if CrayCray is asleep or not. 
 	 */
 	public synchronized void setSleep(boolean state){
 		this.sleeping = state;
 	}
 	
+	/**
+	 * @throws DeadException 
+	 * 
+	 */
+	public void diedOfRussian(){
+		diedOfRussian = true;
+	}
+	
+	/**
+	 * Maximize all needs.
+	 */
+	public void maxAllNeeds(){
+		hungerLevel = Constants.NEED_LEVEL_MAX;
+		cuddleLevel = Constants.NEED_LEVEL_MAX;
+		cleanLevel = Constants.NEED_LEVEL_MAX;
+		pooLevel = Constants.NEED_LEVEL_MAX;
+		energyLevel =Constants.NEED_LEVEL_MAX;
+		
+		ill = false;
+		
+	}
+	
+	/**
+	 * Minimize all needs.
+	 * @throws DeadException 
+	 */
+	public void minAllNeeds(){
+		hungerLevel = Constants.NEED_LEVEL_MIN;
+		cuddleLevel = Constants.NEED_LEVEL_MIN;
+		cleanLevel = Constants.NEED_LEVEL_MIN;
+		pooLevel = Constants.NEED_LEVEL_MIN;
+		energyLevel =Constants.NEED_LEVEL_MIN;
+		
+		ill = true;
+		
+	}
 
-//	private void killWhenIll() throws DeadException{
-//		String deathCause = "CrayCray died of illness!";
-//		throw new DeadException(deathCause);
-//	}
+	public void killWhenIll() throws DeadException{
+		if(illCount == 0){
+			String deathCause = "CrayCray died of illness!";
+			throw new DeadException(deathCause);
+		}
+	}
+	
+
 	
 
 }

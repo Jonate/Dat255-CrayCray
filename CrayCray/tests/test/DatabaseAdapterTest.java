@@ -1,4 +1,4 @@
-package se.chalmers.dat255.craycray.database.test;
+package test;
 
 import org.junit.Test;
 
