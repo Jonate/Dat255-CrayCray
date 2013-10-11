@@ -423,6 +423,15 @@ public class MainActivity extends Activity{
 		//setDrunkExpression for some period of time
 		model.setCuddleLevel(model.getCuddleLevel()+17);
 	}
+	
+	/**
+	 * increases energylevel by 
+	 */
+	public void howToPlay(View view) {
+		createInstructionsAlert().show();
+	
+
+	}
 
 	/**
 	 * Check if pooImage should be drawn or not
@@ -554,6 +563,24 @@ public class MainActivity extends Activity{
 			}
 		});
 
+		return alertDialog;
+
+	}
+	
+	/**
+	 * Creates a pop-up with instructions about how to play
+	 */
+	public AlertDialog.Builder createInstructionsAlert(){
+
+		AlertDialog.Builder alertDialog = new AlertDialog.Builder(this);
+		alertDialog.setTitle("How to play");
+		alertDialog.setNeutralButton("Ok",
+				new DialogInterface.OnClickListener() {
+			public void onClick(DialogInterface dialog, int id) {
+				
+			}
+		});
+		
 		return alertDialog;
 
 	}

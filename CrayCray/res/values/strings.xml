@@ -13,5 +13,6 @@
     <string name="title_activity_russian">RussianActivity</string>
     <string name="fire">Fire Gun!</string>
     <string name="happy_potion">GET DRUNK</string>
+    <string name="about">About</string>
 
 </resources>
