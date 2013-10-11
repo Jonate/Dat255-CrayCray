@@ -121,6 +121,23 @@
         android:layout_toRightOf="@id/crayCray"
         android:src="@drawable/poo" />
 
+    <AbsoluteLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentTop="true" >
+
+        <View
+            android:id="@+id/fade"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="#000000" 
+            android:alpha="0.5"/>
+        	
+    </AbsoluteLayout>
+    
     <ImageButton
         android:id="@+id/russianButton"
         android:layout_width="wrap_content"

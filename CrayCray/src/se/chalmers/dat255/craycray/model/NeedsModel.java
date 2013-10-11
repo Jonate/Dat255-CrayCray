@@ -27,14 +27,14 @@ public class NeedsModel {
 	private int pooLevel;
 	private int energyLevel;
 	
+	private int illCount;
+	
 	private boolean ill;
 	private boolean sleeping;
-
 	private boolean diedOfRussian = false;
 	
 	private NeedsModel(){
 		maxAllNeeds();
-
 	}
 
 	/**
@@ -68,6 +68,10 @@ public class NeedsModel {
 		return pooLevel;
 	}
 	
+	public synchronized int getIllCount(){
+		return illCount;
+	}
+	
 	public synchronized int getEnergyLevel(){
 		return energyLevel;
 	}
@@ -79,6 +83,7 @@ public class NeedsModel {
 	public synchronized boolean isSleeping(){
 		return sleeping;
 	}
+
 	
 
 	/*
@@ -169,12 +174,20 @@ public class NeedsModel {
 		}
 	}
 	
-	
 	/**
 	 * Set if CrayCray is ill or not. 
 	 */
 	public synchronized void setIllness(boolean state){
 		this.ill = state;
+	}
+	
+	/**
+	 * 
+	 * @param count the new value of the illCount
+	 */
+	public synchronized void setIllCount(int count){
+		illCount = count;
+		
 	}
 	
 	/**
@@ -221,10 +234,12 @@ public class NeedsModel {
 		
 	}
 
-//	private void killWhenIll() throws DeadException{
-//		String deathCause = "CrayCray died of illness!";
-//		throw new DeadException(deathCause);
-//	}
+	public void killWhenIll() throws DeadException{
+		if(illCount == 0){
+			String deathCause = "CrayCray died of illness!";
+			throw new DeadException(deathCause);
+		}
+	}
 	
 
 }
