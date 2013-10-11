@@ -46,7 +46,7 @@ public class RussianActivity extends Activity {
 		try {
 			rModel.play();
 		} catch (DeadException e) {
-			key = "loose";
+//			key = "";
 			intent.putExtra(key, Constants.RUSSIAN_LOOSE);
 			setResult(RESULT_OK, intent);
 			finish();

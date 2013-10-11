@@ -578,7 +578,13 @@ public class MainActivity extends Activity{
 	    if (requestCode == Constants.RUSSIAN_REQUEST_CODE) {
 	        if (resultCode == RESULT_OK) {
 	        	Bundle bundle = data.getExtras();
-//	        	boolean result = bundle.getBooleanExtra("key");
+	        	boolean result = bundle.getBoolean("key");
+	        	if(result == Constants.RUSSIAN_LOOSE){
+	        		DeadException e = new DeadException("Bad luck! CrayCray died.");
+	        		Message msg = Message.obtain();
+					msg.obj = e;
+					handler.sendMessage(msg);
+	        	}
 	            // The user picked a contact.
 	            // The Intent's data Uri identifies which contact was selected.
 
