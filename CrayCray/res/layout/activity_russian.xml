@@ -13,13 +13,21 @@
         android:layout_height="wrap_content"
         android:text="@string/russian_roulette" />
     
+    <ImageView
+        android:id="@+id/scaredCrayCray"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerVertical="true"
+        android:layout_centerHorizontal="true"
+        android:src="@drawable/scared_baby" />
+    
     <Button 
         android:id="@+id/fireGun"
         android:text="@string/fire"
         android:textSize="20sp"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignParentRight="true"
+        android:layout_toRightOf="@id/scaredCrayCray"
         android:layout_margin="1dp"
         android:onClick="playRussian" />
 
