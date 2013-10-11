@@ -149,8 +149,13 @@ public class MainActivity extends Activity{
 		cureButton.setImageResource(R.drawable.button_cure);
 		
 		happypotionButton = (ImageButton) findViewById(R.id.happypotionButton);
+		happypotionButton.setImageResource(R.drawable.button_alcohol);
+		
 		
 		russianButton = (ImageButton) findViewById(R.id.russianButton);
+		russianButton.setImageResource(R.drawable.button_roulette);
+		
+		
 		
 
 		//Bar - variables set to xml ID
@@ -425,7 +430,7 @@ public class MainActivity extends Activity{
 	}
 	
 	/**
-	 * increases energylevel by 
+	 * Displays the instructions-pop up 
 	 */
 	public void howToPlay(View view) {
 		createInstructionsAlert().show();
