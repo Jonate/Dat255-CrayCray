@@ -149,7 +149,7 @@
         android:layout_height="wrap_content"
         android:layout_alignParentLeft="true"
         android:layout_margin="1dp"
-        android:onClick=""
+        android:onClick="howToPlay"
         android:text="@string/about"
         android:textSize="15sp" />
 
