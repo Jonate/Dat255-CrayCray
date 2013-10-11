@@ -156,16 +156,15 @@ public class MainActivity extends Activity{
 
 		cureButton = (ImageButton) findViewById(R.id.cureButton);
 		cureButton.setImageResource(R.drawable.button_cure);
-<<<<<<< HEAD:CrayCray/src/se/chalmers/dat255/craycray/MainActivity.java
-		 
-=======
-		
+
 		happypotionButton = (ImageButton) findViewById(R.id.happypotionButton);
+		happypotionButton.setImageResource(R.drawable.button_alcohol);
+		
 		
 		russianButton = (ImageButton) findViewById(R.id.russianButton);
+		russianButton.setImageResource(R.drawable.button_roulette);
 		
 
->>>>>>> 74e2a0439b36ece1c18871bf7f56e0d6a2c0b820:CrayCray/src/se/chalmers/dat255/craycray/activity/MainActivity.java
 		//Bar - variables set to xml ID
 		foodBar = (ProgressBar) findViewById(R.id.foodBar);
 		cuddleBar = (ProgressBar) findViewById(R.id.cuddleBar);
@@ -234,56 +233,9 @@ public class MainActivity extends Activity{
 								}
 							}
 
-<<<<<<< HEAD:CrayCray/src/se/chalmers/dat255/craycray/MainActivity.java
-		t = new Thread(new Runnable() {
 
-			@Override
-			public void run() {
-
-				while (true) {
-					try {
-						model.setHungerLevel(model.getHungerLevel() - 1);
-
-						model.setCleanLevel(model.getCleanLevel() - 3);
-						model.setCuddleLevel(model.getCuddleLevel() - 1);
-						model.setPooLevel(model.getPooLevel() - 10);
-					
-						setCrayExpression(ENERGY, model.getEnergyLevel());
-						
-						if(model.isSleeping()){
-							System.out.println("is sleeping in thread" + model.isSleeping());
-							model.setEnergyLevel(model.getEnergyLevel() + 5);
-							feedButton.setClickable(false);
-							cuddleButton.setClickable(false);
-							cleanButton.setClickable(false);
-							energyButton.setClickable(false);
-							removePooButton.setClickable(false);
-							cureButton.setClickable(false);
-							
-							
-						}else{
-							System.out.println("is not in thread" + model.isSleeping());
-							model.setEnergyLevel(model.getEnergyLevel() - 1);
-							
-							setCrayExpression(CLEANNESS, model.getCleanLevel());
-							setCrayExpression(HUNGER, model.getHungerLevel());
-							setCrayExpression(HAPPINESS, model.getCuddleLevel());
-							
-							feedButton.setClickable(true);
-							cuddleButton.setClickable(true);
-							cleanButton.setClickable(true);
-							energyButton.setClickable(true);
-							removePooButton.setClickable(true);
-							cureButton.setClickable(true);
-							
-
-						}
-						
-
-=======
 							// check if pooImage should be drawn or not
 							cleanButton.setClickable(cleanability);
->>>>>>> 74e2a0439b36ece1c18871bf7f56e0d6a2c0b820:CrayCray/src/se/chalmers/dat255/craycray/activity/MainActivity.java
 
 //							if CrayCray is sick send an ill-notification
 //							if(model.isIll()){
@@ -484,6 +436,15 @@ public class MainActivity extends Activity{
 		//setDrunkExpression for some period of time
 		model.setCuddleLevel(model.getCuddleLevel()+17);
 	}
+	
+	/**
+	 * Displays the instructions-pop up 
+	 */
+	public void howToPlay(View view) {
+		createInstructionsAlert().show();
+	
+
+	}
 
 	/**
 	 * Check if pooImage should be drawn or not
@@ -618,13 +579,25 @@ public class MainActivity extends Activity{
 		return alertDialog;
 
 	}
-<<<<<<< HEAD:CrayCray/src/se/chalmers/dat255/craycray/MainActivity.java
-	
-	
-	
-=======
 
->>>>>>> 74e2a0439b36ece1c18871bf7f56e0d6a2c0b820:CrayCray/src/se/chalmers/dat255/craycray/activity/MainActivity.java
+	/**
+	 * Creates a pop-up with instructions about how to play
+	 */
+	public AlertDialog.Builder createInstructionsAlert(){
+
+		AlertDialog.Builder alertDialog = new AlertDialog.Builder(this);
+		alertDialog.setTitle("How to play");
+		alertDialog.setNeutralButton("Ok",
+				new DialogInterface.OnClickListener() {
+			public void onClick(DialogInterface dialog, int id) {
+				
+			}
+		});
+		
+		return alertDialog;
+
+	}
+	
 	/**
 	 * Creates a pop-up asking if the user really wants to
 	 * play Russian Roulette.
@@ -705,10 +678,4 @@ public class MainActivity extends Activity{
 		}
 		isActive = true;
 	}
-<<<<<<< HEAD:CrayCray/src/se/chalmers/dat255/craycray/MainActivity.java
-	 
-=======
-
-
->>>>>>> 74e2a0439b36ece1c18871bf7f56e0d6a2c0b820:CrayCray/src/se/chalmers/dat255/craycray/activity/MainActivity.java
 }

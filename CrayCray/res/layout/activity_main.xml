@@ -142,5 +142,16 @@
         android:onClick="happyPotion"
         android:text="@string/happy_potion"
         android:textSize="15sp" />
+    
+    <ImageButton
+        android:id="@+id/aboutButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentLeft="true"
+        android:layout_below="@id/cureButton"
+        android:layout_margin="1dp"
+        android:onClick="howToPlay"
+        android:text="@string/about"
+        android:textSize="15sp" />
 
 </RelativeLayout>
