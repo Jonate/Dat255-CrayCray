@@ -34,6 +34,7 @@ import se.chalmers.dat255.craycray.model.DeadException;
 import se.chalmers.dat255.craycray.model.NeedsModel;
 import se.chalmers.dat255.craycray.notifications.NotificationSender;
 import se.chalmers.dat255.craycray.util.TimeUtil;
+import android.app.ActionBar.LayoutParams;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
@@ -47,12 +48,18 @@ import android.graphics.PorterDuff.Mode;
 import android.graphics.Rect;
 import android.graphics.drawable.Drawable;
 import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
+import android.widget.PopupWindow;
 import android.widget.ProgressBar;
+import android.widget.TextView;
+import android.app.AlertDialog; 
+import android.content.DialogInterface;
 
 
 
@@ -66,6 +73,7 @@ public class MainActivity extends Activity{
 	private Button energyButton;
 	private Button removePooButton;
 	private Button cureButton;
+
 
 	// The bars of the application
 	private ProgressBar foodBar;
@@ -87,6 +95,7 @@ public class MainActivity extends Activity{
 
 	private DatabaseAdapter dbA;
 	private NotificationSender notifications = new NotificationSender(this);
+	
 
 	// A Handler to take care of updates in UI-thread
 	// When sendMessage method is called, this is where the message is sent
@@ -137,7 +146,7 @@ public class MainActivity extends Activity{
 
 		final ImageButton cureButton = (ImageButton) findViewById(R.id.cureButton);
 		cureButton.setImageResource(R.drawable.button_cure);
-
+		 
 		//Bar - variables set to xml ID
 		foodBar = (ProgressBar) findViewById(R.id.foodBar);
 		cuddleBar = (ProgressBar) findViewById(R.id.cuddleBar);
@@ -186,6 +195,7 @@ public class MainActivity extends Activity{
 							removePooButton.setClickable(false);
 							cureButton.setClickable(false);
 							
+							
 						}else{
 							System.out.println("is not in thread" + model.isSleeping());
 							model.setEnergyLevel(model.getEnergyLevel() - 1);
@@ -200,6 +210,7 @@ public class MainActivity extends Activity{
 							energyButton.setClickable(true);
 							removePooButton.setClickable(true);
 							cureButton.setClickable(true);
+							
 
 						}
 						
@@ -522,6 +533,8 @@ public class MainActivity extends Activity{
 		
 	}
 	
+	
+	
 	/**
 	 * Checks if the window is in focus,
 	 * if the window is in focus a pop-up with a death announcement shows up
@@ -536,5 +549,5 @@ public class MainActivity extends Activity{
 			createDeathAlert().setMessage(message).show();
 		}
 	}
-
+	 
 }

@@ -121,5 +121,4 @@
         android:layout_toRightOf="@id/crayCray"
         android:src="@drawable/poo" />
 
-
 </RelativeLayout>

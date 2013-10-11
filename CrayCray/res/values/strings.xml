@@ -10,5 +10,6 @@
     <string name="removePoo">RemovePoo</string>
     <string name="title_activity_game_over_dialog">GameOverDialog</string>
     <string name="hello_world">Hello world!</string>
+    <string name="title_activity_popup">PopupActivity</string>
 
 </resources>
