@@ -1,7 +1,7 @@
 package se.chalmers.dat255.craycray.notifications;
 
-import se.chalmers.dat255.craycray.MainActivity;
 import se.chalmers.dat255.craycray.R;
+import se.chalmers.dat255.craycray.activity.MainActivity;
 import android.app.Notification;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
