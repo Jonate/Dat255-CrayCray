@@ -13,19 +13,21 @@ public class RussianRouletteModel {
 	 * Returns a random number between 0 and 5.
 	 */
 	public int getRandom(){
-		
 		return (int)(Math.random()* 6);
 	}
 	
 	/**
 	 * Play Russian Roulette and manipulate NeedsModel
-	 * according to result.
-	 * @throws DeadException 
+	 * according to result. 5/6 chance to win.
+	 *  Win means all needs fullfilled, loosing means dying. 
+	 *  Manipulates NeedsModel according to result.
+	 * @throws DeadException if loose
 	 */
-	public void play() throws DeadException{
+	public void play(){
 		int random = this.getRandom();
 		if(random == 0){
-			throw new DeadException("Bad luck! CrayCray died.");
+			needsModel.diedOfRussian();
+			needsModel.minAllNeeds();
 		}else{
 			needsModel.maxAllNeeds();
 		}

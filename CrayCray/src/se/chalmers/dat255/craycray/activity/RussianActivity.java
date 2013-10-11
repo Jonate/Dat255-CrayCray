@@ -7,6 +7,7 @@ import se.chalmers.dat255.craycray.util.Constants;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.Menu;
 import android.view.View;
 
@@ -41,19 +42,15 @@ public class RussianActivity extends Activity {
 	 * @param view
 	 */
 	public void playRussian(View view){
+		Log.w("russian", "inside playrussian");
 		Intent intent = new Intent();
-		String key = "key";
-		try {
-			rModel.play();
-		} catch (DeadException e) {
-//			key = "";
-			intent.putExtra(key, Constants.RUSSIAN_LOOSE);
-			setResult(RESULT_OK, intent);
-			finish();
-		}
-//		key = "win";
-		intent.putExtra(key, Constants.RUSSIAN_WIN);
+
+		rModel.play();
+		Log.w("russian", "efter rModel.play()");
+		intent.putExtra(Constants.RUSSIAN_KEY, Constants.RUSSIAN_WIN);
 		setResult(RESULT_OK, intent);
 		finish();
+		
+		Log.w("russian", "playRussian finished");
 	}
 }

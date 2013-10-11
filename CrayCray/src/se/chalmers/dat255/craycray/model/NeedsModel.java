@@ -29,6 +29,8 @@ public class NeedsModel {
 	
 	private boolean ill;
 	private boolean sleeping;
+
+	private boolean diedOfRussian = false;
 	
 	private NeedsModel(){
 		maxAllNeeds();
@@ -92,13 +94,19 @@ public class NeedsModel {
 	public synchronized void setHungerLevel(int hunger) throws DeadException{
 		if(hunger <= 0){
 			hunger = 0;
-			String deathCause = "OMG! CrayCray starved to death";
-			throw new DeadException(deathCause);
-		}else if(hunger < Constants.NEED_LEVEL_FULL && hunger > 0){
+			String deathCause;
+			if(!diedOfRussian){
+				deathCause = Constants.HUNGER_DEATH;
+				throw new DeadException(deathCause);
+			}else{
+				deathCause = Constants.RUSSIAN_DEATH;
+				throw new DeadException(deathCause);
+			}
+		}else if(hunger < Constants.NEED_LEVEL_MAX && hunger > 0){
 			hungerLevel = hunger;
 
 		}else{
-			hungerLevel = Constants.NEED_LEVEL_FULL;
+			hungerLevel = Constants.NEED_LEVEL_MAX;
 		}
 	}
 	
@@ -111,10 +119,10 @@ public class NeedsModel {
 		if(clean <= 0){
 			cleanLevel = 0;
 //			setIllness(true);
-		}else if(clean < Constants.NEED_LEVEL_FULL && clean > 0){
+		}else if(clean < Constants.NEED_LEVEL_MAX && clean > 0){
 			cleanLevel = clean;
 		}else{
-			cleanLevel = Constants.NEED_LEVEL_FULL;
+			cleanLevel = Constants.NEED_LEVEL_MAX;
 		}
 	}
 	
@@ -125,10 +133,10 @@ public class NeedsModel {
 	public synchronized void setCuddleLevel(int cuddle){
 		if(cuddle <= 0){
 			cuddleLevel = 0;
-		}else if(cuddle < Constants.NEED_LEVEL_FULL && cuddle > 0){
+		}else if(cuddle < Constants.NEED_LEVEL_MAX && cuddle > 0){
 			cuddleLevel = cuddle;
 		}else{
-			cuddleLevel = Constants.NEED_LEVEL_FULL;
+			cuddleLevel = Constants.NEED_LEVEL_MAX;
 		}
 	}
 	
@@ -139,10 +147,10 @@ public class NeedsModel {
 	public synchronized void setEnergyLevel(int energy){
 		if(energy <= 0){
 			energyLevel = 0;
-		}else if(energy < Constants.NEED_LEVEL_FULL && energy > 0){
+		}else if(energy < Constants.NEED_LEVEL_MAX && energy > 0){
 			energyLevel = energy;
 		}else{
-			energyLevel = Constants.NEED_LEVEL_FULL;
+			energyLevel = Constants.NEED_LEVEL_MAX;
 		}
 	}
 	
@@ -154,10 +162,10 @@ public class NeedsModel {
 		
 		if(pooNeed <=0){
 			pooLevel = 0;
-		}else if(pooNeed < Constants.NEED_LEVEL_FULL && pooNeed >0){
+		}else if(pooNeed < Constants.NEED_LEVEL_MAX && pooNeed >0){
 			pooLevel = pooNeed;
 		}else{
-			pooLevel = Constants.NEED_LEVEL_FULL;
+			pooLevel = Constants.NEED_LEVEL_MAX;
 		}
 	}
 	
@@ -177,19 +185,41 @@ public class NeedsModel {
 	}
 	
 	/**
+	 * @throws DeadException 
+	 * 
+	 */
+	public void diedOfRussian(){
+		diedOfRussian = true;
+	}
+	
+	/**
 	 * Maximize all needs.
 	 */
 	public void maxAllNeeds(){
-		hungerLevel = Constants.NEED_LEVEL_FULL;
-		cuddleLevel = Constants.NEED_LEVEL_FULL;
-		cleanLevel = Constants.NEED_LEVEL_FULL;
-		pooLevel = Constants.NEED_LEVEL_FULL;
-		energyLevel =Constants.NEED_LEVEL_FULL;
+		hungerLevel = Constants.NEED_LEVEL_MAX;
+		cuddleLevel = Constants.NEED_LEVEL_MAX;
+		cleanLevel = Constants.NEED_LEVEL_MAX;
+		pooLevel = Constants.NEED_LEVEL_MAX;
+		energyLevel =Constants.NEED_LEVEL_MAX;
 		
 		ill = false;
 		
 	}
 	
+	/**
+	 * Minimize all needs.
+	 * @throws DeadException 
+	 */
+	public void minAllNeeds(){
+		hungerLevel = Constants.NEED_LEVEL_MIN;
+		cuddleLevel = Constants.NEED_LEVEL_MIN;
+		cleanLevel = Constants.NEED_LEVEL_MIN;
+		pooLevel = Constants.NEED_LEVEL_MIN;
+		energyLevel =Constants.NEED_LEVEL_MIN;
+		
+		ill = true;
+		
+	}
 
 //	private void killWhenIll() throws DeadException{
 //		String deathCause = "CrayCray died of illness!";

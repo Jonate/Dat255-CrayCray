@@ -9,6 +9,7 @@ public class DeadException extends Exception implements Parcelable  {
 
 	public DeadException(String deathCause){
 		cause = deathCause;
+		
 	}
 
 	public String getDeathCause(){
