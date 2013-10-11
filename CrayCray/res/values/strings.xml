@@ -9,6 +9,9 @@
     <string name="energy">Energy</string>
     <string name="removePoo">RemovePoo</string>
     <string name="title_activity_game_over_dialog">GameOverDialog</string>
-    <string name="hello_world">Hello world!</string>
+    <string name="russian_roulette">Russian Roulette</string>
+    <string name="title_activity_russian">RussianActivity</string>
+    <string name="fire">Fire Gun!</string>
+    <string name="happy_potion">GET DRUNK</string>
 
 </resources>
