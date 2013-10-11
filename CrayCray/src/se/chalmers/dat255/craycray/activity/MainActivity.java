@@ -71,6 +71,7 @@ public class MainActivity extends Activity {
 	private ImageButton  cureButton;
 	private ImageButton happypotionButton;
 	private ImageButton russianButton;
+	private ImageButton aboutButton;
 
 	// The bars of the application
 	private ProgressBar foodBar;
@@ -144,15 +145,22 @@ public class MainActivity extends Activity {
 		energyButton = (ImageButton) findViewById(R.id.energyButton);
 		removePooButton = (ImageButton) findViewById(R.id.removePooButton);
 		cureButton = (ImageButton) findViewById(R.id.cureButton);
-		cureButton.setImageResource(R.drawable.button_cure);
-
 		happypotionButton = (ImageButton) findViewById(R.id.happypotionButton);
-		happypotionButton.setImageResource(R.drawable.button_alcohol);
-		
-		
 		russianButton = (ImageButton) findViewById(R.id.russianButton);
-		russianButton.setImageResource(R.drawable.button_roulette);
+		aboutButton = (ImageButton) findViewById(R.id.aboutButton);
 		
+		
+		// Sets correct image to the buttons
+		feedButton.setImageResource(R.drawable.button_food);
+		cleanButton.setImageResource(R.drawable.button_clean);
+		cuddleButton.setImageResource(R.drawable.button_happiness);
+		energyButton.setImageResource(R.drawable.button_energy);
+		removePooButton.setImageResource(R.drawable.button_poo);
+		cureButton.setImageResource(R.drawable.button_cure);
+		happypotionButton.setImageResource(R.drawable.button_alcohol);
+		russianButton.setImageResource(R.drawable.button_roulette);
+		aboutButton.setImageResource(R.drawable.button_about);
+
 
 		//Bar - variables set to xml ID
 		foodBar = (ProgressBar) findViewById(R.id.foodBar);
@@ -189,79 +197,81 @@ public class MainActivity extends Activity {
 					while (true) {
 						try {
 
-							handler.sendMessage(handler.obtainMessage());
+							if(isActive){
 
-<<<<<<< HEAD
+								// check if pooImage should be drawn or not
 
-							// check if pooImage should be drawn or not
-=======
-							model.setHungerLevel(model.getHungerLevel() - 1);
+								model.setHungerLevel(model.getHungerLevel() - 1);
 
-							model.setCleanLevel(model.getCleanLevel() - 1);
-							model.setCuddleLevel(model.getCuddleLevel() - 1);
-							model.setPooLevel(model.getPooLevel() - 1);
+								model.setCleanLevel(model.getCleanLevel() - 1);
+								model.setCuddleLevel(model.getCuddleLevel() - 1);
+								model.setPooLevel(model.getPooLevel() - 1);
 
-							setCrayExpression(ENERGY, model.getEnergyLevel());
+								setCrayExpression(ENERGY, model.getEnergyLevel());
 
-							//Check if user should be able to clean CrayCray
-							drawPooImage(model.getPooLevel());
->>>>>>> 7cdc24a218938fee8974788101bf66a78b506aa6
-							cleanButton.setClickable(cleanability);
+								//Check if user should be able to clean CrayCray
+								drawPooImage(model.getPooLevel());
+								cleanButton.setClickable(cleanability);
 
-							//deactivate buttons if CrayCray is sleeping
-							//increase energy level when sleeping
-							if (model.isSleeping()) {
-								fade.setVisibility(View.VISIBLE);
-								fade.requestLayout();
-								model.setEnergyLevel(model.getEnergyLevel() + 15);
-								activatedButtons(false);
+								//deactivate buttons if CrayCray is sleeping
+								//increase energy level when sleeping
+								if (model.isSleeping()) {
+									fade.setVisibility(View.VISIBLE);
+									fade.requestLayout();
+									model.setEnergyLevel(model.getEnergyLevel() + 15);
+									activatedButtons(false);
 
-							} else {
-								fade.setVisibility(View.INVISIBLE);
-								//							fade.requestLayout();
-								model.setEnergyLevel(model.getEnergyLevel() - 1 );
+								} else {
+									fade.setVisibility(View.INVISIBLE);
+									//							fade.requestLayout();
+									model.setEnergyLevel(model.getEnergyLevel() - 1 );
+									setCrayExpression(HAPPINESS, model.getCuddleLevel());
+									setCrayExpression(HUNGER, model.getHungerLevel());
+									setCrayExpression(CLEANNESS, model.getCleanLevel());
+									
+									activatedButtons(true);
 
-							}
-
-							// If window does not have focus an ill notification is send.
-							// remove 1 from illCount. 
-							// Then checks if the count has reached zero and in that case CrayCray dies.
-							if(model.isIll()){
-								if(!hasWindowFocus()){
-									notifications.sendIllNotification();
 								}
 
-								try{
-									model.setIllCount(model.getIllCount() - 1);
-									model.killWhenIll();
-								} catch(Exception e){
-									if (e instanceof DeadException) {
-										System.out.println("DEAD BY ILLNESS");
-										Message msg = Message.obtain();
-										msg.obj = e;
-										handler.sendMessage(msg);
-										break;
+								// If window does not have focus an ill notification is send.
+								// remove 1 from illCount. 
+								// Then checks if the count has reached zero and in that case CrayCray dies.
+								if(model.isIll()){
+									if(!hasWindowFocus()){
+										notifications.sendIllNotification();
+									}
+
+									try{
+										model.setIllCount(model.getIllCount() - 1);
+										model.killWhenIll();
+									} catch(Exception e){
+										if (e instanceof DeadException) {
+											System.out.println("DEAD BY ILLNESS");
+											Message msg = Message.obtain();
+											msg.obj = e;
+											handler.sendMessage(msg);
+											break;
+										}
 									}
 								}
-							}
 
-							System.out.println("PRINT IN THREAD:");
-							System.out.println("Hunger" + model.getHungerLevel());
-							System.out.println("Clean" + model.getCleanLevel());
-							System.out.println("Cuddle" + model.getCuddleLevel());
-							System.out.println("Energy" + model.getEnergyLevel());
+								System.out.println("PRINT IN THREAD:");
+								System.out.println("Hunger" + model.getHungerLevel());
+								System.out.println("Clean" + model.getCleanLevel());
+								System.out.println("Cuddle" + model.getCuddleLevel());
+								System.out.println("Energy" + model.getEnergyLevel());
 
 
-							// if CrayCray is dirty send a dirty-notification
-							if (model.getCleanLevel() < 50) {
-								if (!hasWindowFocus()) {
-									notifications.sendDirtyNotification();
+								// if CrayCray is dirty send a dirty-notification
+								if (model.getCleanLevel() < 50) {
+									if (!hasWindowFocus()) {
+										notifications.sendDirtyNotification();
+									}
 								}
+
+								handler.sendMessage(handler.obtainMessage());
+								Thread.sleep(1000);
 							}
-
-							handler.sendMessage(handler.obtainMessage());
-							Thread.sleep(1000);
-
 						} catch (Exception e) {
 							if (e instanceof DeadException) {
 								Message msg = Message.obtain();
@@ -272,7 +282,9 @@ public class MainActivity extends Activity {
 						}
 					}
 				}
-			});
+			}
+		);
+	}	
 
 
 
@@ -306,123 +318,120 @@ public class MainActivity extends Activity {
 						handler.sendMessage(msg);
 					}
 				}
-
 			}
+	}
 
+	@Override
+	public void onStart() {
+		super.onStart();
+		if(!t.isAlive()){
+			t.start();
 		}
 
-		@Override
-		public void onStart() {
-			super.onStart();
-			if(!t.isAlive()){
-				t.start();
-			}
+	}
 
+	@Override
+	public boolean onCreateOptionsMenu(Menu menu) {
+		// Inflate the menu; this adds items to the action bar if it is present.
+		getMenuInflater().inflate(R.menu.main, menu);
+		return true;
+	}
+
+	/**
+	 * Updates the database if the application is shut down
+	 */
+	@Override
+	public void onDestroy() {
+		super.onDestroy();
+		dbA.updateValue(DatabaseConstants.HUNGER, model.getHungerLevel());
+		dbA.updateValue(DatabaseConstants.CUDDLE, model.getCuddleLevel());
+		dbA.updateValue(DatabaseConstants.CLEAN, model.getCleanLevel());
+		dbA.updateValue(DatabaseConstants.POO, model.getPooLevel());
+		dbA.updateStringValue(DatabaseConstants.TIME, TimeUtil.getCurrentTime());
+	}
+
+	/**
+	 * increases hungerlevel by 5
+	 */
+	public synchronized void feed(View view) {
+		try {
+			model.setHungerLevel(model.getHungerLevel() + 5);
+
+		} catch (DeadException e) {
+			// handled elsewhere?
 		}
-
-		@Override
-		public boolean onCreateOptionsMenu(Menu menu) {
-			// Inflate the menu; this adds items to the action bar if it is present.
-			getMenuInflater().inflate(R.menu.main, menu);
-			return true;
+		if (model.getHungerLevel() > 50) {
+			setCrayExpression(-1, -1);
 		}
+		handler.sendMessage(handler.obtainMessage());
+	}
 
-		/**
-		 * Updates the database if the application is shut down
-		 */
-		@Override
-		public void onDestroy() {
-			super.onDestroy();
-			dbA.updateValue(DatabaseConstants.HUNGER, model.getHungerLevel());
-			dbA.updateValue(DatabaseConstants.CUDDLE, model.getCuddleLevel());
-			dbA.updateValue(DatabaseConstants.CLEAN, model.getCleanLevel());
-			dbA.updateValue(DatabaseConstants.POO, model.getPooLevel());
-			dbA.updateStringValue(DatabaseConstants.TIME, TimeUtil.getCurrentTime());
-		}
-
-		/**
-		 * increases hungerlevel by 5
-		 */
-		public synchronized void feed(View view) {
-			try {
-				model.setHungerLevel(model.getHungerLevel() + 5);
-
-			} catch (DeadException e) {
-				// handled elsewhere?
-			}
-			if (model.getHungerLevel() > 50) {
+	/**
+	 * increases cleanlevel by 10
+	 */
+	public synchronized void clean(View view) {
+		if (cleanability) {
+			model.setCleanLevel(model.getCleanLevel() + 10);
+			if (model.getCleanLevel() > 50) {
 				setCrayExpression(-1, -1);
 			}
+
 			handler.sendMessage(handler.obtainMessage());
 		}
+	}
 
-		/**
-		 * increases cleanlevel by 10
-		 */
-		public synchronized void clean(View view) {
-			if (cleanability) {
-				model.setCleanLevel(model.getCleanLevel() + 10);
-				if (model.getCleanLevel() > 50) {
-					setCrayExpression(-1, -1);
-				}
+	/**
+	 * increases cuddlelevel by 7
+	 */
+	public synchronized void cuddle(View view) {
 
-				handler.sendMessage(handler.obtainMessage());
-			}
+		model.setCuddleLevel(model.getCuddleLevel() + 7);
+		handler.sendMessage(handler.obtainMessage());
+
+	}
+
+	/**
+	 * increases energylevel by 50
+	 */
+	public synchronized void sleep(View view) {
+		model.setSleep(true);
+
+	}
+
+	/**
+	 * removes poo from screen and increses poolevel by 100
+	 * 
+	 * @param view
+	 */
+	public synchronized void removePoo(View view) {
+		if (model.hasPooped()) {
+			model.setPooLevel(100);
+			drawPooImage(model.getPooLevel());
+			cleanability = true;
+			model.setHasPooped(false);
 		}
+		handler.sendMessage(handler.obtainMessage());
 
-		/**
-		 * increases cuddlelevel by 7
-		 */
-		public synchronized void cuddle(View view) {
+	}
 
-			model.setCuddleLevel(model.getCuddleLevel() + 7);
+	/**
+	 * cures the pet if it is ill
+	 * @param view
+	 */
+	public synchronized void cure(View view) {
+		if (model.isIll()) {
+			cleanability = true;
+			model.setIllness(false);
+			model.setIllCount(30);
 			handler.sendMessage(handler.obtainMessage());
 
-		}
-
-		/**
-		 * increases energylevel by 50
-		 */
-		public synchronized void sleep(View view) {
-			model.setSleep(true);
+			setCrayExpression(CLEANNESS, model.getCleanLevel());
+			setCrayExpression(HUNGER, model.getHungerLevel());
+			setCrayExpression(HAPPINESS, model.getCuddleLevel());
 
 		}
+	}
 
-		/**
-		 * removes poo from screen and increses poolevel by 100
-		 * 
-		 * @param view
-		 */
-		public synchronized void removePoo(View view) {
-			if (model.hasPooped()) {
-				model.setPooLevel(100);
-				drawPooImage(model.getPooLevel());
-				cleanability = true;
-				model.setHasPooped(false);
-			}
-			handler.sendMessage(handler.obtainMessage());
-
-		}
-
-		/**
-		 * cures the pet if it is ill
-		 * @param view
-		 */
-		public synchronized void cure(View view) {
-			if (model.isIll()) {
-				cleanability = true;
-				model.setIllness(false);
-				model.setIllCount(30);
-				handler.sendMessage(handler.obtainMessage());
-
-				setCrayExpression(CLEANNESS, model.getCleanLevel());
-				setCrayExpression(HUNGER, model.getHungerLevel());
-				setCrayExpression(HAPPINESS, model.getCuddleLevel());
-
-			}
-		}
-
-<<<<<<< HEAD
 	/**
 	 * Called when user clicks to play russian roulette
 	 * @param view
@@ -430,7 +439,7 @@ public class MainActivity extends Activity {
 	public void playRussianRoulette(View view){
 		createRussianAlert().show();
 	}
-	
+
 	/**
 	 * Called when user clicks to drink Happy Potion
 	 * @param view
@@ -439,182 +448,154 @@ public class MainActivity extends Activity {
 		//setDrunkExpression for some period of time
 		model.setCuddleLevel(model.getCuddleLevel()+17);
 	}
-	
+
 	/**
 	 * Displays the instructions-pop up 
 	 */
 	public void howToPlay(View view) {
 		createInstructionsAlert().show();
-	
+
 
 	}
-=======
-		/**
-		 * Called when user clicks to play russian roulette
-		 * @param view
-		 */
-		public void playRussianRoulette(View view){
-			createRussianAlert().show();
-		}
->>>>>>> 7cdc24a218938fee8974788101bf66a78b506aa6
 
-		/**
-		 * Called when user clicks to drink Happy Potion
-		 * @param view
-		 */
-		public void happyPotion(View view){
-			//setDrunkExpression for some period of time
-			model.setCuddleLevel(model.getCuddleLevel()+17);
-		}
 
-		/**
-		 * Check if pooImage should be drawn or not
-		 * 
-		 * @param level
-		 */
-		public synchronized void drawPooImage(int level) {
-			pooImage = (ImageView) findViewById(R.id.pooImage);
-			if (level <= 100 && level > 50) {
-				setPoo(NOPOO);
-				handler.sendMessage(handler.obtainMessage());
-			} else if ((level <= 50 && level >= 20) && (!model.hasPooped())) {
-				setPoo(POO);
-				cleanability = false;
-				model.setHasPooped(true);
-				handler.sendMessage(handler.obtainMessage());
-			} else if (level < 20) {
-				model.setCleanLevel(model.getCleanLevel() - 5);
+	/**
+	 * Check if pooImage should be drawn or not
+	 * 
+	 * @param level
+	 */
+	public synchronized void drawPooImage(int level) {
+		pooImage = (ImageView) findViewById(R.id.pooImage);
+		if (level <= 100 && level > 50) {
+			setPoo(NOPOO);
+			handler.sendMessage(handler.obtainMessage());
+		} else if ((level <= 50 && level >= 20) && (!model.hasPooped())) {
+			setPoo(POO);
+			cleanability = false;
+			model.setHasPooped(true);
+			handler.sendMessage(handler.obtainMessage());
+		} else if (level < 20) {
+			model.setCleanLevel(model.getCleanLevel() - 5);
+		}
+	}
+
+	/**
+	 * set image of poo or an "invisible" picture to visualize removing the
+	 * poopicture
+	 * 
+	 * @param pooOrNot
+	 */
+	public synchronized void setPoo(int pooOrNot) {
+		int image;
+		switch (pooOrNot) {
+
+		case POO:
+			image = R.drawable.poo;
+			pooImage.setImageResource(image);
+			break;
+
+		case NOPOO:
+			image = R.drawable.invisible;
+			pooImage.setImageResource(image);
+			break;
+
+		default:
+			image = R.drawable.invisible;
+			pooImage.setImageResource(image);
+		}
+	}
+
+	/**
+	 * set correct image of craycray based on the different levels.
+	 * 
+	 * @param mode
+	 *            which level to check
+	 * @param level
+	 *            the value of the level
+	 */
+	public synchronized void setCrayExpression(int mode, int level) {
+
+		switch (mode) {
+		case ENERGY:
+			if(level >= 100){
+				model.setSleep(false);
+
+			}else if (level == 0 || model.isSleeping()) {
+				crayView.setImageResource(R.drawable.sleeping_baby);
+				model.setSleep(true);
 			}
-		}
+			break;
 
-		/**
-		 * set image of poo or an "invisible" picture to visualize removing the
-		 * poopicture
-		 * 
-		 * @param pooOrNot
-		 */
-		public synchronized void setPoo(int pooOrNot) {
-			int image;
-			switch (pooOrNot) {
-
-			case POO:
-				image = R.drawable.poo;
-				pooImage.setImageResource(image);
-				break;
-
-			case NOPOO:
-				image = R.drawable.invisible;
-				pooImage.setImageResource(image);
-				break;
-
-			default:
-				image = R.drawable.invisible;
-				pooImage.setImageResource(image);
+			// check dirtyLvl
+		case CLEANNESS:
+			if (level >20 && level < 50) {
+				crayView.setImageResource(R.drawable.dirty_baby);
 			}
-		}
+			if (level <= 20) {
+				System.out.println("baby sick");
+				crayView.setImageResource(R.drawable.sick_baby);
+				model.setIllness(true);
+			}
+			break;
 
-		/**
-		 * set correct image of craycray based on the different levels.
-		 * 
-		 * @param mode
-		 *            which level to check
-		 * @param level
-		 *            the value of the level
-		 */
-		public synchronized void setCrayExpression(int mode, int level) {
+			// check hungryLvl
+		case HUNGER:
+			if (level == 0) {
+				crayView.setImageResource(R.drawable.dead_baby);
 
-			switch (mode) {
+			} else if (model.isIll()) {
+				crayView.setImageResource(R.drawable.sick_baby);
 
+			} else if (level < 50) {
+				System.out.println("inside case 1 (hungry)" + level);
+				crayView.setImageResource(R.drawable.feed_baby);
 
-			case ENERGY:
-				if(level >= 100){
-					model.setSleep(false);
+			}
+			break;
 
-				}else if (level == 0 || model.isSleeping()) {
-					expression = R.drawable.sleeping_baby;
-					crayView.setImageResource(expression);
-					model.setSleep(true);
-				}
-				break;
+			// check cuddleLvl
+		case HAPPINESS:
+			if (level > 70) {
+				crayView.setImageResource(R.drawable.happy_baby);
 
-				// check dirtyLvl
-			case CLEANNESS:
-				if (level >20 && level < 50) {
-					crayView.setImageResource(R.drawable.dirty_baby);
-				}
-				if (level <= 20) {
-					System.out.println("baby sick");
-					crayView.setImageResource(R.drawable.sick_baby);
-					model.setIllness(true);
-				}
-				break;
-
-				// check hungryLvl
-			case HUNGER:
-				if (level == 0) {
-					crayView.setImageResource(R.drawable.dead_baby);
-
-				} else if (model.isIll()) {
-					crayView.setImageResource(R.drawable.sick_baby);
-
-				} else if (level < 50) {
-					System.out.println("inside case 1 (hungry)" + level);
-					crayView.setImageResource(R.drawable.feed_baby);
-
-				}
-				break;
-
-				// check cuddleLvl
-			case HAPPINESS:
-				if (level > 70) {
-					crayView.setImageResource(R.drawable.happy_baby);
-
-				} else if(level < 10){
-					crayView.setImageResource(R.drawable.crying_baby);
-				}else{
-					crayView.setImageResource(R.drawable.regular_baby);
-				}
-				break;
-
-			default:
-				System.out.println("inside base-case" + level);
+			} else if(level < 10){
+				crayView.setImageResource(R.drawable.crying_baby);
+			}else{
 				crayView.setImageResource(R.drawable.regular_baby);
 			}
-			handler.sendMessage(handler.obtainMessage());
+			break;
 
-		}	
-
-		/**
-		 * set image of poo or an "invisible" picture 
-		 * to visualize removing the poopicture
-		 * @param pooOrNot
-		 */
-		public void setPoo(int pooOrNot){
-			int image;
-			switch (pooOrNot) {
-
-			case 1:
-				image = R.drawable.poo;
-				pooImage.setImageResource(image);
-				break;
-
-			case 2:
-				image = R.drawable.invisible;
-				pooImage.setImageResource(image);
-				break;
-
-			default:
-				image = R.drawable.invisible;
-				pooImage.setImageResource(image);
-			}
+		default:
+			System.out.println("inside base-case" + level);
+			crayView.setImageResource(R.drawable.regular_baby);
 		}
+		handler.sendMessage(handler.obtainMessage());
 
-		/**
-		 * Creates a pop-up with a death announcement
-		 */
-		public AlertDialog.Builder createDeathAlert() {
+	}	
 
-<<<<<<< HEAD
+
+	/**
+	 * Creates a pop-up with a death announcement
+	 */
+	public AlertDialog.Builder createDeathAlert() {
+
+		AlertDialog.Builder alertDialog = new AlertDialog.Builder(this);
+		alertDialog.setTitle("Game Over");
+		alertDialog.setPositiveButton("New Game",
+				new DialogInterface.OnClickListener() {
+			public void onClick(DialogInterface dialog, int id) {
+
+
+			}
+		});
+		alertDialog.setNegativeButton("Cancel",
+				new DialogInterface.OnClickListener() {
+			public void onClick(DialogInterface dialog, int id) {
+
+			}
+		});
+
+		return alertDialog;
 	}
 
 	/**
@@ -622,19 +603,20 @@ public class MainActivity extends Activity {
 	 */
 	public AlertDialog.Builder createInstructionsAlert(){
 
+		isActive = false;
 		AlertDialog.Builder alertDialog = new AlertDialog.Builder(this);
 		alertDialog.setTitle("How to play");
 		alertDialog.setNeutralButton("Ok",
 				new DialogInterface.OnClickListener() {
 			public void onClick(DialogInterface dialog, int id) {
-				
+				isActive = true;
 			}
 		});
-		
+
 		return alertDialog;
 
 	}
-	
+
 	/**
 	 * Creates a pop-up asking if the user really wants to
 	 * play Russian Roulette.
@@ -658,119 +640,70 @@ public class MainActivity extends Activity {
 				isActive = true;
 			}
 		});
-=======
-			AlertDialog.Builder alertDialog = new AlertDialog.Builder(this);
-			alertDialog.setTitle("Game Over");
-			alertDialog.setPositiveButton("New Game",
-					new DialogInterface.OnClickListener() {
-				public void onClick(DialogInterface dialog, int id) {
->>>>>>> 7cdc24a218938fee8974788101bf66a78b506aa6
 
-				}
-			});
-			alertDialog.setNegativeButton("Cancel",
-					new DialogInterface.OnClickListener() {
-				public void onClick(DialogInterface dialog, int id) {
+		return alertDialog;
 
-				}
-			});
+	}
 
-			return alertDialog;
-
+	/**
+	 * Tells the user CrayCray has died, usually by a pop-up. 
+	 * If the the program is not active a notification will
+	 * be sent instead.
+	 */
+	public void announceDeath(DeadException e) {
+		//		setCrayExpression(2, 0);
+		if (!hasWindowFocus()) {
+			notifications.sendDeadNotification();
+		} else {
+			String message = e.getDeathCause();
+			createDeathAlert().setMessage(message).show();
 		}
+		model.minAllNeeds();
+	}
 
-		/**
-		 * Creates a pop-up asking if the user really wants to
-		 * play Russian Roulette.
-		 */
-		public AlertDialog.Builder createRussianAlert(){
 
-			isActive = false;
-			AlertDialog.Builder alertDialog = new AlertDialog.Builder(this);
-			alertDialog.setTitle("Russian Roulette");
-			alertDialog.setMessage("Do you really want to play? No turning back...");
-			alertDialog.setPositiveButton("Hell Yeah!",
-					new DialogInterface.OnClickListener() {
-				public void onClick(DialogInterface dialog, int id) {
-					Intent rusIntent = new Intent(main, RussianActivity.class);
-					startActivityForResult(rusIntent, Constants.RUSSIAN_REQUEST_CODE);
+	@Override
+	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+
+		// Check which request we're responding to
+		if (requestCode == Constants.RUSSIAN_REQUEST_CODE) {
+			if (resultCode == RESULT_OK) {
+				Bundle bundle = data.getExtras();
+				boolean result = bundle.getBoolean("key");
+				if(result == Constants.RUSSIAN_LOOSE){
+					Log.w("russian", "result = loose in onactivityres");
+					DeadException e = new DeadException(Constants.RUSSIAN_DEATH);
+					Message msg = Message.obtain();
+					msg.obj = e;
+					handler.sendMessage(msg);
+
+					Log.w("russian", "handler message with dedex sent in onactivityresult");
 				}
-			});
-			alertDialog.setNegativeButton("God no!",
-					new DialogInterface.OnClickListener() {
-				public void onClick(DialogInterface dialog, int id) {
-					isActive = true;
-				}
-			});
-
-			return alertDialog;
-
-		}
-
-		/**
-		 * Tells the user CrayCray has died, usually by a pop-up. 
-		 * If the the program is not active a notification will
-		 * be sent instead.
-		 */
-		public void announceDeath(DeadException e) {
-			//		setCrayExpression(2, 0);
-			if (!hasWindowFocus()) {
-				notifications.sendDeadNotification();
-			} else {
-				String message = e.getDeathCause();
-				createDeathAlert().setMessage(message).show();
 			}
-			model.minAllNeeds();
 		}
-<<<<<<< HEAD
 		isActive = true;
 	}
-}
-=======
 
-
-		@Override
-		protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-
-			// Check which request we're responding to
-			if (requestCode == Constants.RUSSIAN_REQUEST_CODE) {
-				if (resultCode == RESULT_OK) {
-					Bundle bundle = data.getExtras();
-					boolean result = bundle.getBoolean("key");
-					if(result == Constants.RUSSIAN_LOOSE){
-						Log.w("russian", "result = loose in onactivityres");
-						DeadException e = new DeadException(Constants.RUSSIAN_DEATH);
-						Message msg = Message.obtain();
-						msg.obj = e;
-						handler.sendMessage(msg);
-
-						Log.w("russian", "handler message with dedex sent in onactivityresult");
-					}
-				}
-			}
-			isActive = true;
-		}
-
-		public synchronized void activatedButtons(boolean state){
-			if(state){
-				feedButton.setClickable(true);
-				cuddleButton.setClickable(true);
-				cleanButton.setClickable(true);
-				energyButton.setClickable(true);
-				removePooButton.setClickable(true);
-				cureButton.setClickable(true);
-				happypotionButton.setClickable(true);
-				russianButton.setClickable(true);
-			}else{
-				feedButton.setClickable(false);
-				cuddleButton.setClickable(false);
-				cleanButton.setClickable(false);
-				energyButton.setClickable(false);
-				removePooButton.setClickable(false);
-				cureButton.setClickable(false);
-				happypotionButton.setClickable(false);
-				russianButton.setClickable(false);
-			}
+	public synchronized void activatedButtons(boolean state){
+		if(state){
+			feedButton.setClickable(true);
+			cuddleButton.setClickable(true);
+			cleanButton.setClickable(true);
+			energyButton.setClickable(true);
+			removePooButton.setClickable(true);
+			cureButton.setClickable(true);
+			happypotionButton.setClickable(true);
+			russianButton.setClickable(true);
+		}else{
+			feedButton.setClickable(false);
+			cuddleButton.setClickable(false);
+			cleanButton.setClickable(false);
+			energyButton.setClickable(false);
+			removePooButton.setClickable(false);
+			cureButton.setClickable(false);
+			happypotionButton.setClickable(false);
+			russianButton.setClickable(false);
 		}
 	}
->>>>>>> 7cdc24a218938fee8974788101bf66a78b506aa6
+}
+

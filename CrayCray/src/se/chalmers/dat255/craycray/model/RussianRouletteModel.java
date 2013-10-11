@@ -13,7 +13,7 @@ public class RussianRouletteModel {
 	 * Returns a random number between 0 and 5.
 	 */
 	public int getRandom(){
-		return (int)(Math.random()* 6);
+		return (int)(Math.random()* 0);
 	}
 	
 	/**

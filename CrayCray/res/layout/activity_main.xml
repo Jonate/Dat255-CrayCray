@@ -39,23 +39,13 @@
         android:layout_below="@id/cleanBar"
         android:max="100" />
 
-    <ImageView
-        android:id="@+id/foodIcon"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignLeft="@id/foodBar"
-        android:layout_alignParentTop="true"
-        android:minHeight="20dp"
-        android:minWidth="20dp"
-        android:src="@drawable/icon_food" />
-
     <ImageButton
         android:id="@+id/feedButton"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentLeft="true"
         android:layout_below="@id/energyBar"
-        android:layout_marginTop="50dp"
+        android:layout_marginTop="10dp"
         android:maxHeight="57dp"
         android:maxWidth="57dp"
         android:onClick="feed" />
@@ -121,23 +111,6 @@
         android:layout_toRightOf="@id/crayCray"
         android:src="@drawable/poo" />
 
-    <AbsoluteLayout
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentRight="true"
-        android:layout_alignParentTop="true" >
-
-        <View
-            android:id="@+id/fade"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:background="#000000" 
-            android:alpha="0.5"/>
-        	
-    </AbsoluteLayout>
-    
     <ImageButton
         android:id="@+id/russianButton"
         android:layout_width="wrap_content"
@@ -159,16 +132,33 @@
         android:onClick="happyPotion"
         android:text="@string/happy_potion"
         android:textSize="15sp" />
-    
+
     <ImageButton
         android:id="@+id/aboutButton"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignParentLeft="true"
-        android:layout_below="@id/cureButton"
-        android:layout_margin="1dp"
+        android:layout_below="@id/energyBar"
+        android:layout_alignParentRight="true"
+        android:layout_margin="10dp"
         android:onClick="howToPlay"
         android:text="@string/about"
         android:textSize="15sp" />
+
+    <AbsoluteLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentTop="true" >
+
+        <View
+            android:id="@+id/fade"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:alpha="0.5"
+            android:background="#000000" />
+
+    </AbsoluteLayout>
 
 </RelativeLayout>

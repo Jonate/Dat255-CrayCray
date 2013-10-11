@@ -30,6 +30,7 @@ public class NeedsModel {
 	private int illCount;
 	
 	private boolean ill;
+	private boolean pooped;
 	private boolean sleeping;
 	private boolean diedOfRussian = false;
 	
@@ -83,7 +84,10 @@ public class NeedsModel {
 	public synchronized boolean isSleeping(){
 		return sleeping;
 	}
-
+	
+	public boolean hasPooped(){
+		return pooped;
+	}
 	
 
 	/*
@@ -113,6 +117,10 @@ public class NeedsModel {
 		}else{
 			hungerLevel = Constants.NEED_LEVEL_MAX;
 		}
+	}
+	
+	public synchronized void setHasPooped(boolean state){
+		pooped=state;
 	}
 	
 	
@@ -240,6 +248,8 @@ public class NeedsModel {
 			throw new DeadException(deathCause);
 		}
 	}
+	
+
 	
 
 }
