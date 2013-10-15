@@ -287,7 +287,7 @@ public class MainActivity extends Activity {
 		);
 	}	
 
-
+		t.start();
 
 			// checks if the database exists
 			if (dbA.getValue("Firsttime") == -1) {
@@ -326,9 +326,8 @@ public class MainActivity extends Activity {
 	public void onStart() {
 		super.onStart();
 		if(!t.isAlive()){
-			t.start();
+			t.run();
 		}
-
 	}
 
 	@Override
@@ -594,7 +593,10 @@ public class MainActivity extends Activity {
 			public void onClick(DialogInterface dialog, int id) {
 				isActive = true;
 				model.maxAllNeeds();
-				handler.sendMessage(Message.obtain());
+				getBaseContext().deleteDatabase(DatabaseConstants.DATABASE_NAME);
+				Intent newGame = new Intent(main, MainActivity.class);
+				startActivity(newGame);
+				finish();
 			}
 		});
 		alertDialog.setNegativeButton("Cancel",
@@ -639,6 +641,10 @@ public class MainActivity extends Activity {
 			public void onClick(DialogInterface dialog, int id){
 				isActive = true;
 				model.maxAllNeeds();
+				getBaseContext().deleteDatabase(DatabaseConstants.DATABASE_NAME);
+				Intent newGame = new Intent(main, MainActivity.class);
+				startActivity(newGame);
+				finish();
 
 			}
 		});
@@ -691,6 +697,7 @@ public class MainActivity extends Activity {
 		} else {
 			String message = e.getDeathCause();
 			createDeathAlert().setMessage(message).show();
+			
 		}
 		model.minAllNeeds();
 	}
