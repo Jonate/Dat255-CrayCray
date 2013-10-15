@@ -458,6 +458,13 @@ public class MainActivity extends Activity {
 
 
 	}
+	
+	/**
+	 * Displays the new game-pop up 
+	 */
+	public void newGame(View view){
+		createNewGameAlert().show();
+	}
 
 
 	/**
@@ -585,8 +592,9 @@ public class MainActivity extends Activity {
 		alertDialog.setPositiveButton("New Game",
 				new DialogInterface.OnClickListener() {
 			public void onClick(DialogInterface dialog, int id) {
-				model.maxAllNeeds();
 				isActive = true;
+				model.maxAllNeeds();
+				handler.sendMessage(Message.obtain());
 			}
 		});
 		alertDialog.setNegativeButton("Cancel",
@@ -629,8 +637,9 @@ public class MainActivity extends Activity {
 		alertDialog.setMessage("Do you really want to start a new game?");
 		alertDialog.setPositiveButton("Yes", new DialogInterface.OnClickListener(){
 			public void onClick(DialogInterface dialog, int id){
-				model.maxAllNeeds();
 				isActive = true;
+				model.maxAllNeeds();
+				handler.sendMessage(Message.obtain());
 			}
 		});
 		alertDialog.setNegativeButton("No!", new DialogInterface.OnClickListener(){
@@ -718,10 +727,6 @@ public class MainActivity extends Activity {
 			cureButton.setClickable(state);
 			happypotionButton.setClickable(state);
 			russianButton.setClickable(state);
-	}
-	
-	public void newGame(View view){
-		createNewGameAlert();
 	}
 }
 
