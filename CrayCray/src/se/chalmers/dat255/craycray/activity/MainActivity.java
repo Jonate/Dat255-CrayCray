@@ -89,11 +89,15 @@ public class MainActivity extends Activity {
 	private final int CLEANNESS = 2;
 	private final int HAPPINESS = 3;
 	private final int ENERGY = 4;
+	private final int DRUNK = 5;
 
 	private final int POO = 1;
 	private final int NOPOO = 2;
+	
+	private int drunkCount = Constants.MAX_DRUNK_COUNT;
 
 	private boolean cleanability = true;
+	private boolean isDrunk = false;
 
 	private DatabaseAdapter dbA;
 	private NotificationSender notifications = new NotificationSender(this);
@@ -266,6 +270,23 @@ public class MainActivity extends Activity {
 										notifications.sendDirtyNotification();
 									}
 								}
+								
+								//if CrayCray is drunk show drunkpicture
+								if(isDrunk){
+									setCrayExpression(DRUNK, 0);
+								}
+								//decrease drunkCount
+								setDrunkCount(drunkCount -1);
+								//when drunkCount is 0 decide what picture to show
+								if(drunkCount == 0){
+									isDrunk = false;
+									model.setEnergyLevel(model.getEnergyLevel() - 1 );
+									setCrayExpression(HAPPINESS, model.getCuddleLevel());
+									setCrayExpression(HUNGER, model.getHungerLevel());
+									setCrayExpression(CLEANNESS, model.getCleanLevel());
+									drunkCount = Constants.MAX_DRUNK_COUNT;
+								}
+								
 
 								handler.sendMessage(handler.obtainMessage());
 								Thread.sleep(800);
@@ -444,7 +465,12 @@ public class MainActivity extends Activity {
 	 */
 	public void happyPotion(View view){
 		//setDrunkExpression for some period of time
+		isDrunk = true;
 		model.setCuddleLevel(model.getCuddleLevel()+17);
+	}
+	
+	private void setDrunkCount(int count){
+		drunkCount = count;
 	}
 
 	/**
@@ -561,6 +587,10 @@ public class MainActivity extends Activity {
 			}else{
 				crayView.setImageResource(R.drawable.regular_baby);
 			}
+			break;
+			
+		case DRUNK:
+			crayView.setImageResource(R.drawable.wasted_baby);
 			break;
 
 		default:
