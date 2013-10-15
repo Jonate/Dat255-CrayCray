@@ -306,7 +306,7 @@ public class MainActivity extends Activity {
 	}	
 
 
-
+		t.start();
 			// checks if the database exists
 			if (dbA.getValue("Firsttime") == -1) {
 				dbA.addValue("Firsttime", 1);
@@ -344,7 +344,7 @@ public class MainActivity extends Activity {
 	public void onStart() {
 		super.onStart();
 		if(!t.isAlive()){
-			t.start();
+			t.run();
 		}
 
 	}
