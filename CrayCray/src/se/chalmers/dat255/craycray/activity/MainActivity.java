@@ -629,8 +629,8 @@ public class MainActivity extends Activity {
 		alertDialog.setMessage("Do you really want to start a new game?");
 		alertDialog.setPositiveButton("Yes", new DialogInterface.OnClickListener(){
 			public void onClick(DialogInterface dialog, int id){
-				model.maxAllNeeds();
 				isActive = true;
+				model.maxAllNeeds();
 			}
 		});
 		alertDialog.setNegativeButton("No!", new DialogInterface.OnClickListener(){
@@ -721,7 +721,7 @@ public class MainActivity extends Activity {
 	}
 	
 	public void newGame(View view){
-		createNewGameAlert();
+		createNewGameAlert().show();
 	}
 }
 
