@@ -214,14 +214,14 @@ public class MainActivity extends Activity {
 								//deactivate buttons if CrayCray is sleeping
 								//increase energy level when sleeping
 								if (model.isSleeping()) {
-									fade.setVisibility(View.VISIBLE);
-									fade.requestLayout();
+									fade.setAlpha(0.5F);
+									fade.invalidate();
 									model.setEnergyLevel(model.getEnergyLevel() + 15);
 									activatedButtons(false);
 
 								} else {
-									fade.setVisibility(View.INVISIBLE);
-									//							fade.requestLayout();
+									fade.setAlpha(0F);
+									fade.invalidate();
 									model.setEnergyLevel(model.getEnergyLevel() - 1 );
 									setCrayExpression(HAPPINESS, model.getCuddleLevel());
 									setCrayExpression(HUNGER, model.getHungerLevel());
