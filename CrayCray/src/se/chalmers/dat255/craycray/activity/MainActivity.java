@@ -452,8 +452,6 @@ public class MainActivity extends Activity {
 	 */
 	public void howToPlay(View view) {
 		createInstructionsAlert().show();
-
-
 	}
 
 
