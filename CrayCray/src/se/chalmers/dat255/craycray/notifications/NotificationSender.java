@@ -43,7 +43,9 @@ public class NotificationSender {
 		.setContentText("Your sweet CrayCray died.")
 		.setSmallIcon(R.drawable.dead_baby)
 		.setContentIntent(pIntent)
-		.build();		
+		.build();	
+		
+		noti.flags = Notification.FLAG_AUTO_CANCEL;
 
 		//Send notification.
 		NotificationManager notificationManager = (NotificationManager) ctx.getSystemService(Context.NOTIFICATION_SERVICE);
@@ -65,7 +67,9 @@ public class NotificationSender {
 		.setContentText("*hihi*")
 		.setSmallIcon(R.drawable.dirty_baby)
 		.setContentIntent(pIntent)
-		.build();		
+		.build();	
+		
+		noti.flags = Notification.FLAG_AUTO_CANCEL;
 
 		//Send notification.
 		NotificationManager notificationManager = (NotificationManager) ctx.getSystemService(Context.NOTIFICATION_SERVICE);
@@ -86,7 +90,9 @@ public class NotificationSender {
 		.setContentText("Please, please cuuuuuure me!")
 		.setSmallIcon(R.drawable.sick_baby)
 		.setContentIntent(pIntent)
-		.build();		
+		.build();	
+		
+		noti.flags = Notification.FLAG_AUTO_CANCEL;
 
 		//Send notification.
 		NotificationManager notificationManager = (NotificationManager) ctx.getSystemService(Context.NOTIFICATION_SERVICE);

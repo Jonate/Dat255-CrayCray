@@ -5,6 +5,7 @@ public class Constants {
 	//For needs
 	public final static int NEED_LEVEL_MAX = 100;
 	public final static int NEED_LEVEL_MIN = 0;
+	public final static int MAX_DRUNK_COUNT = 15;
 	
 	//For playing Russian Roulette
 	public final static int RUSSIAN_REQUEST_CODE = 1;
