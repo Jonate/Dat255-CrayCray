@@ -602,7 +602,7 @@ public class MainActivity extends Activity {
 		isActive = false;
 		AlertDialog.Builder alertDialog = new AlertDialog.Builder(this);
 		alertDialog.setTitle("How to play");
-		alertDialog.setMessage("Här kommer massa instruktioner stå");
+		alertDialog.setMessage("CrayCray is happier alive. You'd better push the buttons and let it know!");
 		alertDialog.setNeutralButton("Ok",
 				new DialogInterface.OnClickListener() {
 			public void onClick(DialogInterface dialog, int id) {
