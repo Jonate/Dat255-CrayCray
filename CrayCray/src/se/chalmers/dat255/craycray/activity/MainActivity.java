@@ -93,11 +93,14 @@ public class MainActivity extends Activity {
 
 	private final int POO = 1;
 	private final int NOPOO = 2;
-	
+
 	private int drunkCount = Constants.MAX_DRUNK_COUNT;
 
 	private boolean cleanability = true;
 	private boolean isDrunk = false;
+
+	private boolean hasSentIllNoti = false;
+	private boolean hasSentDirtyNoti = false;
 
 	private DatabaseAdapter dbA;
 	private NotificationSender notifications = new NotificationSender(this);
@@ -152,8 +155,8 @@ public class MainActivity extends Activity {
 		happypotionButton = (ImageButton) findViewById(R.id.happypotionButton);
 		russianButton = (ImageButton) findViewById(R.id.russianButton);
 		aboutButton = (ImageButton) findViewById(R.id.aboutButton);
-		
-		
+
+
 		// Sets correct image to the buttons
 		feedButton.setImageResource(R.drawable.button_food);
 		cleanButton.setImageResource(R.drawable.button_clean);
@@ -230,7 +233,7 @@ public class MainActivity extends Activity {
 									setCrayExpression(HAPPINESS, model.getCuddleLevel());
 									setCrayExpression(HUNGER, model.getHungerLevel());
 									setCrayExpression(CLEANNESS, model.getCleanLevel());
-									
+
 									activatedButtons(true);
 
 								}
@@ -240,7 +243,10 @@ public class MainActivity extends Activity {
 								// Then checks if the count has reached zero and in that case CrayCray dies.
 								if(model.isIll()){
 									if(!hasWindowFocus()){
-										notifications.sendIllNotification();
+										if(!hasSentIllNoti){
+											notifications.sendIllNotification();
+											hasSentIllNoti = true;
+										}
 									}
 
 									try{
@@ -266,11 +272,14 @@ public class MainActivity extends Activity {
 
 								// if CrayCray is dirty send a dirty-notification
 								if (model.getCleanLevel() < 50) {
-									if (!hasWindowFocus()) {
-										notifications.sendDirtyNotification();
+									if(!hasSentDirtyNoti){
+										if (!hasWindowFocus()) {
+											notifications.sendDirtyNotification();
+											hasSentDirtyNoti = true;
+										}
 									}
 								}
-								
+
 								//if CrayCray is drunk show drunkpicture
 								if(isDrunk){
 									setCrayExpression(DRUNK, 0);
@@ -286,7 +295,7 @@ public class MainActivity extends Activity {
 									setCrayExpression(CLEANNESS, model.getCleanLevel());
 									drunkCount = Constants.MAX_DRUNK_COUNT;
 								}
-								
+
 
 								handler.sendMessage(handler.obtainMessage());
 								Thread.sleep(800);
@@ -302,42 +311,42 @@ public class MainActivity extends Activity {
 					}
 				}
 			}
-		);
-	}	
+					);
+		}	
 
 
 		t.start();
-			// checks if the database exists
-			if (dbA.getValue("Firsttime") == -1) {
-				dbA.addValue("Firsttime", 1);
-				dbA.addValue(DatabaseConstants.HUNGER, model.getHungerLevel());
-				dbA.addValue(DatabaseConstants.CUDDLE, model.getCuddleLevel());
-				dbA.addValue(DatabaseConstants.POO, model.getPooLevel());
-				dbA.addValue(DatabaseConstants.CLEAN, model.getCleanLevel());
-				dbA.addStringValue(DatabaseConstants.TIME,
-						TimeUtil.getCurrentTime());
-			} else {
-				int differenceInSeconds = TimeUtil.compareTime(dbA
-						.getStringValue(DatabaseConstants.TIME));
-				Log.w("Database",
-						differenceInSeconds + ", "
-								+ dbA.getValue(DatabaseConstants.HUNGER));
-				try {
-					model.setHungerLevel(dbA.getValue(DatabaseConstants.HUNGER)
-							+ differenceInSeconds * (-1));
-					model.setCuddleLevel(dbA.getValue(DatabaseConstants.CUDDLE)
-							+ differenceInSeconds * (-3));
-					model.setCleanLevel(dbA.getValue(DatabaseConstants.CLEAN)
-							+ differenceInSeconds * (-2));
-					model.setPooLevel(dbA.getValue(DatabaseConstants.POO));
-				} catch (DeadException e) {
-					if (e instanceof DeadException) {
-						Message msg = Message.obtain();
-						msg.obj = e;
-						handler.sendMessage(msg);
-					}
+		// checks if the database exists
+		if (dbA.getValue("Firsttime") == -1) {
+			dbA.addValue("Firsttime", 1);
+			dbA.addValue(DatabaseConstants.HUNGER, model.getHungerLevel());
+			dbA.addValue(DatabaseConstants.CUDDLE, model.getCuddleLevel());
+			dbA.addValue(DatabaseConstants.POO, model.getPooLevel());
+			dbA.addValue(DatabaseConstants.CLEAN, model.getCleanLevel());
+			dbA.addStringValue(DatabaseConstants.TIME,
+					TimeUtil.getCurrentTime());
+		} else {
+			int differenceInSeconds = TimeUtil.compareTime(dbA
+					.getStringValue(DatabaseConstants.TIME));
+			Log.w("Database",
+					differenceInSeconds + ", "
+							+ dbA.getValue(DatabaseConstants.HUNGER));
+			try {
+				model.setHungerLevel(dbA.getValue(DatabaseConstants.HUNGER)
+						+ differenceInSeconds * (-1));
+				model.setCuddleLevel(dbA.getValue(DatabaseConstants.CUDDLE)
+						+ differenceInSeconds * (-3));
+				model.setCleanLevel(dbA.getValue(DatabaseConstants.CLEAN)
+						+ differenceInSeconds * (-2));
+				model.setPooLevel(dbA.getValue(DatabaseConstants.POO));
+			} catch (DeadException e) {
+				if (e instanceof DeadException) {
+					Message msg = Message.obtain();
+					msg.obj = e;
+					handler.sendMessage(msg);
 				}
 			}
+		}
 	}
 
 	@Override
@@ -393,6 +402,7 @@ public class MainActivity extends Activity {
 			model.setCleanLevel(model.getCleanLevel() + 10);
 			if (model.getCleanLevel() > 50) {
 				setCrayExpression(-1, -1);
+				hasSentDirtyNoti = false;
 			}
 
 			handler.sendMessage(handler.obtainMessage());
@@ -441,6 +451,7 @@ public class MainActivity extends Activity {
 		if (model.isIll()) {
 			cleanability = true;
 			model.setIllness(false);
+			hasSentIllNoti = false;
 			model.setIllCount(30);
 			handler.sendMessage(handler.obtainMessage());
 
@@ -468,7 +479,7 @@ public class MainActivity extends Activity {
 		isDrunk = true;
 		model.setCuddleLevel(model.getCuddleLevel()+17);
 	}
-	
+
 	private void setDrunkCount(int count){
 		drunkCount = count;
 	}
@@ -588,7 +599,7 @@ public class MainActivity extends Activity {
 				crayView.setImageResource(R.drawable.regular_baby);
 			}
 			break;
-			
+
 		case DRUNK:
 			crayView.setImageResource(R.drawable.wasted_baby);
 			break;
@@ -713,14 +724,14 @@ public class MainActivity extends Activity {
 	}
 
 	public synchronized void activatedButtons(boolean state){
-			feedButton.setClickable(state);
-			cuddleButton.setClickable(state);
-			cleanButton.setClickable(state);
-			energyButton.setClickable(state);
-			removePooButton.setClickable(state);
-			cureButton.setClickable(state);
-			happypotionButton.setClickable(state);
-			russianButton.setClickable(state);
+		feedButton.setClickable(state);
+		cuddleButton.setClickable(state);
+		cleanButton.setClickable(state);
+		energyButton.setClickable(state);
+		removePooButton.setClickable(state);
+		cureButton.setClickable(state);
+		happypotionButton.setClickable(state);
+		russianButton.setClickable(state);
 	}
 }
 
