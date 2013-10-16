@@ -140,10 +140,17 @@
         android:layout_below="@id/energyBar"
         android:layout_alignParentRight="true"
         android:layout_margin="10dp"
-        android:onClick="howToPlay"
-        android:text="@string/about"
-        android:textSize="15sp" />
-
+        android:onClick="howToPlay" />
+    
+    <ImageButton
+		android:id="@+id/newGameButton"
+		android:layout_width="wrap_content"
+		android:layout_height="wrap_content"
+		android:layout_below="@id/aboutButton"
+		android:layout_alignParentRight="true"
+		android:layout_margin="10dp"
+		android:onClick="newGame"/>
+	
     <AbsoluteLayout
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"

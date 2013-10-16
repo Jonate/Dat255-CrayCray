@@ -5,6 +5,14 @@ package se.chalmers.dat255.craycray.database;
  * 
  */
 public class DatabaseConstants {
+	
+	public static final String DATABASE_NAME= "craycray_needs_database";
+	
+	public static final String DATABASE_CREATE = "create table CrayCrayNeeds " +
+			"( _id String primary key, value text not null);";
+	
+	
+	
 	public static String HUNGER="Hunger";
 	public static String TIME="Time";
 	public static String CUDDLE="Cuddle";
