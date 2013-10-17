@@ -2,11 +2,7 @@ package se.chalmers.dat255.craycray.model;
 
 
 
-import java.util.TimerTask;
-import se.chalmers.dat255.craycray.R;
 import se.chalmers.dat255.craycray.util.Constants;
-import android.util.Log;
-import android.widget.ImageView;
 
 /**
  * 
@@ -111,7 +107,7 @@ public class NeedsModel {
 				deathCause = Constants.RUSSIAN_DEATH;
 				throw new DeadException(deathCause);
 			}
-		}else if(hunger < Constants.NEED_LEVEL_MAX && hunger > 0){
+		}else if(hunger < Constants.NEED_LEVEL_MAX){
 			hungerLevel = hunger;
 
 		}else{
@@ -132,7 +128,7 @@ public class NeedsModel {
 		if(clean <= 0){
 			cleanLevel = 0;
 //			setIllness(true);
-		}else if(clean < Constants.NEED_LEVEL_MAX && clean > 0){
+		}else if(clean < Constants.NEED_LEVEL_MAX){
 			cleanLevel = clean;
 		}else{
 			cleanLevel = Constants.NEED_LEVEL_MAX;
@@ -146,7 +142,7 @@ public class NeedsModel {
 	public synchronized void setCuddleLevel(int cuddle){
 		if(cuddle <= 0){
 			cuddleLevel = 0;
-		}else if(cuddle < Constants.NEED_LEVEL_MAX && cuddle > 0){
+		}else if(cuddle < Constants.NEED_LEVEL_MAX){
 			cuddleLevel = cuddle;
 		}else{
 			cuddleLevel = Constants.NEED_LEVEL_MAX;
@@ -160,7 +156,7 @@ public class NeedsModel {
 	public synchronized void setEnergyLevel(int energy){
 		if(energy <= 0){
 			energyLevel = 0;
-		}else if(energy < Constants.NEED_LEVEL_MAX && energy > 0){
+		}else if(energy < Constants.NEED_LEVEL_MAX){
 			energyLevel = energy;
 		}else{
 			energyLevel = Constants.NEED_LEVEL_MAX;
@@ -175,7 +171,7 @@ public class NeedsModel {
 		
 		if(pooNeed <=0){
 			pooLevel = 0;
-		}else if(pooNeed < Constants.NEED_LEVEL_MAX && pooNeed >0){
+		}else if(pooNeed < Constants.NEED_LEVEL_MAX){
 			pooLevel = pooNeed;
 		}else{
 			pooLevel = Constants.NEED_LEVEL_MAX;
