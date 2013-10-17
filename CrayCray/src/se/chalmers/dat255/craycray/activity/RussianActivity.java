@@ -1,7 +1,7 @@
 package se.chalmers.dat255.craycray.activity;
 
 import se.chalmers.dat255.craycray.R;
-import se.chalmers.dat255.craycray.model.DeadException;
+import se.chalmers.dat255.craycray.model.NeedsModel;
 import se.chalmers.dat255.craycray.model.RussianRouletteModel;
 import se.chalmers.dat255.craycray.util.Constants;
 import android.app.Activity;
@@ -15,6 +15,7 @@ import android.widget.ImageView;
 public class RussianActivity extends Activity {
 
 	RussianRouletteModel rModel;
+	NeedsModel model = NeedsModel.getInstance();
 	
 	ImageView crayView;
 	
@@ -25,13 +26,7 @@ public class RussianActivity extends Activity {
 		setContentView(R.layout.activity_russian);
 		crayView = (ImageView) findViewById(R.id.scaredCrayCray);
 	}
-//
-//	@Override
-//	public boolean onCreateOptionsMenu(Menu menu) {
-//		// Inflate the menu; this adds items to the action bar if it is present.
-//		getMenuInflater().inflate(R.menu.russian, menu);
-//		return true;
-//	}
+
 	
 	/*
 	 * Disable back button
@@ -51,7 +46,6 @@ public class RussianActivity extends Activity {
 
 		rModel.play();
 		Log.w("russian", "efter rModel.play()");
-		intent.putExtra(Constants.RUSSIAN_KEY, Constants.RUSSIAN_WIN);
 		setResult(RESULT_OK, intent);
 		finish();
 		

@@ -28,7 +28,6 @@ package se.chalmers.dat255.craycray.activity;
 import se.chalmers.dat255.craycray.R;
 import se.chalmers.dat255.craycray.database.DatabaseAdapter;
 import se.chalmers.dat255.craycray.database.DatabaseConstants;
-import se.chalmers.dat255.craycray.model.DeadException;
 import se.chalmers.dat255.craycray.model.NeedsModel;
 import se.chalmers.dat255.craycray.notifications.NotificationSender;
 import se.chalmers.dat255.craycray.util.Constants;
@@ -92,6 +91,8 @@ public class MainActivity extends Activity {
 	private final int ENERGY = 4;
 	private final int DRUNK = 5;
 
+	private final int DEAD = 6;
+
 	private final int POO = 1;
 	private final int NOPOO = 2;
 
@@ -124,11 +125,9 @@ public class MainActivity extends Activity {
 			// force imageview to update
 			crayView.invalidate();
 
-			if (msg.obj instanceof DeadException) {
-
-				DeadException e = (DeadException) msg.obj;
-				announceDeath(e);
-				activatedButtons(false);
+			if (msg.what == DEAD){
+				announceDeath();
+				model.minAllNeeds();
 			}
 
 		}
@@ -250,19 +249,7 @@ public class MainActivity extends Activity {
 											hasSentIllNoti = true;
 										}
 									}
-
-									try{
-										model.setIllCount(model.getIllCount() - 1);
-										model.killWhenIll();
-									} catch(Exception e){
-										if (e instanceof DeadException) {
-											System.out.println("DEAD BY ILLNESS");
-											Message msg = Message.obtain();
-											msg.obj = e;
-											handler.sendMessage(msg);
-											break;
-										}
-									}
+									model.setIllCount(model.getIllCount() - 1);
 								}
 
 								System.out.println("PRINT IN THREAD:");
@@ -285,10 +272,9 @@ public class MainActivity extends Activity {
 								//if CrayCray is drunk show drunkpicture
 								if(isDrunk){
 									setCrayExpression(DRUNK, 0);
+									setDrunkCount(drunkCount -1);
 								}
-								//decrease drunkCount
-								setDrunkCount(drunkCount -1);
-								//when drunkCount is 0 decide what picture to show
+								//when drunkCount is 0 decide what picture to show and reset
 								if(drunkCount == 0){
 									isDrunk = false;
 									model.setEnergyLevel(model.getEnergyLevel() - 1 );
@@ -298,17 +284,19 @@ public class MainActivity extends Activity {
 									drunkCount = Constants.MAX_DRUNK_COUNT;
 								}
 
+								if(!model.isAlive()){
+									Message msg = Message.obtain();
+									msg.what = DEAD;
+									handler.sendMessage(msg);
+									break;
+								}
 
 								handler.sendMessage(handler.obtainMessage());
 								Thread.sleep(800);
 							}
+
 						} catch (Exception e) {
-							if (e instanceof DeadException) {
-								Message msg = Message.obtain();
-								msg.obj = e;
-								handler.sendMessage(msg);
-								break;
-							}
+
 						}
 					}
 				}
@@ -333,21 +321,13 @@ public class MainActivity extends Activity {
 			Log.w("Database",
 					differenceInSeconds + ", "
 							+ dbA.getValue(DatabaseConstants.HUNGER));
-			try {
-				model.setHungerLevel(dbA.getValue(DatabaseConstants.HUNGER)
-						+ differenceInSeconds * (-1));
-				model.setCuddleLevel(dbA.getValue(DatabaseConstants.CUDDLE)
-						+ differenceInSeconds * (-3));
-				model.setCleanLevel(dbA.getValue(DatabaseConstants.CLEAN)
-						+ differenceInSeconds * (-2));
-				model.setPooLevel(dbA.getValue(DatabaseConstants.POO));
-			} catch (DeadException e) {
-				if (e instanceof DeadException) {
-					Message msg = Message.obtain();
-					msg.obj = e;
-					handler.sendMessage(msg);
-				}
-			}
+			model.setHungerLevel(dbA.getValue(DatabaseConstants.HUNGER)
+					+ differenceInSeconds * (-1));
+			model.setCuddleLevel(dbA.getValue(DatabaseConstants.CUDDLE)
+					+ differenceInSeconds * (-3));
+			model.setCleanLevel(dbA.getValue(DatabaseConstants.CLEAN)
+					+ differenceInSeconds * (-2));
+			model.setPooLevel(dbA.getValue(DatabaseConstants.POO));
 		}
 	}
 
@@ -360,12 +340,6 @@ public class MainActivity extends Activity {
 		}
 	}
 
-//	@Override
-//	public boolean onCreateOptionsMenu(Menu menu) {
-//		// Inflate the menu; this adds items to the action bar if it is present.
-//		getMenuInflater().inflate(R.menu.main, menu);
-//		return true;
-//	}
 
 	/**
 	 * Updates the database if the application is shut down
@@ -384,12 +358,9 @@ public class MainActivity extends Activity {
 	 * increases hungerlevel by 5
 	 */
 	public synchronized void feed(View view) {
-		try {
-			model.setHungerLevel(model.getHungerLevel() + 5);
 
-		} catch (DeadException e) {
-			// handled elsewhere?
-		}
+		model.setHungerLevel(model.getHungerLevel() + 5);
+
 		if (model.getHungerLevel() > 50) {
 			setCrayExpression(-1, -1);
 		}
@@ -731,16 +702,20 @@ public class MainActivity extends Activity {
 	 * If the the program is not active a notification will
 	 * be sent instead.
 	 */
-	public void announceDeath(DeadException e) {
+	public void announceDeath() {
 		setCrayExpression(HUNGER, 0);
-		if (!hasWindowFocus()) {
-			notifications.sendDeadNotification();
-		} else {
-			String message = e.getDeathCause();
+		String message = model.getDeathCause();
+		
+		if(message == Constants.RUSSIAN_DEATH){
 			createDeathAlert().setMessage(message).show();
-
+		}else{
+			if (!hasWindowFocus()) {
+				System.out.println("not in focus");
+				notifications.sendDeadNotification();
+			} else {
+				createDeathAlert().setMessage(message).show();
+			}
 		}
-		model.minAllNeeds();
 	}
 
 
@@ -750,20 +725,14 @@ public class MainActivity extends Activity {
 		// Check which request we're responding to
 		if (requestCode == Constants.RUSSIAN_REQUEST_CODE) {
 			if (resultCode == RESULT_OK) {
-				Bundle bundle = data.getExtras();
-				boolean result = bundle.getBoolean("key");
-				if(result == Constants.RUSSIAN_LOOSE){
-					Log.w("russian", "result = loose in onactivityres");
-					DeadException e = new DeadException(Constants.RUSSIAN_DEATH);
-					Message msg = Message.obtain();
-					msg.obj = e;
-					handler.sendMessage(msg);
-
-					Log.w("russian", "handler message with dedex sent in onactivityresult");
-				}
+				//				if(!model.isAlive()){
+				//					Message msg = Message.obtain();
+				//					msg.what = DEAD;
+				//					handler.sendMessage(msg);
+				//				}
+				isActive = true;
 			}
 		}
-		isActive = true;
 	}
 
 	public synchronized void activatedButtons(boolean state){
