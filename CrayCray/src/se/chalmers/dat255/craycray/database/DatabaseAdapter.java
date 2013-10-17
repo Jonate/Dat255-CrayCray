@@ -50,7 +50,7 @@ public class DatabaseAdapter {
 	public long addStringValue(String id, String value){  
 		ContentValues values = new ContentValues();  
 		values.put(NEED_ID, id);  
-		values.put(NEED_VALUE, value);  
+		values.put(NEED_VALUE, value);
 		return database.insert(NEED_TABLE, null, values);  
 	}    
 	

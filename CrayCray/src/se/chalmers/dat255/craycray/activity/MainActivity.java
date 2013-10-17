@@ -72,6 +72,7 @@ public class MainActivity extends Activity {
 	private ImageButton happypotionButton;
 	private ImageButton russianButton;
 	private ImageButton aboutButton;
+	private ImageButton newGameButton;
 
 	// The bars of the application
 	private ProgressBar foodBar;
@@ -89,11 +90,15 @@ public class MainActivity extends Activity {
 	private final int CLEANNESS = 2;
 	private final int HAPPINESS = 3;
 	private final int ENERGY = 4;
+	private final int DRUNK = 5;
 
 	private final int POO = 1;
 	private final int NOPOO = 2;
+	
+	private int drunkCount = Constants.MAX_DRUNK_COUNT;
 
 	private boolean cleanability = true;
+	private boolean isDrunk = false;
 
 	private DatabaseAdapter dbA;
 	private NotificationSender notifications = new NotificationSender(this);
@@ -148,6 +153,7 @@ public class MainActivity extends Activity {
 		happypotionButton = (ImageButton) findViewById(R.id.happypotionButton);
 		russianButton = (ImageButton) findViewById(R.id.russianButton);
 		aboutButton = (ImageButton) findViewById(R.id.aboutButton);
+		newGameButton = (ImageButton)findViewById(R.id.newGameButton);
 		
 		
 		// Sets correct image to the buttons
@@ -160,6 +166,7 @@ public class MainActivity extends Activity {
 		happypotionButton.setImageResource(R.drawable.button_alcohol);
 		russianButton.setImageResource(R.drawable.button_roulette);
 		aboutButton.setImageResource(R.drawable.button_about);
+		newGameButton.setImageResource(R.drawable.button_restart);
 
 
 		//Bar - variables set to xml ID
@@ -214,14 +221,14 @@ public class MainActivity extends Activity {
 								//deactivate buttons if CrayCray is sleeping
 								//increase energy level when sleeping
 								if (model.isSleeping()) {
-									fade.setVisibility(View.VISIBLE);
-									fade.requestLayout();
+									fade.setAlpha(0.5F);
+									fade.invalidate();
 									model.setEnergyLevel(model.getEnergyLevel() + 15);
 									activatedButtons(false);
 
 								} else {
-									fade.setVisibility(View.INVISIBLE);
-									//							fade.requestLayout();
+									fade.setAlpha(0F);
+									fade.invalidate();
 									model.setEnergyLevel(model.getEnergyLevel() - 1 );
 									setCrayExpression(HAPPINESS, model.getCuddleLevel());
 									setCrayExpression(HUNGER, model.getHungerLevel());
@@ -231,7 +238,7 @@ public class MainActivity extends Activity {
 
 								}
 
-								// If window does not have focus an ill notification is send.
+								// If window does not have focus an ill notification is sent.
 								// remove 1 from illCount. 
 								// Then checks if the count has reached zero and in that case CrayCray dies.
 								if(model.isIll()){
@@ -266,6 +273,23 @@ public class MainActivity extends Activity {
 										notifications.sendDirtyNotification();
 									}
 								}
+								
+								//if CrayCray is drunk show drunkpicture
+								if(isDrunk){
+									setCrayExpression(DRUNK, 0);
+								}
+								//decrease drunkCount
+								setDrunkCount(drunkCount -1);
+								//when drunkCount is 0 decide what picture to show
+								if(drunkCount == 0){
+									isDrunk = false;
+									model.setEnergyLevel(model.getEnergyLevel() - 1 );
+									setCrayExpression(HAPPINESS, model.getCuddleLevel());
+									setCrayExpression(HUNGER, model.getHungerLevel());
+									setCrayExpression(CLEANNESS, model.getCleanLevel());
+									drunkCount = Constants.MAX_DRUNK_COUNT;
+								}
+								
 
 								handler.sendMessage(handler.obtainMessage());
 								Thread.sleep(800);
@@ -284,7 +308,7 @@ public class MainActivity extends Activity {
 		);
 	}	
 
-
+		t.start();
 
 			// checks if the database exists
 			if (dbA.getValue("Firsttime") == -1) {
@@ -323,9 +347,8 @@ public class MainActivity extends Activity {
 	public void onStart() {
 		super.onStart();
 		if(!t.isAlive()){
-			t.start();
+			t.run();
 		}
-
 	}
 
 	@Override
@@ -444,7 +467,12 @@ public class MainActivity extends Activity {
 	 */
 	public void happyPotion(View view){
 		//setDrunkExpression for some period of time
+		isDrunk = true;
 		model.setCuddleLevel(model.getCuddleLevel()+17);
+	}
+	
+	private void setDrunkCount(int count){
+		drunkCount = count;
 	}
 
 	/**
@@ -452,6 +480,13 @@ public class MainActivity extends Activity {
 	 */
 	public void howToPlay(View view) {
 		createInstructionsAlert().show();
+	}
+	
+	/**
+	 * Displays the new game-pop up 
+	 */
+	public void newGame(View view){
+		createNewGameAlert().show();
 	}
 
 
@@ -560,6 +595,10 @@ public class MainActivity extends Activity {
 				crayView.setImageResource(R.drawable.regular_baby);
 			}
 			break;
+			
+		case DRUNK:
+			crayView.setImageResource(R.drawable.wasted_baby);
+			break;
 
 		default:
 			System.out.println("inside base-case" + level);
@@ -580,8 +619,12 @@ public class MainActivity extends Activity {
 		alertDialog.setPositiveButton("New Game",
 				new DialogInterface.OnClickListener() {
 			public void onClick(DialogInterface dialog, int id) {
-
-
+				isActive = true;
+				model.maxAllNeeds();
+				getBaseContext().deleteDatabase(DatabaseConstants.DATABASE_NAME);
+				Intent newGame = new Intent(main, MainActivity.class);
+				startActivity(newGame);
+				finish();
 			}
 		});
 		alertDialog.setNegativeButton("Cancel",
@@ -612,6 +655,35 @@ public class MainActivity extends Activity {
 
 		return alertDialog;
 
+	}
+	
+	/**
+	 * Creates a pop-up asking if the user really wants to
+	 * start a new game.
+	 */
+	public AlertDialog.Builder createNewGameAlert(){
+		isActive = false;
+		AlertDialog.Builder alertDialog = new AlertDialog.Builder(this);
+		alertDialog.setTitle("New Game");
+		alertDialog.setMessage("Do you really want to start a new game?");
+		alertDialog.setPositiveButton("Yes", new DialogInterface.OnClickListener(){
+			public void onClick(DialogInterface dialog, int id){
+				isActive = true;
+				model.maxAllNeeds();
+				getBaseContext().deleteDatabase(DatabaseConstants.DATABASE_NAME);
+				Intent newGame = new Intent(main, MainActivity.class);
+				startActivity(newGame);
+				finish();
+
+			}
+		});
+		alertDialog.setNegativeButton("No!", new DialogInterface.OnClickListener(){
+			public void onClick(DialogInterface dialog, int id){
+				isActive = true;
+			}
+		});
+		
+		return alertDialog;
 	}
 
 	/**
@@ -654,6 +726,7 @@ public class MainActivity extends Activity {
 		} else {
 			String message = e.getDeathCause();
 			createDeathAlert().setMessage(message).show();
+			
 		}
 		model.minAllNeeds();
 	}
@@ -691,5 +764,6 @@ public class MainActivity extends Activity {
 			happypotionButton.setClickable(state);
 			russianButton.setClickable(state);
 	}
+
 }
 
