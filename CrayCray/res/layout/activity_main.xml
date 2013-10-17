@@ -53,8 +53,8 @@
         android:layout_height="wrap_content"
         android:layout_alignParentLeft="true"
         android:layout_below="@id/energyBar"
-        android:layout_marginLeft="15dp"
-        android:layout_marginTop="20dp"
+        android:layout_marginLeft="20dp"
+        android:layout_marginTop="165dp"
         android:background="@null"
         android:onClick="feed" />
 
@@ -64,8 +64,8 @@
         android:layout_height="wrap_content"
         android:layout_alignParentLeft="true"
         android:layout_below="@id/feedButton"
-        android:layout_marginLeft="15dp"
-        android:layout_marginTop="5dp"
+        android:layout_marginLeft="20dp"
+        android:layout_marginTop="15dp"
         android:background="@null"
         android:onClick="cuddle" />
 
@@ -75,8 +75,8 @@
         android:layout_height="wrap_content"
         android:layout_alignParentLeft="true"
         android:layout_below="@id/cuddleButton"
-        android:layout_marginLeft="15dp"
-        android:layout_marginTop="5dp"
+        android:layout_marginLeft="20dp"
+        android:layout_marginTop="15dp"
         android:background="@null"
         android:onClick="clean" />
 
@@ -86,8 +86,8 @@
         android:layout_height="wrap_content"
         android:layout_alignParentLeft="true"
         android:layout_below="@id/cleanButton"
-        android:layout_marginLeft="15dp"
-        android:layout_marginTop="5dp"
+        android:layout_marginLeft="25dp"
+        android:layout_marginTop="15dp"
         android:background="@null"
         android:onClick="sleep" />
 
@@ -97,8 +97,8 @@
         android:layout_height="wrap_content"
         android:layout_alignParentLeft="true"
         android:layout_below="@id/energyButton"
-        android:layout_marginLeft="15dp"
-        android:layout_marginTop="5dp"
+        android:layout_marginLeft="20dp"
+        android:layout_marginTop="15dp"
         android:background="@null"
         android:onClick="removePoo" />
 
@@ -108,8 +108,8 @@
         android:layout_height="wrap_content"
         android:layout_alignParentLeft="true"
         android:layout_below="@id/removePooButton"
-        android:layout_marginLeft="15dp"
-        android:layout_marginTop="5dp"
+        android:layout_marginLeft="25dp"
+        android:layout_marginTop="15dp"
         android:background="@null"
         android:onClick="cure" />
 
@@ -137,8 +137,8 @@
         android:layout_height="wrap_content"
         android:layout_alignParentLeft="true"
         android:layout_below="@id/cureButton"
-        android:layout_marginLeft="15dp"
-        android:layout_marginTop="5dp"
+        android:layout_marginLeft="20dp"
+        android:layout_marginTop="15dp"
         android:background="@null"
         android:onClick="happyPotion" />
 
@@ -148,8 +148,8 @@
         android:layout_height="wrap_content"
         android:layout_alignParentLeft="true"
         android:layout_below="@id/happypotionButton"
-        android:layout_marginLeft="15dp"
-        android:layout_marginTop="5dp"
+        android:layout_marginLeft="20dp"
+        android:layout_marginTop="15dp"
         android:background="@null"
         android:onClick="playRussianRoulette" />
 
