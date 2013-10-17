@@ -2,14 +2,14 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="wrap_content"
     android:layout_height="wrap_content" >
-    
-    <ImageView 
+
+    <ImageView
         android:id="@+id/background"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_centerInParent="true"
         android:scaleType="centerCrop"
-            android:src="@drawable/background2" />
+        android:src="@drawable/background2" />
 
     <ProgressBar
         android:id="@+id/foodBar"
@@ -45,7 +45,6 @@
         android:layout_height="wrap_content"
         android:layout_alignParentLeft="true"
         android:layout_below="@id/cleanBar"
-        
         android:max="100" />
 
     <ImageButton
@@ -54,9 +53,9 @@
         android:layout_height="wrap_content"
         android:layout_alignParentLeft="true"
         android:layout_below="@id/energyBar"
-        android:background="@null"
         android:layout_marginLeft="15dp"
         android:layout_marginTop="20dp"
+        android:background="@null"
         android:onClick="feed" />
 
     <ImageButton
@@ -65,9 +64,9 @@
         android:layout_height="wrap_content"
         android:layout_alignParentLeft="true"
         android:layout_below="@id/feedButton"
-        android:background="@null"
         android:layout_marginLeft="15dp"
         android:layout_marginTop="5dp"
+        android:background="@null"
         android:onClick="cuddle" />
 
     <ImageButton
@@ -76,9 +75,9 @@
         android:layout_height="wrap_content"
         android:layout_alignParentLeft="true"
         android:layout_below="@id/cuddleButton"
-        android:background="@null"
-		android:layout_marginLeft="15dp"
+        android:layout_marginLeft="15dp"
         android:layout_marginTop="5dp"
+        android:background="@null"
         android:onClick="clean" />
 
     <ImageButton
@@ -87,9 +86,9 @@
         android:layout_height="wrap_content"
         android:layout_alignParentLeft="true"
         android:layout_below="@id/cleanButton"
-        android:background="@null"
         android:layout_marginLeft="15dp"
         android:layout_marginTop="5dp"
+        android:background="@null"
         android:onClick="sleep" />
 
     <ImageButton
@@ -98,9 +97,9 @@
         android:layout_height="wrap_content"
         android:layout_alignParentLeft="true"
         android:layout_below="@id/energyButton"
-        android:background="@null"
         android:layout_marginLeft="15dp"
         android:layout_marginTop="5dp"
+        android:background="@null"
         android:onClick="removePoo" />
 
     <ImageButton
@@ -109,16 +108,16 @@
         android:layout_height="wrap_content"
         android:layout_alignParentLeft="true"
         android:layout_below="@id/removePooButton"
-        android:background="@null"
         android:layout_marginLeft="15dp"
         android:layout_marginTop="5dp"
+        android:background="@null"
         android:onClick="cure" />
 
     <ImageView
         android:id="@+id/crayCray"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_above="@+id/removePooButton"
+        android:paddingTop="210dp"
         android:layout_centerHorizontal="true"
         android:src="@drawable/regular_baby" />
 
@@ -127,53 +126,53 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_below="@id/crayCray"
-        android:layout_toRightOf="@id/crayCray"
         android:layout_marginLeft="15dp"
         android:layout_marginTop="20dp"
+        android:layout_toRightOf="@id/crayCray"
         android:src="@drawable/poo" />
-
-    <ImageButton
-        android:id="@+id/russianButton"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true"
-        android:layout_alignParentRight="true"
-        android:background="@null"
-        android:layout_marginLeft="15dp"
-        android:layout_margin="5dp"
-        android:onClick="playRussianRoulette" />
 
     <ImageButton
         android:id="@+id/happypotionButton"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true"
         android:layout_alignParentLeft="true"
-        android:background="@null"
+        android:layout_below="@id/cureButton"
         android:layout_marginLeft="15dp"
-        android:layout_margin="5dp"
+        android:layout_marginTop="5dp"
+        android:background="@null"
         android:onClick="happyPotion" />
+
+    <ImageButton
+        android:id="@+id/russianButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentLeft="true"
+        android:layout_below="@id/happypotionButton"
+        android:layout_marginLeft="15dp"
+        android:layout_marginTop="5dp"
+        android:background="@null"
+        android:onClick="playRussianRoulette" />
+
+    <ImageButton
+        android:id="@+id/newGameButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentBottom="true"
+        android:padding="10dp"
+        android:background="@null"
+        android:onClick="newGame" />
 
     <ImageButton
         android:id="@+id/aboutButton"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_below="@id/energyBar"
-        android:layout_alignParentRight="true"
+        android:layout_alignParentBottom="true"
+        android:layout_toLeftOf="@id/newGameButton"
+        android:padding="10dp"
         android:background="@null"
-        android:layout_marginLeft="15dp"
-        android:layout_margin="10dp"
         android:onClick="howToPlay" />
-    
-    <ImageButton
-		android:id="@+id/newGameButton"
-		android:layout_width="wrap_content"
-		android:layout_height="wrap_content"
-		android:layout_below="@id/aboutButton"
-		android:layout_alignParentRight="true"
-		android:layout_margin="10dp"
-		android:onClick="newGame"/>
-	
+
     <AbsoluteLayout
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -187,8 +186,6 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:background="#000000" />
-            
-
     </AbsoluteLayout>
 
 </RelativeLayout>
