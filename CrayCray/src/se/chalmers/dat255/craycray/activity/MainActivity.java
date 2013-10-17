@@ -72,6 +72,7 @@ public class MainActivity extends Activity {
 	private ImageButton happypotionButton;
 	private ImageButton russianButton;
 	private ImageButton aboutButton;
+	private ImageButton newGameButton;
 
 	// The bars of the application
 	private ProgressBar foodBar;
@@ -155,7 +156,7 @@ public class MainActivity extends Activity {
 		happypotionButton = (ImageButton) findViewById(R.id.happypotionButton);
 		russianButton = (ImageButton) findViewById(R.id.russianButton);
 		aboutButton = (ImageButton) findViewById(R.id.aboutButton);
-
+		newGameButton = (ImageButton)findViewById(R.id.newGameButton);
 
 		// Sets correct image to the buttons
 		feedButton.setImageResource(R.drawable.button_food);
@@ -167,6 +168,7 @@ public class MainActivity extends Activity {
 		happypotionButton.setImageResource(R.drawable.button_alcohol);
 		russianButton.setImageResource(R.drawable.button_roulette);
 		aboutButton.setImageResource(R.drawable.button_about);
+		newGameButton.setImageResource(R.drawable.button_restart);
 
 
 		//Bar - variables set to xml ID
@@ -238,7 +240,7 @@ public class MainActivity extends Activity {
 
 								}
 
-								// If window does not have focus an ill notification is send.
+								// If window does not have focus an ill notification is sent.
 								// remove 1 from illCount. 
 								// Then checks if the count has reached zero and in that case CrayCray dies.
 								if(model.isIll()){
@@ -314,8 +316,8 @@ public class MainActivity extends Activity {
 					);
 		}	
 
-
 		t.start();
+
 		// checks if the database exists
 		if (dbA.getValue("Firsttime") == -1) {
 			dbA.addValue("Firsttime", 1);
@@ -349,13 +351,13 @@ public class MainActivity extends Activity {
 		}
 	}
 
+
 	@Override
 	public void onStart() {
 		super.onStart();
 		if(!t.isAlive()){
 			t.run();
 		}
-
 	}
 
 	@Override
@@ -493,6 +495,13 @@ public class MainActivity extends Activity {
 
 	}
 
+	/**
+	 * Displays the new game-pop up 
+	 */
+	public void newGame(View view){
+		createNewGameAlert().show();
+	}
+
 
 	/**
 	 * Check if pooImage should be drawn or not
@@ -623,8 +632,12 @@ public class MainActivity extends Activity {
 		alertDialog.setPositiveButton("New Game",
 				new DialogInterface.OnClickListener() {
 			public void onClick(DialogInterface dialog, int id) {
-
-
+				isActive = true;
+				model.maxAllNeeds();
+				getBaseContext().deleteDatabase(DatabaseConstants.DATABASE_NAME);
+				Intent newGame = new Intent(main, MainActivity.class);
+				startActivity(newGame);
+				finish();
 			}
 		});
 		alertDialog.setNegativeButton("Cancel",
@@ -654,6 +667,35 @@ public class MainActivity extends Activity {
 
 		return alertDialog;
 
+	}
+
+	/**
+	 * Creates a pop-up asking if the user really wants to
+	 * start a new game.
+	 */
+	public AlertDialog.Builder createNewGameAlert(){
+		isActive = false;
+		AlertDialog.Builder alertDialog = new AlertDialog.Builder(this);
+		alertDialog.setTitle("New Game");
+		alertDialog.setMessage("Do you really want to start a new game?");
+		alertDialog.setPositiveButton("Yes", new DialogInterface.OnClickListener(){
+			public void onClick(DialogInterface dialog, int id){
+				isActive = true;
+				model.maxAllNeeds();
+				getBaseContext().deleteDatabase(DatabaseConstants.DATABASE_NAME);
+				Intent newGame = new Intent(main, MainActivity.class);
+				startActivity(newGame);
+				finish();
+
+			}
+		});
+		alertDialog.setNegativeButton("No!", new DialogInterface.OnClickListener(){
+			public void onClick(DialogInterface dialog, int id){
+				isActive = true;
+			}
+		});
+
+		return alertDialog;
 	}
 
 	/**
@@ -696,6 +738,7 @@ public class MainActivity extends Activity {
 		} else {
 			String message = e.getDeathCause();
 			createDeathAlert().setMessage(message).show();
+
 		}
 		model.minAllNeeds();
 	}
@@ -733,5 +776,6 @@ public class MainActivity extends Activity {
 		happypotionButton.setClickable(state);
 		russianButton.setClickable(state);
 	}
+
 }
 

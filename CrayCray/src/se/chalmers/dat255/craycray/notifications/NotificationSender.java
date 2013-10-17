@@ -98,5 +98,18 @@ public class NotificationSender {
 		NotificationManager notificationManager = (NotificationManager) ctx.getSystemService(Context.NOTIFICATION_SERVICE);
 		notificationManager.notify(ILL_NOTI, noti);
 	}
-
+	
+	/**
+	 * Removes the ill notification from notification bar if it exists
+	 */
+	public void removeIllNotification(){
+		
+	}
+	
+	/**
+	 * Removes the dirty notification from notification bar if it exists
+	 */
+	public void removeDirtyNotification(){
+		
+	}
 }
