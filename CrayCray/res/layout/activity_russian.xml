@@ -9,29 +9,28 @@
     tools:context=".RussianActivity" >
 
     <TextView
+        android:id="@+id/textView1"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="@string/russian_roulette" />
-    
+
+    <ImageButton
+        android:id="@+id/fireGun"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentRight="true"
+        android:layout_alignTop="@+id/scaredCrayCray"
+        android:layout_marginTop="40dp"
+        android:background="@null"
+        android:onClick="playRussian"
+        android:src="@drawable/gun" />
+
     <ImageView
         android:id="@+id/scaredCrayCray"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_centerVertical="true"
-        android:layout_alignParentLeft="true"
-        android:layout_marginLeft="50dp"
+        android:layout_toLeftOf="@+id/fireGun"
         android:src="@drawable/scared_baby" />
-    
-    <Button 
-        android:id="@+id/fireGun"
-        android:text="@string/fire"
-        android:textSize="20sp"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_centerVertical="true"
-        android:layout_alignParentRight="true"
-        android:layout_marginRight="50dp"
-        android:layout_margin="1dp"
-        android:onClick="playRussian" />
 
 </RelativeLayout>
