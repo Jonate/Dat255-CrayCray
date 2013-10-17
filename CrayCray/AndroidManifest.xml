@@ -44,12 +44,12 @@
             </intent-filter>
         </activity>
         <activity
-            android:name="se.chalmers.dat255.craycray.GameOverDialog"
-            android:label="@string/title_activity_game_over_dialog" >
-        </activity>
-        <activity
             android:name="se.chalmers.dat255.craycray.activity.RussianActivity"
-            android:label="@string/title_activity_russian" >
+            android:label="@string/title_activity_russian" 
+            android:screenOrientation="portrait" >
+            <intent-filter>
+
+            </intent-filter>
         </activity>
     </application>
 
