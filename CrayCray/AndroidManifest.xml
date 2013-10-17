@@ -47,6 +47,9 @@
             android:name="se.chalmers.dat255.craycray.activity.RussianActivity"
             android:label="@string/title_activity_russian" 
             android:screenOrientation="portrait" >
+            <intent-filter>
+
+            </intent-filter>
         </activity>
     </application>
 

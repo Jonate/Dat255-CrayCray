@@ -25,13 +25,13 @@ public class RussianActivity extends Activity {
 		setContentView(R.layout.activity_russian);
 		crayView = (ImageView) findViewById(R.id.scaredCrayCray);
 	}
-
-	@Override
-	public boolean onCreateOptionsMenu(Menu menu) {
-		// Inflate the menu; this adds items to the action bar if it is present.
-		getMenuInflater().inflate(R.menu.russian, menu);
-		return true;
-	}
+//
+//	@Override
+//	public boolean onCreateOptionsMenu(Menu menu) {
+//		// Inflate the menu; this adds items to the action bar if it is present.
+//		getMenuInflater().inflate(R.menu.russian, menu);
+//		return true;
+//	}
 	
 	/*
 	 * Disable back button
