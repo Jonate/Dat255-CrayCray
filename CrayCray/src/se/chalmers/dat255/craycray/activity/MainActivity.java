@@ -707,41 +707,42 @@ public class MainActivity extends Activity {
 			createDeathAlert().setMessage(message).show();
 		}else{
 			if (!hasWindowFocus()) {
-				System.out.println("not in focus");
 				notifications.sendDeadNotification();
-			} else {
+				createDeathAlert().setMessage(message).show();
+			}else {
 				createDeathAlert().setMessage(message).show();
 			}
 		}
 	}
 
 
-	@Override
-	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
 
-		// Check which request we're responding to
-		if (requestCode == Constants.RUSSIAN_REQUEST_CODE) {
-			if (resultCode == RESULT_OK) {
-				//				if(!model.isAlive()){
-				//					Message msg = Message.obtain();
-				//					msg.what = DEAD;
-				//					handler.sendMessage(msg);
-				//				}
-				isActive = true;
-			}
+@Override
+protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+
+	// Check which request we're responding to
+	if (requestCode == Constants.RUSSIAN_REQUEST_CODE) {
+		if (resultCode == RESULT_OK) {
+			//				if(!model.isAlive()){
+			//					Message msg = Message.obtain();
+			//					msg.what = DEAD;
+			//					handler.sendMessage(msg);
+			//				}
+			isActive = true;
 		}
 	}
+}
 
-	public synchronized void activatedButtons(boolean state){
-		feedButton.setClickable(state);
-		cuddleButton.setClickable(state);
-		cleanButton.setClickable(state);
-		energyButton.setClickable(state);
-		removePooButton.setClickable(state);
-		cureButton.setClickable(state);
-		happypotionButton.setClickable(state);
-		russianButton.setClickable(state);
-	}
+public synchronized void activatedButtons(boolean state){
+	feedButton.setClickable(state);
+	cuddleButton.setClickable(state);
+	cleanButton.setClickable(state);
+	energyButton.setClickable(state);
+	removePooButton.setClickable(state);
+	cureButton.setClickable(state);
+	happypotionButton.setClickable(state);
+	russianButton.setClickable(state);
+}
 
 }
 
