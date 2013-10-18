@@ -1,9 +1,9 @@
 package se.chalmers.dat255.craycray.modeltest;
 
-import se.chalmers.dat255.craycray.model.DeadException;
 import se.chalmers.dat255.craycray.model.NeedsModel;
 import se.chalmers.dat255.craycray.util.Constants;
 import android.test.AndroidTestCase;
+
 
 /**
  * A class for testing the class NeedsModel.
@@ -30,7 +30,7 @@ public class NeedsModelTest extends AndroidTestCase{
 	 * Test if it is possible to get the hungerLevel
 	 * @throws DeadException
 	 */
-	public void getHungerLevelTest() throws DeadException {
+	public void getHungerLevelTest(){
 		
 		NeedsModel model = NeedsModel.getInstance();
 		assertTrue(model.getHungerLevel() == 10);
@@ -42,30 +42,13 @@ public class NeedsModelTest extends AndroidTestCase{
 	 * and if a DeadException is thrown
 	 * @throws DeadException
 	 */
-	public void setHungerLevelTest() throws DeadException {
+	public void setHungerLevelTest(){
 
 		NeedsModel model = NeedsModel.getInstance();
 		model.setHungerLevel(50);
 		assertTrue(model.getHungerLevel() == 50);
 		model.setHungerLevel(200);
 		assertTrue(model.getHungerLevel() == 100);
-
-		try {
-			model.setHungerLevel(-10);
-			fail("DeadException not thrown when hungerlevel is 0");
-			
-		} catch (DeadException e) {
-
-		}
-		assertTrue(model.getHungerLevel() == 0);
-
-		try {
-			model.setHungerLevel(0);
-			fail("DeadException not thrown when hungerlevel is 0");
-		} catch (DeadException e) {
-
-		}
-		assertTrue(model.getHungerLevel() == 0);
 		
 	}
 
