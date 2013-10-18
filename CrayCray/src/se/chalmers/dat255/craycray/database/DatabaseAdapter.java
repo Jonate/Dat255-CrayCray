@@ -120,4 +120,5 @@ public class DatabaseAdapter {
 			return null;
 		}				
 	}
+
 }

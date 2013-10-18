@@ -2,6 +2,7 @@ package se.chalmers.dat255.craycray.modeltest;
 
 import se.chalmers.dat255.craycray.model.DeadException;
 import se.chalmers.dat255.craycray.model.NeedsModel;
+import se.chalmers.dat255.craycray.util.Constants;
 import android.test.AndroidTestCase;
 
 /**
@@ -25,7 +26,10 @@ public class NeedsModelTest extends AndroidTestCase{
 	
 	}
 
-
+	/**
+	 * Test if it is possible to get the hungerLevel
+	 * @throws DeadException
+	 */
 	public void getHungerLevelTest() throws DeadException {
 		
 		NeedsModel model = NeedsModel.getInstance();
@@ -33,9 +37,12 @@ public class NeedsModelTest extends AndroidTestCase{
 
 	}
 
-
+	/**
+	 * Test if it is possible to set the hungerLevel 
+	 * and if a DeadException is thrown
+	 * @throws DeadException
+	 */
 	public void setHungerLevelTest() throws DeadException {
-		fail("");
 
 		NeedsModel model = NeedsModel.getInstance();
 		model.setHungerLevel(50);
@@ -59,9 +66,12 @@ public class NeedsModelTest extends AndroidTestCase{
 
 		}
 		assertTrue(model.getHungerLevel() == 0);
+		
 	}
 
-	
+	/**
+	 * Test if it is possible to get the cleanLevel
+	 */
 	public void getCleanLevel() {
 		
 		NeedsModel model = NeedsModel.getInstance();
@@ -69,7 +79,9 @@ public class NeedsModelTest extends AndroidTestCase{
 	
 	}
 
-	
+	/**
+	 * Test if it is possible to set the cleanLevel
+	 */
 	public void setCleanLevel() {
 		
 		NeedsModel model = NeedsModel.getInstance();
@@ -94,13 +106,18 @@ public class NeedsModelTest extends AndroidTestCase{
 	
 	}
 
+	/**
+	 * Test if the model is ill
+	 */
 	public void isIllTest() {
 		
 		NeedsModel model = NeedsModel.getInstance();
 		assertTrue(model.isIll() == true);
 
 	}
-	
+	/**
+	 * Test if it is possible to set the illness
+	 */
 	public void setIllnessTest() {
 
 		NeedsModel model = NeedsModel.getInstance();
@@ -114,6 +131,9 @@ public class NeedsModelTest extends AndroidTestCase{
 	}
 
 
+	/**
+	 * Test if it is possible to get the cuddleLevel
+	 */
 	public void getCuddleLevelTest() {
 
 		NeedsModel model = NeedsModel.getInstance();
@@ -122,6 +142,9 @@ public class NeedsModelTest extends AndroidTestCase{
 	}
 
 
+	/**
+	 * Test if it is possible to set the cuddleLevel
+	 */
 	public void setCuddleLevelTest() {
 
 		NeedsModel model = NeedsModel.getInstance();
@@ -140,7 +163,9 @@ public class NeedsModelTest extends AndroidTestCase{
 
 	}
 
-
+	/**
+	 * Test if it is possible to get the energyLevel
+	 */
 	public void getEnergylevelTest() {
 
 		NeedsModel model = NeedsModel.getInstance();
@@ -148,7 +173,9 @@ public class NeedsModelTest extends AndroidTestCase{
 
 	}
 
-
+	/**
+	 * Test if it is possible to set the energyLevel
+	 */
 	public void setEnergyLevelTest() {
 
 		NeedsModel model = NeedsModel.getInstance();
@@ -166,16 +193,20 @@ public class NeedsModelTest extends AndroidTestCase{
 		assertTrue(model.getEnergyLevel() == 100);
 
 	}
-
 	
+	/**
+	 * Test if it is possible to get the pooLevel
+	 */
 	public void getPooLevelTest() {
-
+		
 		NeedsModel model = NeedsModel.getInstance();
 		assertTrue(model.getPooLevel() == 100);
-
+		
 	}
-
 	
+	/**
+	 * Test if it is possible to set the pooLevel
+	 */
 	public void setPooLevelTest() {
 
 		NeedsModel model = NeedsModel.getInstance();
@@ -183,8 +214,8 @@ public class NeedsModelTest extends AndroidTestCase{
 		model.setPooLevel(55);
 		assertTrue(model.getPooLevel() == 55);
 
-		model.setPooLevel(100);
-		assertTrue(model.getPooLevel() == 90);
+		model.setPooLevel(101);
+		assertTrue(model.getPooLevel() == 100);
 
 		model.setPooLevel(-1);
 		assertTrue(model.getPooLevel() == 0);
@@ -193,5 +224,24 @@ public class NeedsModelTest extends AndroidTestCase{
 		assertTrue(model.getPooLevel() == 0);
 
 	}
+	
+	/*public void minAllNeedsTest() throws DeadException{
+		NeedsModel model = NeedsModel.getInstance();
+		model.setHungerLevel(0);
+		
+		assertTrue(model.getHungerLevel() == Constants.NEED_LEVEL_MIN);
+	}
+	*/
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
 
 }
