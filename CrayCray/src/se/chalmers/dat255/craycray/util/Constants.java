@@ -2,11 +2,16 @@ package se.chalmers.dat255.craycray.util;
 
 public class Constants {
 	
+	//For the thread
+	public final static long THREAD_SLEEP = 500;
+	public final static double THREAD_SLEEP_SEC = THREAD_SLEEP/1000.0;
+	
 	//For needs
 	public final static double NEED_LEVEL_MAX = 100;
 	public final static double NEED_LEVEL_MIN = 0;
 	public final static int MAX_DRUNK_COUNT = 7;
-
+	public final static int ILL_COUNT = 30;
+	
 	//For decreasing needlevels
 	public final static double HUNGERLEVELDECREASE = -0.01;
 	public final static double CLEANLEVELDECREASE = -0.02;
