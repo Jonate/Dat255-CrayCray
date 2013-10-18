@@ -13,6 +13,10 @@ import android.view.Menu;
 import android.view.View;
 import android.widget.ImageView;
 
+/**
+ * An Activity for playing a simple game of Russian Roulette 
+ * with 5/6 chance to win. If you loose you die.
+ */
 public class RussianActivity extends Activity {
 
 	RussianRouletteModel rModel;

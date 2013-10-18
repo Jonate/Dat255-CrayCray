@@ -16,6 +16,7 @@ import se.chalmers.dat255.craycray.util.Constants;
 public class NeedsModel {
 
 	private static NeedsModel instance = null;
+	
 	private double hungerLevel;
 	private double cuddleLevel;
 	private double cleanLevel;
@@ -29,12 +30,12 @@ public class NeedsModel {
 	private boolean sleeping;
 
 	private static boolean isAlive;
-	private String deathCause = "I'M ALIVE";
+	private String deathCause;
 
 	private NeedsModel(){
 		maxAllNeeds();
 		isAlive = true;
-		deathCause = "NOT DEAD YET!!";
+		deathCause = "I'M ALIVE";
 	}
 
 	/**
@@ -235,9 +236,7 @@ public class NeedsModel {
 	}
 
 	/**
-	 * Kill with specified death cause. If killed by Russian Roulette
-	 * before, the deathCause will automatically be set to Russian Roulette.
-	 * @param deathCause
+	 * Kill with specified death cause. 
 	 */
 	public void kill(String deathCause){
 		isAlive = false;
