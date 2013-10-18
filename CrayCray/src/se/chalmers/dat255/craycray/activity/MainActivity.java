@@ -236,7 +236,7 @@ public class MainActivity extends Activity {
 								}
 
 								handler.sendMessage(handler.obtainMessage());
-								Thread.sleep(800);
+								Thread.sleep(1000);
 							}
 
 						} catch (Exception e) {
