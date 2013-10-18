@@ -18,4 +18,8 @@ public class Constants {
 	public final static String ILLNESS_DEATH = "OMG! CrayCray died of illness";
 	public final static String RUSSIAN_DEATH = "Bad luck! CrayCray lost Russian Roulette (haha *buhu*)";
 
+	//Notifications
+	public final static int DEAD_NOTI = 0;
+	public final static int DIRTY_NOTI = 1;
+	public final static int ILL_NOTI = 2;
 }

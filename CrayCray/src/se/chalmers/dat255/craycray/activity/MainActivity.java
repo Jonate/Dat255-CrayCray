@@ -29,11 +29,14 @@ import se.chalmers.dat255.craycray.R;
 import se.chalmers.dat255.craycray.database.DatabaseAdapter;
 import se.chalmers.dat255.craycray.database.DatabaseConstants;
 import se.chalmers.dat255.craycray.model.NeedsModel;
-import se.chalmers.dat255.craycray.notifications.NotificationSender;
+import se.chalmers.dat255.craycray.notifications.NotificationCreator;
 import se.chalmers.dat255.craycray.util.Constants;
 import se.chalmers.dat255.craycray.util.TimeUtil;
 import android.app.Activity;
 import android.app.AlertDialog;
+import android.app.Notification;
+import android.app.NotificationManager;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Color;
@@ -42,7 +45,6 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import android.util.Log;
-import android.view.Menu;
 import android.view.View;
 import android.widget.ImageButton;
 import android.widget.ImageView;
@@ -55,12 +57,12 @@ public class MainActivity extends Activity {
 	private boolean isActive;
 
 	// The buttons of the application
-	private ImageButton feedButton;
-	private ImageButton cuddleButton;
-	private ImageButton cleanButton;
-	private ImageButton energyButton;
-	private ImageButton removePooButton;
-	private ImageButton cureButton;
+	private ImageButton  feedButton;
+	private ImageButton  cuddleButton;
+	private ImageButton  cleanButton;
+	private ImageButton  energyButton;
+	private ImageButton  removePooButton;
+	private ImageButton  cureButton;
 	private ImageButton happypotionButton;
 	private ImageButton russianButton;
 	private ImageButton aboutButton;
@@ -93,12 +95,15 @@ public class MainActivity extends Activity {
 
 	private boolean cleanability = true;
 	private boolean isDrunk = false;
-
-	private boolean hasSentIllNoti = false;
-	private boolean hasSentDirtyNoti = false;
+	private boolean hasAnnouncedDeath = false;
 
 	private DatabaseAdapter dbA;
-	private NotificationSender notifications = new NotificationSender(this);
+
+	private NotificationCreator notiCreator;
+	private NotificationManager notiManager;
+	private Notification deadNoti;
+	private Notification illNoti;
+	private Notification dirtyNoti;
 
 
 	// A Handler to take care of updates in UI-thread
@@ -120,22 +125,27 @@ public class MainActivity extends Activity {
 
 			if (msg.what == DEAD){
 				announceDeath();
+				hasAnnouncedDeath = true;
 				model.minAllNeeds();
+				activatedButtons(false);
+
 			}
 
 		}
 	};
 
 	@Override
-	protected void onCreate(Bundle savedInstanceState) {
+	protected synchronized void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
+		isActive = true;
 
 		setContentView(R.layout.activity_main);
 		fade=(View) findViewById(R.id.fade);
 		model = NeedsModel.getInstance();
 		dbA = new DatabaseAdapter(getBaseContext());
 
-		isActive = true;
+		notiCreator = new NotificationCreator(this);
+		notiManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
 
 		initUi();
 
@@ -188,32 +198,27 @@ public class MainActivity extends Activity {
 								// Then checks if the count has reached zero and in that case CrayCray dies.
 								if(model.isIll()){
 									if(!hasWindowFocus()){
-										if(!hasSentIllNoti){
-											notifications.sendIllNotification();
-											hasSentIllNoti = true;
+										if(illNoti == null){
+											illNoti = notiCreator.createIllNotification();
+											notiManager.notify(Constants.ILL_NOTI, illNoti);
 										}
 									}
 									model.setIllCount(model.getIllCount() - 1);
 								}
 
-								System.out.println("PRINT IN THREAD:");
-								System.out.println("Hunger" + model.getHungerLevel());
-								System.out.println("Clean" + model.getCleanLevel());
-								System.out.println("Cuddle" + model.getCuddleLevel());
-								System.out.println("Energy" + model.getEnergyLevel());
 
-
-								// if CrayCray is dirty send a dirty-notification
+								// if CrayCray is dirty and program not in focus
+								// send a dirty-notification
 								if (model.getCleanLevel() < 50) {
-									if(!hasSentDirtyNoti){
-										if (!hasWindowFocus()) {
-											notifications.sendDirtyNotification();
-											hasSentDirtyNoti = true;
+									if(!hasWindowFocus()){
+										if (dirtyNoti == null) {
+											dirtyNoti = notiCreator.createDirtyNotification();
+											notiManager.notify(Constants.DIRTY_NOTI, dirtyNoti);
 										}
 									}
 								}
 
-								//if CrayCray is drunk show drunkpicture
+								//if CrayCray is drunk show drunkpicture as long as the drunkCount counts
 								if(isDrunk){
 									setCrayExpression(DRUNK, 0);
 									setDrunkCount(drunkCount -1);
@@ -228,7 +233,7 @@ public class MainActivity extends Activity {
 									drunkCount = Constants.MAX_DRUNK_COUNT;
 								}
 
-								if(!model.isAlive()){
+								if(!model.isAlive() && !hasAnnouncedDeath){
 									Message msg = Message.obtain();
 									msg.what = DEAD;
 									handler.sendMessage(msg);
@@ -236,11 +241,11 @@ public class MainActivity extends Activity {
 								}
 
 								handler.sendMessage(handler.obtainMessage());
-								Thread.sleep(300);
+								Thread.sleep(100);
 							}
 
 						} catch (Exception e) {
-							e.printStackTrace();
+
 						}
 					}
 				}
@@ -276,10 +281,8 @@ public class MainActivity extends Activity {
 		}
 	}
 
-	/*
-	 * Initiates the UI.
-	 */
-	private void initUi() {
+
+	private synchronized void initUi() {
 
 		// Button - variables set to xml ID
 		feedButton = (ImageButton) findViewById(R.id.feedButton);
@@ -333,11 +336,12 @@ public class MainActivity extends Activity {
 
 
 	@Override
-	public void onStart() {
+	public synchronized void onStart() {
 		super.onStart();
 		if(!t.isAlive()){
 			t.run();
 		}
+		notiManager.cancelAll();
 	}
 
 
@@ -345,7 +349,7 @@ public class MainActivity extends Activity {
 	 * Updates the database if the application is shut down
 	 */
 	@Override
-	public void onDestroy() {
+	public synchronized void onDestroy() {
 		super.onDestroy();
 		dbA.updateValue(DatabaseConstants.HUNGER, model.getHungerLevel());
 		dbA.updateValue(DatabaseConstants.CUDDLE, model.getCuddleLevel());
@@ -375,7 +379,7 @@ public class MainActivity extends Activity {
 			model.setCleanLevel(model.getCleanLevel() + 10);
 			if (model.getCleanLevel() > 50) {
 				setCrayExpression(-1, -1);
-				hasSentDirtyNoti = false;
+				dirtyNoti = null;
 			}
 
 			handler.sendMessage(handler.obtainMessage());
@@ -424,7 +428,7 @@ public class MainActivity extends Activity {
 		if (model.isIll()) {
 			cleanability = true;
 			model.setIllness(false);
-			hasSentIllNoti = false;
+			illNoti = null;
 			model.setIllCount(30);
 			handler.sendMessage(handler.obtainMessage());
 
@@ -436,8 +440,7 @@ public class MainActivity extends Activity {
 	}
 
 	/**
-	 * Creates an AlertDialog which asks the user if she/he really
-	 * wants to play Russian Roulette. If yes the game is started.
+	 * Called when user clicks to play russian roulette
 	 * @param view
 	 */
 	public synchronized void playRussianRoulette(View view){
@@ -445,7 +448,7 @@ public class MainActivity extends Activity {
 	}
 
 	/**
-	 * Entoxicates CrayCray.
+	 * Called when user clicks to drink Happy Potion
 	 * @param view
 	 */
 	public synchronized void happyPotion(View view){
@@ -709,10 +712,10 @@ public class MainActivity extends Activity {
 		if(message == Constants.RUSSIAN_DEATH){
 			createDeathAlert().setMessage(message).show();
 		}else{
-			//Usually, dvs not Russian:
 			if (!hasWindowFocus()) {
-				notifications.sendDeadNotification();
-				createDeathAlert().setMessage(message).show();
+				deadNoti = notiCreator.createDeadNotification();
+				notiManager.notify(Constants.DEAD_NOTI, deadNoti);
+//				createDeathAlert().setMessage(message).show();
 			}else {
 				createDeathAlert().setMessage(message).show();
 			}
@@ -727,6 +730,11 @@ public class MainActivity extends Activity {
 		// Check which request we're responding to
 		if (requestCode == Constants.RUSSIAN_REQUEST_CODE) {
 			if (resultCode == RESULT_OK) {
+				//				if(!model.isAlive()){
+				//					Message msg = Message.obtain();
+				//					msg.what = DEAD;
+				//					handler.sendMessage(msg);
+				//				}
 				isActive = true;
 			}
 		}
