@@ -77,11 +77,11 @@ public class MainActivity extends Activity {
 	private ProgressBar energyBar;
 	private ImageView crayView;
 	private ImageView pooImage;
-	private View fade;
-	private Vibrator vib;
 
 	private NeedsModel model;
 	private Thread t;
+	private View fade;
+	private Vibrator vib;
 
 	private final int HUNGER = 1;
 	private final int CLEANNESS = 2;
@@ -149,13 +149,12 @@ public class MainActivity extends Activity {
 
 		vib = (Vibrator) this.getSystemService(VIBRATOR_SERVICE);
 		setContentView(R.layout.activity_main);
-		fade=(View) findViewById(R.id.fade);
 		model = NeedsModel.getInstance();
 		dbA = DatabaseAdapter.getInstance(getBaseContext());
 
 		notiCreator = new NotificationCreator(this);
 		notiManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
-
+		
 		initUi();
 		
 
@@ -386,6 +385,9 @@ public class MainActivity extends Activity {
 		cuddleBar.setProgress((int)model.getCuddleLevel());
 		cleanBar.setProgress((int)model.getCleanLevel());
 		energyBar.setProgress((int)model.getEnergyLevel());
+		
+		//fade - variables set to xml ID
+		fade=(View) findViewById(R.id.fade);
 	}
 
 
