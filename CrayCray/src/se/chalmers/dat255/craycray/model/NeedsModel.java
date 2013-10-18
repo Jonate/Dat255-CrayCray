@@ -16,14 +16,13 @@ import se.chalmers.dat255.craycray.util.Constants;
 public class NeedsModel {
 
 	private static NeedsModel instance = null;
-
 	private double hungerLevel;
 	private double cuddleLevel;
 	private double cleanLevel;
 	private double pooLevel;
 	private double energyLevel;
-
-	private int illCount;
+	
+	private double illCount;
 
 	private boolean ill;
 	private boolean pooped;
@@ -58,7 +57,6 @@ public class NeedsModel {
 	public synchronized double getHungerLevel(){
 		return hungerLevel;
 	}
-
 	public synchronized double getCleanLevel(){
 		return cleanLevel;
 	}	
@@ -70,15 +68,13 @@ public class NeedsModel {
 	public synchronized double getPooLevel(){
 		return pooLevel;
 	}
-
-	public synchronized int getIllCount(){
-		return illCount;
-	}
-
 	public synchronized double getEnergyLevel(){
 		return energyLevel;
 	}
-
+	public synchronized double getIllCount(){
+		return illCount;
+	}
+		
 	public synchronized boolean isIll(){
 		return ill;
 	}
@@ -173,7 +169,6 @@ public class NeedsModel {
 	 * @param pooNeed
 	 */
 	public synchronized void setPooLevel(double pooNeed){
-
 		if(pooNeed <=0){
 			pooLevel = 0;
 		}else if(pooNeed < Constants.NEED_LEVEL_MAX){
@@ -195,9 +190,9 @@ public class NeedsModel {
 	 * 
 	 * @param count the new value of the illCount
 	 */
-	public synchronized void setIllCount(int count){
+	public synchronized void setIllCount(double count){
 		illCount = count;
-		if(illCount == 0){
+		if(illCount <= 0){
 			kill(Constants.ILLNESS_DEATH);
 		}	
 	}
@@ -219,6 +214,7 @@ public class NeedsModel {
 		cleanLevel = Constants.NEED_LEVEL_MAX;
 		pooLevel = Constants.NEED_LEVEL_MAX;
 		energyLevel =Constants.NEED_LEVEL_MAX;
+		illCount=Constants.ILL_COUNT;
 
 		ill = false;
 
@@ -245,7 +241,6 @@ public class NeedsModel {
 	 */
 	public void kill(String deathCause){
 		isAlive = false;
-//		minAllNeeds();
 		this.deathCause = deathCause;
 	}
 
