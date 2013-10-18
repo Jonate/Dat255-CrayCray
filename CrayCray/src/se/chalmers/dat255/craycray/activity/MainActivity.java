@@ -42,6 +42,7 @@ import android.graphics.PorterDuff.Mode;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
+import android.os.Vibrator;
 import android.util.Log;
 import android.view.Menu;
 import android.view.View;
@@ -75,6 +76,7 @@ public class MainActivity extends Activity {
 	private ImageView crayView;
 	private ImageView pooImage;
 	private View fade;
+	private Vibrator vib;
 
 	private NeedsModel model;
 	private Thread t;
@@ -135,7 +137,12 @@ public class MainActivity extends Activity {
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
+<<<<<<< HEAD
 		
+=======
+		vib = (Vibrator) this.getSystemService(VIBRATOR_SERVICE);
+
+>>>>>>> button_graphics
 		setContentView(R.layout.activity_main);
 		fade=(View) findViewById(R.id.fade);
 		model = NeedsModel.getInstance();
@@ -427,6 +434,7 @@ public class MainActivity extends Activity {
 	 * increases hungerlevel by constant HUNGERLEVELINCREASE
 	 */
 	public synchronized void feed(View view) {
+		vib.vibrate(50);
 
 		model.setHungerLevel(model.getHungerLevel() + Constants.HUNGERLEVELINCREASE);
 
@@ -440,6 +448,7 @@ public class MainActivity extends Activity {
 	 * increases cleanlevel by constant CLEANLEVELINCREASE
 	 */
 	public synchronized void clean(View view) {
+		vib.vibrate(50);
 		if (cleanability) {
 			model.setCleanLevel(model.getCleanLevel() + Constants.CLEANLEVELINCREASE);
 			if (model.getCleanLevel() > 50) {
@@ -455,8 +464,13 @@ public class MainActivity extends Activity {
 	 * increases cuddlelevel by constant CUDDLELVELINCREASE
 	 */
 	public synchronized void cuddle(View view) {
+<<<<<<< HEAD
 
 		model.setCuddleLevel(model.getCuddleLevel() + Constants.CUDDLELEVELINCREASE);
+=======
+		vib.vibrate(50);
+		model.setCuddleLevel(model.getCuddleLevel() + 7);
+>>>>>>> button_graphics
 		handler.sendMessage(handler.obtainMessage());
 
 	}
@@ -465,6 +479,7 @@ public class MainActivity extends Activity {
 	 * increases energylevel
 	 */
 	public synchronized void sleep(View view) {
+		vib.vibrate(50);
 		model.setSleep(true);
 
 	}
@@ -475,6 +490,7 @@ public class MainActivity extends Activity {
 	 * @param view
 	 */
 	public synchronized void removePoo(View view) {
+		vib.vibrate(50);
 		if (model.hasPooped()) {
 			model.setPooLevel(Constants.NEED_LEVEL_MAX);
 			drawPooImage(model.getPooLevel());
@@ -490,6 +506,7 @@ public class MainActivity extends Activity {
 	 * @param view
 	 */
 	public synchronized void cure(View view) {
+		vib.vibrate(50);
 		if (model.isIll()) {
 			cleanability = true;
 			model.setIllness(false);
@@ -509,6 +526,7 @@ public class MainActivity extends Activity {
 	 * @param view
 	 */
 	public void playRussianRoulette(View view){
+		vib.vibrate(50);
 		createRussianAlert().show();
 	}
 
@@ -517,6 +535,7 @@ public class MainActivity extends Activity {
 	 * @param view
 	 */
 	public void happyPotion(View view){
+		vib.vibrate(50);
 		//setDrunkExpression for some period of time
 		isDrunk = true;
 		model.setCuddleLevel(model.getCuddleLevel()+ Constants.CUDDLELEVELINCREASE*10);
