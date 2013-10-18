@@ -15,7 +15,6 @@ import android.content.Intent;
 public class NotificationCreator {
 
 	private Context ctx;
-	private NotificationManager notiManager;
 
 	/**
 	 * Creates a NotificationSender with the given Context.
@@ -23,7 +22,6 @@ public class NotificationCreator {
 	 */
 	public NotificationCreator(Context ctx){
 		this.ctx = ctx;
-		this.notiManager = (NotificationManager) ctx.getSystemService(Context.NOTIFICATION_SERVICE);
 	}
 
 	/**
@@ -46,11 +44,6 @@ public class NotificationCreator {
 		noti.flags = Notification.FLAG_AUTO_CANCEL;
 		
 		return noti;
-
-		//Send notification.
-//		NotificationManager notiManager = (NotificationManager) ctx.getSystemService(Context.NOTIFICATION_SERVICE);
-//		notiManager.notify(Constants.DEAD_NOTI, noti);
-
 	}
 
 	/**
@@ -72,10 +65,6 @@ public class NotificationCreator {
 		noti.flags = Notification.FLAG_AUTO_CANCEL;
 
 		return noti;
-		
-		//Send notification.
-//		NotificationManager notiManager = (NotificationManager) ctx.getSystemService(Context.NOTIFICATION_SERVICE);
-//		notiManager.notify(Constants.DIRTY_NOTI, noti);
 	}
 	
 	/**
@@ -97,17 +86,6 @@ public class NotificationCreator {
 		noti.flags = Notification.FLAG_AUTO_CANCEL;
 		
 		return noti;
-
-		//Send notification.
-//		NotificationManager notiManager = (NotificationManager) ctx.getSystemService(Context.NOTIFICATION_SERVICE);
-//		notiManager.notify(Constants.ILL_NOTI, noti);
-	}
-	
-	/**
-	 * Removes all notifications from Notification Bar
-	 */
-	public void removeAllNotis(){
-		notiManager.cancelAll();
 	}
 	
 

@@ -125,7 +125,6 @@ public class MainActivity extends Activity {
 
 			if (msg.what == DEAD){
 				announceDeath();
-				hasAnnouncedDeath = true;
 				model.minAllNeeds();
 				activatedButtons(false);
 
@@ -233,7 +232,7 @@ public class MainActivity extends Activity {
 									drunkCount = Constants.MAX_DRUNK_COUNT;
 								}
 
-								if(!model.isAlive() && !hasAnnouncedDeath){
+								if(!model.isAlive()){
 									Message msg = Message.obtain();
 									msg.what = DEAD;
 									handler.sendMessage(msg);
@@ -241,7 +240,7 @@ public class MainActivity extends Activity {
 								}
 
 								handler.sendMessage(handler.obtainMessage());
-								Thread.sleep(100);
+								Thread.sleep(400);
 							}
 
 						} catch (Exception e) {
@@ -341,6 +340,18 @@ public class MainActivity extends Activity {
 		if(!t.isAlive()){
 			t.run();
 		}
+		notiManager.cancelAll();
+	}
+	
+	@Override
+	public synchronized void onResume() {
+		super.onResume();
+		notiManager.cancelAll();
+	}
+	
+	@Override
+	public synchronized void onRestart() {
+		super.onRestart();
 		notiManager.cancelAll();
 	}
 
@@ -720,6 +731,7 @@ public class MainActivity extends Activity {
 				createDeathAlert().setMessage(message).show();
 			}
 		}
+		hasAnnouncedDeath = true;
 	}
 
 
