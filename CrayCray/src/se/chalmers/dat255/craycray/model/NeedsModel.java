@@ -17,11 +17,11 @@ public class NeedsModel {
 
 	private static NeedsModel instance = null;
 
-	private int hungerLevel;
-	private int cuddleLevel;
-	private int cleanLevel;
-	private int pooLevel;
-	private int energyLevel;
+	private double hungerLevel;
+	private double cuddleLevel;
+	private double cleanLevel;
+	private double pooLevel;
+	private double energyLevel;
 
 	private int illCount;
 
@@ -55,19 +55,19 @@ public class NeedsModel {
 	/*
 	 * Getters for needs.
 	 */
-	public synchronized int getHungerLevel(){
+	public synchronized double getHungerLevel(){
 		return hungerLevel;
 	}
 
-	public synchronized int getCleanLevel(){
+	public synchronized double getCleanLevel(){
 		return cleanLevel;
 	}	
 
-	public synchronized int getCuddleLevel(){
+	public synchronized double getCuddleLevel(){
 		return cuddleLevel;
 	}
 
-	public synchronized int getPooLevel(){
+	public synchronized double getPooLevel(){
 		return pooLevel;
 	}
 
@@ -75,7 +75,7 @@ public class NeedsModel {
 		return illCount;
 	}
 
-	public synchronized int getEnergyLevel(){
+	public synchronized double getEnergyLevel(){
 		return energyLevel;
 	}
 
@@ -110,7 +110,7 @@ public class NeedsModel {
 	 * @param hunger
 	 * @throws DeadException
 	 */
-	public synchronized void setHungerLevel(int hunger){
+	public synchronized void setHungerLevel(double hunger){
 		if(hunger <= 0){
 			hunger = 0;
 			kill(Constants.HUNGER_DEATH);
@@ -130,7 +130,7 @@ public class NeedsModel {
 	 * Method for setting CrayCrays cleanness level
 	 * @param clean
 	 */
-	public synchronized void setCleanLevel(int clean){
+	public synchronized void setCleanLevel(double clean){
 		if(clean <= 0){
 			cleanLevel = 0;
 		}else if(clean < Constants.NEED_LEVEL_MAX){
@@ -144,7 +144,7 @@ public class NeedsModel {
 	 * Method for setting CrayCrays cuddle level
 	 * @param cuddle
 	 */
-	public synchronized void setCuddleLevel(int cuddle){
+	public synchronized void setCuddleLevel(double cuddle){
 		if(cuddle <= 0){
 			cuddleLevel = 0;
 		}else if(cuddle < Constants.NEED_LEVEL_MAX){
@@ -158,7 +158,7 @@ public class NeedsModel {
 	 * Method for setting CrayCrays energy level
 	 * @param energy
 	 */
-	public synchronized void setEnergyLevel(int energy){
+	public synchronized void setEnergyLevel(double energy){
 		if(energy <= 0){
 			energyLevel = 0;
 		}else if(energy < Constants.NEED_LEVEL_MAX){
@@ -172,7 +172,7 @@ public class NeedsModel {
 	 * Method for setting how much CrayCray needs to poo.
 	 * @param pooNeed
 	 */
-	public synchronized void setPooLevel(int pooNeed){
+	public synchronized void setPooLevel(double pooNeed){
 
 		if(pooNeed <=0){
 			pooLevel = 0;

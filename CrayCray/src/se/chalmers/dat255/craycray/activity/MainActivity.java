@@ -110,10 +110,10 @@ public class MainActivity extends Activity {
 			super.handleMessage(msg);
 
 			// sets/updates the values of the progressbars
-			foodBar.setProgress(model.getHungerLevel());
-			cuddleBar.setProgress(model.getCuddleLevel());
-			cleanBar.setProgress(model.getCleanLevel());
-			energyBar.setProgress(model.getEnergyLevel());
+			foodBar.setProgress((int) model.getHungerLevel());
+			cuddleBar.setProgress((int)model.getCuddleLevel());
+			cleanBar.setProgress((int)model.getCleanLevel());
+			energyBar.setProgress((int)model.getEnergyLevel());
 
 			// force imageview to update
 			crayView.invalidate();
@@ -152,10 +152,10 @@ public class MainActivity extends Activity {
 
 								// check if pooImage should be drawn or not
 
-								model.setHungerLevel(model.getHungerLevel() - 1);
-								model.setCleanLevel(model.getCleanLevel() - 1);
-								model.setCuddleLevel(model.getCuddleLevel() - 1);
-								model.setPooLevel(model.getPooLevel() - 1);
+								model.setHungerLevel(model.getHungerLevel() + Constants.HUNGERLEVELDECREASE);
+								model.setCleanLevel(model.getCleanLevel() + Constants.CLEANLEVELDECREASE);
+								model.setCuddleLevel(model.getCuddleLevel() + Constants.CUDDLELEVELDECREASE);
+								model.setPooLevel(model.getPooLevel() + Constants.POOLEVELDECREASE);
 
 								setCrayExpression(ENERGY, model.getEnergyLevel());
 
@@ -168,13 +168,13 @@ public class MainActivity extends Activity {
 								if (model.isSleeping()) {
 									fade.setAlpha(0.5F);
 									fade.invalidate();
-									model.setEnergyLevel(model.getEnergyLevel() + 15);
+									model.setEnergyLevel(model.getEnergyLevel() + Constants.ENERGYLEVELINCREASE);
 									activatedButtons(false);
 
 								} else {
 									fade.setAlpha(0F);
 									fade.invalidate();
-									model.setEnergyLevel(model.getEnergyLevel() - 1 );
+									model.setEnergyLevel(model.getEnergyLevel() + Constants.ENERGYLEVELDECREASE );
 									setCrayExpression(HAPPINESS, model.getCuddleLevel());
 									setCrayExpression(HUNGER, model.getHungerLevel());
 									setCrayExpression(CLEANNESS, model.getCleanLevel());
@@ -221,7 +221,7 @@ public class MainActivity extends Activity {
 								//when drunkCount is 0 decide what picture to show and reset
 								if(drunkCount == 0){
 									isDrunk = false;
-									model.setEnergyLevel(model.getEnergyLevel() - 1 );
+									model.setEnergyLevel(model.getEnergyLevel() + Constants.ENERGYLEVELDECREASE );
 									setCrayExpression(HAPPINESS, model.getCuddleLevel());
 									setCrayExpression(HUNGER, model.getHungerLevel());
 									setCrayExpression(CLEANNESS, model.getCleanLevel());
@@ -267,11 +267,11 @@ public class MainActivity extends Activity {
 					differenceInSeconds + ", "
 							+ dbA.getValue(DatabaseConstants.HUNGER));
 			model.setHungerLevel(dbA.getValue(DatabaseConstants.HUNGER)
-					+ differenceInSeconds * (-1));
+					+ differenceInSeconds * Constants.HUNGERLEVELDECREASE);
 			model.setCuddleLevel(dbA.getValue(DatabaseConstants.CUDDLE)
-					+ differenceInSeconds * (-3));
+					+ differenceInSeconds * Constants.CUDDLELEVELDECREASE);
 			model.setCleanLevel(dbA.getValue(DatabaseConstants.CLEAN)
-					+ differenceInSeconds * (-2));
+					+ differenceInSeconds * Constants.CLEANLEVELDECREASE);
 			model.setPooLevel(dbA.getValue(DatabaseConstants.POO));
 		}
 	}
@@ -323,10 +323,10 @@ public class MainActivity extends Activity {
 				Color.parseColor("#FFFF66"), Mode.MULTIPLY);
 
 		// sets the latest values of the progressbars
-		foodBar.setProgress(model.getHungerLevel());
-		cuddleBar.setProgress(model.getCuddleLevel());
-		cleanBar.setProgress(model.getCleanLevel());
-		energyBar.setProgress(model.getEnergyLevel());
+		foodBar.setProgress((int)model.getHungerLevel());
+		cuddleBar.setProgress((int)model.getCuddleLevel());
+		cleanBar.setProgress((int)model.getCleanLevel());
+		energyBar.setProgress((int)model.getEnergyLevel());
 	}
 
 
@@ -353,11 +353,11 @@ public class MainActivity extends Activity {
 	}
 
 	/**
-	 * increases hungerlevel by 5
+	 * increases hungerlevel by constant HUNGERLEVELINCREASE
 	 */
 	public synchronized void feed(View view) {
 
-		model.setHungerLevel(model.getHungerLevel() + 5);
+		model.setHungerLevel(model.getHungerLevel() + Constants.HUNGERLEVELINCREASE);
 
 		if (model.getHungerLevel() > 50) {
 			setCrayExpression(-1, -1);
@@ -366,11 +366,11 @@ public class MainActivity extends Activity {
 	}
 
 	/**
-	 * increases cleanlevel by 10
+	 * increases cleanlevel by constant CLEANLEVELINCREASE
 	 */
 	public synchronized void clean(View view) {
 		if (cleanability) {
-			model.setCleanLevel(model.getCleanLevel() + 10);
+			model.setCleanLevel(model.getCleanLevel() + Constants.CLEANLEVELINCREASE);
 			if (model.getCleanLevel() > 50) {
 				setCrayExpression(-1, -1);
 				hasSentDirtyNoti = false;
@@ -381,17 +381,17 @@ public class MainActivity extends Activity {
 	}
 
 	/**
-	 * increases cuddlelevel by 7
+	 * increases cuddlelevel by constant CUDDLELVELINCREASE
 	 */
 	public synchronized void cuddle(View view) {
 
-		model.setCuddleLevel(model.getCuddleLevel() + 7);
+		model.setCuddleLevel(model.getCuddleLevel() + Constants.CUDDLELEVELINCREASE);
 		handler.sendMessage(handler.obtainMessage());
 
 	}
 
 	/**
-	 * increases energylevel by 50
+	 * increases energylevel
 	 */
 	public synchronized void sleep(View view) {
 		model.setSleep(true);
@@ -405,7 +405,7 @@ public class MainActivity extends Activity {
 	 */
 	public synchronized void removePoo(View view) {
 		if (model.hasPooped()) {
-			model.setPooLevel(100);
+			model.setPooLevel(Constants.NEED_LEVEL_MAX);
 			drawPooImage(model.getPooLevel());
 			cleanability = true;
 			model.setHasPooped(false);
@@ -448,7 +448,7 @@ public class MainActivity extends Activity {
 	public void happyPotion(View view){
 		//setDrunkExpression for some period of time
 		isDrunk = true;
-		model.setCuddleLevel(model.getCuddleLevel()+17);
+		model.setCuddleLevel(model.getCuddleLevel()+ Constants.CUDDLELEVELINCREASE*10);
 	}
 
 	private void setDrunkCount(int count){
@@ -475,7 +475,7 @@ public class MainActivity extends Activity {
 	 * 
 	 * @param level
 	 */
-	public synchronized void drawPooImage(int level) {
+	public synchronized void drawPooImage(double level) {
 		pooImage = (ImageView) findViewById(R.id.pooImage);
 		if (level <= 100 && level > 50) {
 			setPoo(NOPOO);
@@ -486,7 +486,7 @@ public class MainActivity extends Activity {
 			model.setHasPooped(true);
 			handler.sendMessage(handler.obtainMessage());
 		} else if (level < 20) {
-			model.setCleanLevel(model.getCleanLevel() - 5);
+			model.setCleanLevel(model.getCleanLevel() + Constants.CLEANLEVELDECREASE);
 		}
 	}
 
@@ -524,7 +524,7 @@ public class MainActivity extends Activity {
 	 * @param level
 	 *            the value of the level
 	 */
-	public synchronized void setCrayExpression(int mode, int level) {
+	public synchronized void setCrayExpression(int mode, double level) {
 
 		switch (mode) {
 		case ENERGY:

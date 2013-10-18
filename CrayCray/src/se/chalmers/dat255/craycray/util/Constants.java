@@ -3,10 +3,23 @@ package se.chalmers.dat255.craycray.util;
 public class Constants {
 	
 	//For needs
-	public final static int NEED_LEVEL_MAX = 100;
-	public final static int NEED_LEVEL_MIN = 0;
+	public final static double NEED_LEVEL_MAX = 100;
+	public final static double NEED_LEVEL_MIN = 0;
 	public final static int MAX_DRUNK_COUNT = 7;
+
+	//For decreasing needlevels
+	public final static double HUNGERLEVELDECREASE = -0.01;
+	public final static double CLEANLEVELDECREASE = -0.02;
+	public final static double ENERGYLEVELDECREASE = -0.03;
+	public final static double POOLEVELDECREASE = -0.09;
+	public final static double CUDDLELEVELDECREASE  = -0.04;
 	
+	//For increasing needlevels
+	public final static double HUNGERLEVELINCREASE = 1.2;
+	public final static double CLEANLEVELINCREASE = 1.3;
+	public final static double ENERGYLEVELINCREASE = 2.0;
+	public final static double CUDDLELEVELINCREASE = 1.5;
+
 	//For playing Russian Roulette
 	public final static int RUSSIAN_REQUEST_CODE = 1;
 	public final static boolean RUSSIAN_WIN = true;
