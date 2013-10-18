@@ -173,7 +173,6 @@ public class NeedsModel {
 	 * @param pooNeed
 	 */
 	public synchronized void setPooLevel(int pooNeed){
-
 		if(pooNeed <=0){
 			pooLevel = 0;
 		}else if(pooNeed < Constants.NEED_LEVEL_MAX){
@@ -245,7 +244,6 @@ public class NeedsModel {
 	 */
 	public void kill(String deathCause){
 		isAlive = false;
-//		minAllNeeds();
 		this.deathCause = deathCause;
 	}
 

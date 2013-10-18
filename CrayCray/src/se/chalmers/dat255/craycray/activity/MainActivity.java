@@ -55,12 +55,12 @@ public class MainActivity extends Activity {
 	private boolean isActive;
 
 	// The buttons of the application
-	private ImageButton  feedButton;
-	private ImageButton  cuddleButton;
-	private ImageButton  cleanButton;
-	private ImageButton  energyButton;
-	private ImageButton  removePooButton;
-	private ImageButton  cureButton;
+	private ImageButton feedButton;
+	private ImageButton cuddleButton;
+	private ImageButton cleanButton;
+	private ImageButton energyButton;
+	private ImageButton removePooButton;
+	private ImageButton cureButton;
 	private ImageButton happypotionButton;
 	private ImageButton russianButton;
 	private ImageButton aboutButton;
@@ -236,11 +236,11 @@ public class MainActivity extends Activity {
 								}
 
 								handler.sendMessage(handler.obtainMessage());
-								Thread.sleep(800);
+								Thread.sleep(300);
 							}
 
 						} catch (Exception e) {
-
+							e.printStackTrace();
 						}
 					}
 				}
@@ -276,7 +276,9 @@ public class MainActivity extends Activity {
 		}
 	}
 
-
+	/*
+	 * Initiates the UI.
+	 */
 	private void initUi() {
 
 		// Button - variables set to xml ID
@@ -434,38 +436,39 @@ public class MainActivity extends Activity {
 	}
 
 	/**
-	 * Called when user clicks to play russian roulette
+	 * Creates an AlertDialog which asks the user if she/he really
+	 * wants to play Russian Roulette. If yes the game is started.
 	 * @param view
 	 */
-	public void playRussianRoulette(View view){
+	public synchronized void playRussianRoulette(View view){
 		createRussianAlert().show();
 	}
 
 	/**
-	 * Called when user clicks to drink Happy Potion
+	 * Entoxicates CrayCray.
 	 * @param view
 	 */
-	public void happyPotion(View view){
+	public synchronized void happyPotion(View view){
 		//setDrunkExpression for some period of time
 		isDrunk = true;
 		model.setCuddleLevel(model.getCuddleLevel()+17);
 	}
 
-	private void setDrunkCount(int count){
+	private synchronized void setDrunkCount(int count){
 		drunkCount = count;
 	}
 
 	/**
 	 * Displays the instructions-pop up 
 	 */
-	public void howToPlay(View view) {
+	public synchronized void howToPlay(View view) {
 		createInstructionsAlert().show();
 	}
 
 	/**
 	 * Displays the new game-pop up 
 	 */
-	public void newGame(View view){
+	public synchronized void newGame(View view){
 		createNewGameAlert().show();
 	}
 
@@ -592,7 +595,7 @@ public class MainActivity extends Activity {
 	/**
 	 * Creates a pop-up with a death announcement
 	 */
-	public AlertDialog.Builder createDeathAlert() {
+	public synchronized AlertDialog.Builder createDeathAlert() {
 
 		AlertDialog.Builder alertDialog = new AlertDialog.Builder(this);
 		alertDialog.setTitle("Game Over");
@@ -620,7 +623,7 @@ public class MainActivity extends Activity {
 	/**
 	 * Creates a pop-up with instructions about how to play
 	 */
-	public AlertDialog.Builder createInstructionsAlert(){
+	public synchronized AlertDialog.Builder createInstructionsAlert(){
 
 		isActive = false;
 		AlertDialog.Builder alertDialog = new AlertDialog.Builder(this);
@@ -641,7 +644,7 @@ public class MainActivity extends Activity {
 	 * Creates a pop-up asking if the user really wants to
 	 * start a new game.
 	 */
-	public AlertDialog.Builder createNewGameAlert(){
+	public synchronized AlertDialog.Builder createNewGameAlert(){
 		isActive = false;
 		AlertDialog.Builder alertDialog = new AlertDialog.Builder(this);
 		alertDialog.setTitle("New Game");
@@ -670,7 +673,7 @@ public class MainActivity extends Activity {
 	 * Creates a pop-up asking if the user really wants to
 	 * play Russian Roulette.
 	 */
-	public AlertDialog.Builder createRussianAlert(){
+	public synchronized AlertDialog.Builder createRussianAlert(){
 
 		isActive = false;
 		AlertDialog.Builder alertDialog = new AlertDialog.Builder(this);
@@ -699,13 +702,14 @@ public class MainActivity extends Activity {
 	 * If the the program is not active a notification will
 	 * be sent instead.
 	 */
-	public void announceDeath() {
+	public synchronized void announceDeath() {
 		setCrayExpression(HUNGER, 0);
 		String message = model.getDeathCause();
 
 		if(message == Constants.RUSSIAN_DEATH){
 			createDeathAlert().setMessage(message).show();
 		}else{
+			//Usually, dvs not Russian:
 			if (!hasWindowFocus()) {
 				notifications.sendDeadNotification();
 				createDeathAlert().setMessage(message).show();
@@ -717,32 +721,27 @@ public class MainActivity extends Activity {
 
 
 
-@Override
-protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+	@Override
+	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
 
-	// Check which request we're responding to
-	if (requestCode == Constants.RUSSIAN_REQUEST_CODE) {
-		if (resultCode == RESULT_OK) {
-			//				if(!model.isAlive()){
-			//					Message msg = Message.obtain();
-			//					msg.what = DEAD;
-			//					handler.sendMessage(msg);
-			//				}
-			isActive = true;
+		// Check which request we're responding to
+		if (requestCode == Constants.RUSSIAN_REQUEST_CODE) {
+			if (resultCode == RESULT_OK) {
+				isActive = true;
+			}
 		}
 	}
-}
 
-public synchronized void activatedButtons(boolean state){
-	feedButton.setClickable(state);
-	cuddleButton.setClickable(state);
-	cleanButton.setClickable(state);
-	energyButton.setClickable(state);
-	removePooButton.setClickable(state);
-	cureButton.setClickable(state);
-	happypotionButton.setClickable(state);
-	russianButton.setClickable(state);
-}
+	public synchronized void activatedButtons(boolean state){
+		feedButton.setClickable(state);
+		cuddleButton.setClickable(state);
+		cleanButton.setClickable(state);
+		energyButton.setClickable(state);
+		removePooButton.setClickable(state);
+		cureButton.setClickable(state);
+		happypotionButton.setClickable(state);
+		russianButton.setClickable(state);
+	}
 
 }
 
