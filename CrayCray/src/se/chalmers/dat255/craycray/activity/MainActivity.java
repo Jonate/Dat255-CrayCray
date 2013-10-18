@@ -326,6 +326,7 @@ public class MainActivity extends Activity {
 								}
 
 								handler.sendMessage(handler.obtainMessage());
+
 								Thread.sleep(Constants.THREAD_SLEEP);
 							}
 
