@@ -137,12 +137,7 @@ public class MainActivity extends Activity {
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-<<<<<<< HEAD
-		
-=======
 		vib = (Vibrator) this.getSystemService(VIBRATOR_SERVICE);
-
->>>>>>> button_graphics
 		setContentView(R.layout.activity_main);
 		fade=(View) findViewById(R.id.fade);
 		model = NeedsModel.getInstance();
@@ -465,13 +460,8 @@ public class MainActivity extends Activity {
 	 * increases cuddlelevel by constant CUDDLELVELINCREASE
 	 */
 	public synchronized void cuddle(View view) {
-<<<<<<< HEAD
-
 		model.setCuddleLevel(model.getCuddleLevel() + Constants.CUDDLELEVELINCREASE);
-=======
 		vib.vibrate(50);
-		model.setCuddleLevel(model.getCuddleLevel() + 7);
->>>>>>> button_graphics
 		handler.sendMessage(handler.obtainMessage());
 
 	}
