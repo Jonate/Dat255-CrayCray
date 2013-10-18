@@ -28,6 +28,7 @@ package se.chalmers.dat255.craycray.activity;
 import se.chalmers.dat255.craycray.R;
 import se.chalmers.dat255.craycray.database.DatabaseAdapter;
 import se.chalmers.dat255.craycray.database.DatabaseConstants;
+import se.chalmers.dat255.craycray.model.DatabaseException;
 import se.chalmers.dat255.craycray.model.NeedsModel;
 import se.chalmers.dat255.craycray.notifications.NotificationSender;
 import se.chalmers.dat255.craycray.util.Constants;
@@ -41,6 +42,7 @@ import android.graphics.PorterDuff.Mode;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
+import android.os.Vibrator;
 import android.util.Log;
 import android.view.Menu;
 import android.view.View;
@@ -74,6 +76,7 @@ public class MainActivity extends Activity {
 	private ImageView crayView;
 	private ImageView pooImage;
 	private View fade;
+	private Vibrator vib;
 
 	private NeedsModel model;
 	private Thread t;
@@ -110,7 +113,7 @@ public class MainActivity extends Activity {
 			super.handleMessage(msg);
 
 			// sets/updates the values of the progressbars
-			foodBar.setProgress((int) model.getHungerLevel());
+			foodBar.setProgress((int)model.getHungerLevel());
 			cuddleBar.setProgress((int)model.getCuddleLevel());
 			cleanBar.setProgress((int)model.getCleanLevel());
 			energyBar.setProgress((int)model.getEnergyLevel());
@@ -118,10 +121,15 @@ public class MainActivity extends Activity {
 			// force imageview to update
 			crayView.invalidate();
 
+			if (msg.obj instanceof DatabaseException){
+				setUpDatabase();
+
+			} 
 			if (msg.what == DEAD){
 				announceDeath();
 				model.minAllNeeds();
 			}
+
 
 		}
 	};
@@ -129,15 +137,90 @@ public class MainActivity extends Activity {
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		
+		vib = (Vibrator) this.getSystemService(VIBRATOR_SERVICE);
 		setContentView(R.layout.activity_main);
 		fade=(View) findViewById(R.id.fade);
 		model = NeedsModel.getInstance();
-		dbA = new DatabaseAdapter(getBaseContext());
+		dbA = DatabaseAdapter.getInstance(getBaseContext());
 
 		isActive = true;
 
 		initUi();
+		
+
+		try{
+			Log.w("Database", "TRYYY");
+			dbA.getValue(DatabaseConstants.HUNGER);
+			Log.w("Database", "AFTER GET");
+			int differenceInSeconds = TimeUtil.compareTime(dbA
+					.getStringValue(DatabaseConstants.TIME));
+			Log.w("Database", "DifferenceInSeconds"+ differenceInSeconds+" "+  Constants.THREAD_SLEEP_SEC);
+			model.setHungerLevel(dbA.getValue(DatabaseConstants.HUNGER) + differenceInSeconds 
+					* Constants.HUNGERLEVELDECREASE * Constants.THREAD_SLEEP_SEC);
+			model.setCuddleLevel(dbA.getValue(DatabaseConstants.CUDDLE) + differenceInSeconds 
+					* Constants.CUDDLELEVELDECREASE * Constants.THREAD_SLEEP_SEC);
+			model.setCleanLevel(dbA.getValue(DatabaseConstants.CLEAN) + differenceInSeconds 
+					* Constants.CLEANLEVELDECREASE * Constants.THREAD_SLEEP_SEC);
+			model.setPooLevel(dbA.getValue(DatabaseConstants.POO) + differenceInSeconds 
+					* Constants.POOLEVELDECREASE * Constants.THREAD_SLEEP_SEC);
+
+			// Checks if CrayCray was healthy or ill at the last shutdown 
+			// and give it the same value again.
+			if(dbA.getValue(DatabaseConstants.ILL)==0){
+				model.setIllness(false);
+			}else{
+				model.setIllCount(dbA.getValue(DatabaseConstants.ILL_COUNT) - differenceInSeconds
+						* Constants.THREAD_SLEEP_SEC);
+				model.setIllness(true);
+			}
+
+			// Checks if there was poop on the screen at the last shutdown
+			// and in that case place the poop again.
+			if(dbA.getValue(DatabaseConstants.POOPED)==0){
+				model.setHasPooped(false);
+			}else{
+				model.setHasPooped(true);
+			}
+
+			// Checks if CrayCray was awake or not when the app was closed the last time.
+			if(dbA.getValue(DatabaseConstants.SLEEPING)==0){
+				double energy = dbA.getValue(DatabaseConstants.ENERGY) 
+						+ differenceInSeconds * Constants.ENERGYLEVELDECREASE;
+				// The energy level is set to 1 if it has reached a value of zero or lower
+				// because CrayCray can't automatically go to sleep when the application is 
+				// dead. The user needs to be able to feed or cure CrayCray the next time 
+				// the app is started before he goes to sleep.
+				if(energy <= 0){
+					model.setEnergyLevel(1);
+
+				} else {
+					model.setEnergyLevel(energy);
+
+				}
+			} else {
+				double energy = dbA.getValue(DatabaseConstants.ENERGY) 
+						+ differenceInSeconds * Constants.ENERGYLEVELINCREASE;
+				if(energy >= Constants.NEED_LEVEL_MAX){
+					model.setEnergyLevel(Constants.NEED_LEVEL_MAX);
+					model.setSleep(false);
+				} else {
+					model.setEnergyLevel(energy);
+					model.setSleep(true);
+				}
+			}
+
+		} catch(Exception e){
+			if(e instanceof DatabaseException){
+				Log.w("Database", "EXCEPTION");
+
+				Message msg = Message.obtain();
+				msg.obj = e;
+				handler.sendMessage(msg);
+			}
+		}
+
+		
+		
 
 		if(t == null){
 			t = new Thread(new Runnable() {
@@ -174,7 +257,8 @@ public class MainActivity extends Activity {
 								} else {
 									fade.setAlpha(0F);
 									fade.invalidate();
-									model.setEnergyLevel(model.getEnergyLevel() + Constants.ENERGYLEVELDECREASE );
+									
+									model.setEnergyLevel(model.getEnergyLevel() + Constants.ENERGYLEVELDECREASE);
 									setCrayExpression(HAPPINESS, model.getCuddleLevel());
 									setCrayExpression(HUNGER, model.getHungerLevel());
 									setCrayExpression(CLEANNESS, model.getCleanLevel());
@@ -201,7 +285,8 @@ public class MainActivity extends Activity {
 								System.out.println("Clean" + model.getCleanLevel());
 								System.out.println("Cuddle" + model.getCuddleLevel());
 								System.out.println("Energy" + model.getEnergyLevel());
-
+								System.out.println("Poo" + model.getPooLevel());
+								System.out.println("Ill" + model.getIllCount());
 
 								// if CrayCray is dirty send a dirty-notification
 								if (model.getCleanLevel() < 50) {
@@ -236,7 +321,8 @@ public class MainActivity extends Activity {
 								}
 
 								handler.sendMessage(handler.obtainMessage());
-								Thread.sleep(800);
+
+								Thread.sleep(Constants.THREAD_SLEEP);
 							}
 
 						} catch (Exception e) {
@@ -249,33 +335,7 @@ public class MainActivity extends Activity {
 		}	
 
 		t.start();
-
-
-		// checks if the database exists
-		if (dbA.getValue("Firsttime") == -1) {
-			dbA.addValue("Firsttime", 1);
-			dbA.addValue(DatabaseConstants.HUNGER, model.getHungerLevel());
-			dbA.addValue(DatabaseConstants.CUDDLE, model.getCuddleLevel());
-			dbA.addValue(DatabaseConstants.POO, model.getPooLevel());
-			dbA.addValue(DatabaseConstants.CLEAN, model.getCleanLevel());
-			dbA.addStringValue(DatabaseConstants.TIME,
-					TimeUtil.getCurrentTime());
-		} else {
-			int differenceInSeconds = TimeUtil.compareTime(dbA
-					.getStringValue(DatabaseConstants.TIME));
-			Log.w("Database",
-					differenceInSeconds + ", "
-							+ dbA.getValue(DatabaseConstants.HUNGER));
-			model.setHungerLevel(dbA.getValue(DatabaseConstants.HUNGER)
-					+ differenceInSeconds * Constants.HUNGERLEVELDECREASE);
-			model.setCuddleLevel(dbA.getValue(DatabaseConstants.CUDDLE)
-					+ differenceInSeconds * Constants.CUDDLELEVELDECREASE);
-			model.setCleanLevel(dbA.getValue(DatabaseConstants.CLEAN)
-					+ differenceInSeconds * Constants.CLEANLEVELDECREASE);
-			model.setPooLevel(dbA.getValue(DatabaseConstants.POO));
-		}
 	}
-
 
 	private void initUi() {
 
@@ -307,7 +367,7 @@ public class MainActivity extends Activity {
 				Color.parseColor("#66FFFF"), Mode.MULTIPLY);
 		energyBar.getProgressDrawable().setColorFilter(
 				Color.parseColor("#FFFF66"), Mode.MULTIPLY);
-
+		
 		// sets the latest values of the progressbars
 		foodBar.setProgress((int)model.getHungerLevel());
 		cuddleBar.setProgress((int)model.getCuddleLevel());
@@ -331,17 +391,46 @@ public class MainActivity extends Activity {
 	@Override
 	public void onDestroy() {
 		super.onDestroy();
-		dbA.updateValue(DatabaseConstants.HUNGER, model.getHungerLevel());
-		dbA.updateValue(DatabaseConstants.CUDDLE, model.getCuddleLevel());
-		dbA.updateValue(DatabaseConstants.CLEAN, model.getCleanLevel());
-		dbA.updateValue(DatabaseConstants.POO, model.getPooLevel());
-		dbA.updateStringValue(DatabaseConstants.TIME, TimeUtil.getCurrentTime());
+		Log.w("Database", "DESTROY!!!!!");
+		try{
+			dbA.updateValue(DatabaseConstants.HUNGER, model.getHungerLevel());
+			dbA.updateValue(DatabaseConstants.CUDDLE, model.getCuddleLevel());
+			dbA.updateValue(DatabaseConstants.CLEAN, model.getCleanLevel());
+			dbA.updateValue(DatabaseConstants.POO, model.getPooLevel());
+			dbA.updateValue(DatabaseConstants.ENERGY, model.getEnergyLevel());
+			dbA.updateValue(DatabaseConstants.ILL_COUNT, model.getIllCount());
+			dbA.updateStringValue(DatabaseConstants.TIME, TimeUtil.getCurrentTime());
+
+			// if the boolean values are true their value in the database will be 1
+			// if not, the value will be 0
+			if(model.isSleeping()){
+				dbA.updateValue(DatabaseConstants.SLEEPING, 1);
+			} else{
+				dbA.updateValue(DatabaseConstants.SLEEPING, 0);
+			}
+
+			if(model.isIll()){
+				dbA.updateValue(DatabaseConstants.ILL, 1);
+			} else{
+				dbA.updateValue(DatabaseConstants.ILL, 0);
+			}
+
+			if(model.hasPooped()){
+				dbA.updateValue(DatabaseConstants.POOPED, 1);
+			} else{
+				dbA.updateValue(DatabaseConstants.POOPED, 0);
+			}
+		} catch(Exception e){
+			setUpDatabase();
+		}
+		Log.w("Database","END DESTROY");
 	}
 
 	/**
 	 * increases hungerlevel by constant HUNGERLEVELINCREASE
 	 */
 	public synchronized void feed(View view) {
+		vib.vibrate(50);
 
 		model.setHungerLevel(model.getHungerLevel() + Constants.HUNGERLEVELINCREASE);
 
@@ -355,6 +444,7 @@ public class MainActivity extends Activity {
 	 * increases cleanlevel by constant CLEANLEVELINCREASE
 	 */
 	public synchronized void clean(View view) {
+		vib.vibrate(50);
 		if (cleanability) {
 			model.setCleanLevel(model.getCleanLevel() + Constants.CLEANLEVELINCREASE);
 			if (model.getCleanLevel() > 50) {
@@ -370,8 +460,8 @@ public class MainActivity extends Activity {
 	 * increases cuddlelevel by constant CUDDLELVELINCREASE
 	 */
 	public synchronized void cuddle(View view) {
-
 		model.setCuddleLevel(model.getCuddleLevel() + Constants.CUDDLELEVELINCREASE);
+		vib.vibrate(50);
 		handler.sendMessage(handler.obtainMessage());
 
 	}
@@ -380,6 +470,7 @@ public class MainActivity extends Activity {
 	 * increases energylevel
 	 */
 	public synchronized void sleep(View view) {
+		vib.vibrate(50);
 		model.setSleep(true);
 
 	}
@@ -390,6 +481,7 @@ public class MainActivity extends Activity {
 	 * @param view
 	 */
 	public synchronized void removePoo(View view) {
+		vib.vibrate(50);
 		if (model.hasPooped()) {
 			model.setPooLevel(Constants.NEED_LEVEL_MAX);
 			drawPooImage(model.getPooLevel());
@@ -405,11 +497,12 @@ public class MainActivity extends Activity {
 	 * @param view
 	 */
 	public synchronized void cure(View view) {
+		vib.vibrate(50);
 		if (model.isIll()) {
 			cleanability = true;
 			model.setIllness(false);
 			hasSentIllNoti = false;
-			model.setIllCount(30);
+			model.setIllCount(Constants.ILL_COUNT);
 			handler.sendMessage(handler.obtainMessage());
 
 			setCrayExpression(CLEANNESS, model.getCleanLevel());
@@ -424,6 +517,7 @@ public class MainActivity extends Activity {
 	 * @param view
 	 */
 	public void playRussianRoulette(View view){
+		vib.vibrate(50);
 		createRussianAlert().show();
 	}
 
@@ -432,6 +526,7 @@ public class MainActivity extends Activity {
 	 * @param view
 	 */
 	public void happyPotion(View view){
+		vib.vibrate(50);
 		//setDrunkExpression for some period of time
 		isDrunk = true;
 		model.setCuddleLevel(model.getCuddleLevel()+ Constants.CUDDLELEVELINCREASE*10);
@@ -587,7 +682,7 @@ public class MainActivity extends Activity {
 			public void onClick(DialogInterface dialog, int id) {
 				isActive = true;
 				model.maxAllNeeds();
-				getBaseContext().deleteDatabase(DatabaseConstants.DATABASE_NAME);
+				dbA.resetDatabase();
 				Intent newGame = new Intent(main, MainActivity.class);
 				startActivity(newGame);
 				finish();
@@ -636,7 +731,7 @@ public class MainActivity extends Activity {
 			public void onClick(DialogInterface dialog, int id){
 				isActive = true;
 				model.maxAllNeeds();
-				getBaseContext().deleteDatabase(DatabaseConstants.DATABASE_NAME);
+				dbA.resetDatabase();
 				Intent newGame = new Intent(main, MainActivity.class);
 				startActivity(newGame);
 				finish();
@@ -691,6 +786,7 @@ public class MainActivity extends Activity {
 
 		if(message == Constants.RUSSIAN_DEATH){
 			createDeathAlert().setMessage(message).show();
+
 		}else{
 			if (!hasWindowFocus()) {
 				notifications.sendDeadNotification();
@@ -703,32 +799,67 @@ public class MainActivity extends Activity {
 
 
 
-@Override
-protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+	@Override
+	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
 
-	// Check which request we're responding to
-	if (requestCode == Constants.RUSSIAN_REQUEST_CODE) {
-		if (resultCode == RESULT_OK) {
-			//				if(!model.isAlive()){
-			//					Message msg = Message.obtain();
-			//					msg.what = DEAD;
-			//					handler.sendMessage(msg);
-			//				}
-			isActive = true;
+		// Check which request we're responding to
+		if (requestCode == Constants.RUSSIAN_REQUEST_CODE) {
+			if (resultCode == RESULT_OK) {
+				//				if(!model.isAlive()){
+				//					Message msg = Message.obtain();
+				//					msg.what = DEAD;
+				//					handler.sendMessage(msg);
+				//				}
+				isActive = true;
+			}
 		}
 	}
-}
 
-public synchronized void activatedButtons(boolean state){
-	feedButton.setClickable(state);
-	cuddleButton.setClickable(state);
-	cleanButton.setClickable(state);
-	energyButton.setClickable(state);
-	removePooButton.setClickable(state);
-	cureButton.setClickable(state);
-	happypotionButton.setClickable(state);
-	russianButton.setClickable(state);
-}
+	public void setUpDatabase(){
+		try{
+			dbA.addValue(DatabaseConstants.HUNGER, model.getHungerLevel());
+			dbA.addValue(DatabaseConstants.CUDDLE, model.getCuddleLevel());
+			dbA.addValue(DatabaseConstants.POO, model.getPooLevel());
+			dbA.addValue(DatabaseConstants.CLEAN, model.getCleanLevel());
+			dbA.addValue(DatabaseConstants.ENERGY, model.getEnergyLevel());
+			dbA.addValue(DatabaseConstants.ILL_COUNT, model.getIllCount());
+			dbA.addStringValue(DatabaseConstants.TIME,
+					TimeUtil.getCurrentTime());
+
+			// if the boolean values are true their value in the database will be 1
+			// if not, the value will be 0
+			if(model.isSleeping()){
+				dbA.addValue(DatabaseConstants.SLEEPING, 1);
+			} else{
+				dbA.addValue(DatabaseConstants.SLEEPING, 0);
+			}
+
+			if(model.isIll()){
+				dbA.addValue(DatabaseConstants.ILL, 1);
+			} else{
+				dbA.addValue(DatabaseConstants.ILL, 0);
+			}
+
+			if(model.hasPooped()){
+				dbA.addValue(DatabaseConstants.POOPED, 1);
+			} else{
+				dbA.addValue(DatabaseConstants.POOPED, 0);
+			}
+		} catch(Exception e){
+			return;
+		}
+	}
+
+	public synchronized void activatedButtons(boolean state){
+		feedButton.setClickable(state);
+		cuddleButton.setClickable(state);
+		cleanButton.setClickable(state);
+		energyButton.setClickable(state);
+		removePooButton.setClickable(state);
+		cureButton.setClickable(state);
+		happypotionButton.setClickable(state);
+		russianButton.setClickable(state);
+	}
 
 }
 
