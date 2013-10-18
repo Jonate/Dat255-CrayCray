@@ -23,7 +23,6 @@ public class RussianRouletteModel {
 	 * according to result. 5/6 chance to win.
 	 *  Win means all needs fullfilled, loosing means dying. 
 	 *  Manipulates NeedsModel according to result.
-	 * @throws DeadException if loose
 	 */
 	public void play(){
 		int random = this.getRandom();
