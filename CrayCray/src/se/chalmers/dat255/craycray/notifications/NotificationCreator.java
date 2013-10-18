@@ -2,6 +2,7 @@ package se.chalmers.dat255.craycray.notifications;
 
 import se.chalmers.dat255.craycray.R;
 import se.chalmers.dat255.craycray.activity.MainActivity;
+import se.chalmers.dat255.craycray.util.Constants;
 import android.app.Notification;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
@@ -11,19 +12,15 @@ import android.content.Intent;
 /**
  * Sends notifications.
  */
-public class NotificationSender {
+public class NotificationCreator {
 
 	private Context ctx;
-
-	private final int DEAD_NOTI = 0;
-	private final int DIRTY_NOTI = 1;
-	private final int ILL_NOTI = 2;
 
 	/**
 	 * Creates a NotificationSender with the given Context.
 	 * @param context
 	 */
-	public NotificationSender(Context ctx){
+	public NotificationCreator(Context ctx){
 		this.ctx = ctx;
 	}
 
@@ -31,10 +28,10 @@ public class NotificationSender {
 	 * Creates and sends a notification telling the user
 	 * CrayCray has died.
 	 */
-	public void sendDeadNotification(){	
+	public Notification createDeadNotification(){	
 		//Set activity shown when clicked.
 		Intent intent = new Intent(ctx, MainActivity.class);
-		PendingIntent pIntent = PendingIntent.getActivity(ctx, DEAD_NOTI, intent, Intent.FLAG_ACTIVITY_NEW_TASK);
+		PendingIntent pIntent = PendingIntent.getActivity(ctx, Constants.DEAD_NOTI, intent, Intent.FLAG_ACTIVITY_NEW_TASK);
 
 		//Make notification.
 		Notification noti = new Notification.Builder(ctx)
@@ -45,21 +42,18 @@ public class NotificationSender {
 		.build();	
 		
 		noti.flags = Notification.FLAG_AUTO_CANCEL;
-
-		//Send notification.
-		NotificationManager notiManager = (NotificationManager) ctx.getSystemService(Context.NOTIFICATION_SERVICE);
-		notiManager.notify(DEAD_NOTI, noti);
-
+		
+		return noti;
 	}
 
 	/**
 	 * Creates and sends a notification telling the user
 	 * CrayCray is Dirty.
 	 */
-	public void sendDirtyNotification(){
+	public Notification createDirtyNotification(){
 		//Set activity shown when clicked.
 		Intent intent = new Intent(ctx, MainActivity.class);
-		PendingIntent pIntent = PendingIntent.getActivity(ctx, DIRTY_NOTI, intent, Intent.FLAG_ACTIVITY_NEW_TASK);
+		PendingIntent pIntent = PendingIntent.getActivity(ctx, Constants.DIRTY_NOTI, intent, Intent.FLAG_ACTIVITY_NEW_TASK);
 		//Make notification.
 		Notification noti = new Notification.Builder(ctx)
 		.setContentTitle("I'm Dirty")
@@ -70,19 +64,17 @@ public class NotificationSender {
 		
 		noti.flags = Notification.FLAG_AUTO_CANCEL;
 
-		//Send notification.
-		NotificationManager notiManager = (NotificationManager) ctx.getSystemService(Context.NOTIFICATION_SERVICE);
-		notiManager.notify(DIRTY_NOTI, noti);
+		return noti;
 	}
 	
 	/**
 	 * Creates and sends a notification telling the user
 	 * CrayCray is Ill.
 	 */
-	public void sendIllNotification(){
+	public Notification createIllNotification(){
 		//Set activity shown when clicked.
 		Intent intent = new Intent(ctx, MainActivity.class);
-		PendingIntent pIntent = PendingIntent.getActivity(ctx, ILL_NOTI, intent, Intent.FLAG_ACTIVITY_NEW_TASK);
+		PendingIntent pIntent = PendingIntent.getActivity(ctx, Constants.ILL_NOTI, intent, Intent.FLAG_ACTIVITY_NEW_TASK);
 		//Make notification.
 		Notification noti = new Notification.Builder(ctx)
 		.setContentTitle("I'm feeling sick :(")
@@ -92,18 +84,8 @@ public class NotificationSender {
 		.build();	
 		
 		noti.flags = Notification.FLAG_AUTO_CANCEL;
-
-		//Send notification.
-		NotificationManager notiManager = (NotificationManager) ctx.getSystemService(Context.NOTIFICATION_SERVICE);
-		notiManager.notify(ILL_NOTI, noti);
-	}
-	
-	/**
-	 * Removes all notifications from Notification Bar
-	 */
-	public void removeAllNotis(){
-		NotificationManager notiManager = (NotificationManager) ctx.getSystemService(Context.NOTIFICATION_SERVICE);
-		notiManager.cancelAll();
+		
+		return noti;
 	}
 	
 
