@@ -280,30 +280,16 @@ public class MainActivity extends Activity {
 	private void initUi() {
 
 		// Button - variables set to xml ID
-		feedButton = (ImageButton) findViewById(R.id.feedButton);
-		cleanButton = (ImageButton) findViewById(R.id.cleanButton);
-		cuddleButton = (ImageButton) findViewById(R.id.cuddleButton);
-		energyButton = (ImageButton) findViewById(R.id.energyButton);
-		removePooButton = (ImageButton) findViewById(R.id.removePooButton);
-		cureButton = (ImageButton) findViewById(R.id.cureButton);
-		happypotionButton = (ImageButton) findViewById(R.id.happypotionButton);
 		russianButton = (ImageButton) findViewById(R.id.russianButton);
+		happypotionButton = (ImageButton) findViewById(R.id.happypotionButton);
+		cureButton = (ImageButton) findViewById(R.id.cureButton);
+		removePooButton = (ImageButton) findViewById(R.id.removePooButton);
+		energyButton = (ImageButton) findViewById(R.id.energyButton);
+		cuddleButton = (ImageButton) findViewById(R.id.cuddleButton);
+		cleanButton = (ImageButton) findViewById(R.id.cleanButton);
+		feedButton = (ImageButton) findViewById(R.id.feedButton);
 		aboutButton = (ImageButton) findViewById(R.id.aboutButton);
 		newGameButton = (ImageButton)findViewById(R.id.newGameButton);
-
-
-		// Sets correct image to the buttons
-		feedButton.setImageResource(R.drawable.button_food);
-		cleanButton.setImageResource(R.drawable.button_clean);
-		cuddleButton.setImageResource(R.drawable.button_happiness);
-		energyButton.setImageResource(R.drawable.button_energy);
-		removePooButton.setImageResource(R.drawable.button_poo);
-		cureButton.setImageResource(R.drawable.button_cure);
-		happypotionButton.setImageResource(R.drawable.button_alcohol);
-		russianButton.setImageResource(R.drawable.button_roulette);
-		aboutButton.setImageResource(R.drawable.button_about);
-		newGameButton.setImageResource(R.drawable.button_restart);
-
 
 		//Bar - variables set to xml ID
 		foodBar = (ProgressBar) findViewById(R.id.foodBar);

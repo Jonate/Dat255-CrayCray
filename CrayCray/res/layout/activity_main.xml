@@ -48,77 +48,107 @@
         android:max="100" />
 
     <ImageButton
-        android:id="@+id/feedButton"
+        android:id="@+id/russianButton"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
         android:layout_alignParentLeft="true"
-        android:layout_below="@id/energyBar"
-        android:layout_marginLeft="20dp"
-        android:layout_marginTop="165dp"
+        android:padding="15dp"
+        android:layout_marginLeft="5dp"
+        android:src="@drawable/button_roulette"
         android:background="@null"
-        android:onClick="feed" />
+        android:onClick="playRussianRoulette" />
 
     <ImageButton
-        android:id="@+id/cuddleButton"
+        android:id="@+id/happypotionButton"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_above="@id/russianButton"
         android:layout_alignParentLeft="true"
-        android:layout_below="@id/feedButton"
         android:layout_marginLeft="20dp"
         android:layout_marginTop="15dp"
+        android:src="@drawable/button_alcohol"
         android:background="@null"
-        android:onClick="cuddle" />
-
-    <ImageButton
-        android:id="@+id/cleanButton"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentLeft="true"
-        android:layout_below="@id/cuddleButton"
-        android:layout_marginLeft="20dp"
-        android:layout_marginTop="15dp"
-        android:background="@null"
-        android:onClick="clean" />
-
-    <ImageButton
-        android:id="@+id/energyButton"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentLeft="true"
-        android:layout_below="@id/cleanButton"
-        android:layout_marginLeft="25dp"
-        android:layout_marginTop="15dp"
-        android:background="@null"
-        android:onClick="sleep" />
-
-    <ImageButton
-        android:id="@+id/removePooButton"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentLeft="true"
-        android:layout_below="@id/energyButton"
-        android:layout_marginLeft="20dp"
-        android:layout_marginTop="15dp"
-        android:background="@null"
-        android:onClick="removePoo" />
+        android:onClick="happyPotion" />
 
     <ImageButton
         android:id="@+id/cureButton"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_above="@id/happypotionButton"
         android:layout_alignParentLeft="true"
-        android:layout_below="@id/removePooButton"
         android:layout_marginLeft="25dp"
         android:layout_marginTop="15dp"
+        android:src="@drawable/button_cure"
         android:background="@null"
         android:onClick="cure" />
+
+    <ImageButton
+        android:id="@+id/removePooButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_above="@id/cureButton"
+        android:layout_alignParentLeft="true"
+        android:layout_marginLeft="20dp"
+        android:layout_marginTop="15dp"
+        android:src="@drawable/button_poo"
+        android:background="@null"
+        android:onClick="removePoo" />
+
+    <ImageButton
+        android:id="@+id/energyButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_above="@id/removePooButton"
+        android:layout_alignParentLeft="true"
+        android:layout_marginLeft="25dp"
+        android:layout_marginTop="15dp"
+        android:src="@drawable/button_energy"
+        android:background="@null"
+        android:onClick="sleep" />
+
+    <ImageButton
+        android:id="@+id/cleanButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_above="@id/energyButton"
+        android:layout_alignParentLeft="true"
+        android:layout_marginLeft="20dp"
+        android:layout_marginTop="15dp"
+        android:src="@drawable/button_clean"
+        android:background="@null"
+        android:onClick="clean" />
+
+    <ImageButton
+        android:id="@+id/cuddleButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_above="@id/cleanButton"
+        android:layout_alignParentLeft="true"
+        android:layout_marginLeft="20dp"
+        android:layout_marginTop="15dp"
+        android:src="@drawable/button_cuddle"
+        android:background="@null"
+        android:onClick="cuddle" />
+
+    <ImageButton
+        android:id="@+id/feedButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_above="@id/cuddleButton"
+        android:layout_alignParentLeft="true"
+        android:layout_marginLeft="20dp"
+        android:layout_marginTop="15dp"
+        android:src="@drawable/button_food"
+        android:background="@null"
+        android:onClick="feed" />
 
     <ImageView
         android:id="@+id/crayCray"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:paddingTop="210dp"
         android:layout_centerHorizontal="true"
+        android:paddingTop="210dp"
         android:src="@drawable/regular_baby" />
 
     <ImageView
@@ -126,42 +156,20 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_below="@id/crayCray"
-        android:layout_marginLeft="15dp"
+        android:layout_centerHorizontal="true"
         android:layout_marginTop="20dp"
-        android:layout_toRightOf="@id/crayCray"
         android:src="@drawable/poo" />
-
-    <ImageButton
-        android:id="@+id/happypotionButton"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentLeft="true"
-        android:layout_below="@id/cureButton"
-        android:layout_marginLeft="20dp"
-        android:layout_marginTop="15dp"
-        android:background="@null"
-        android:onClick="happyPotion" />
-
-    <ImageButton
-        android:id="@+id/russianButton"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentLeft="true"
-        android:layout_below="@id/happypotionButton"
-        android:layout_marginLeft="20dp"
-        android:layout_marginTop="15dp"
-        android:background="@null"
-        android:onClick="playRussianRoulette" />
 
     <ImageButton
         android:id="@+id/newGameButton"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignParentRight="true"
         android:layout_alignParentBottom="true"
-        android:padding="10dp"
+        android:layout_alignParentRight="true"
+        android:src="@drawable/button_restart"
         android:background="@null"
-        android:onClick="newGame" />
+        android:onClick="newGame"
+        android:padding="10dp" />
 
     <ImageButton
         android:id="@+id/aboutButton"
@@ -169,9 +177,10 @@
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
         android:layout_toLeftOf="@id/newGameButton"
-        android:padding="10dp"
+        android:src="@drawable/button_about"
         android:background="@null"
-        android:onClick="howToPlay" />
+        android:onClick="howToPlay"
+        android:padding="10dp" />
 
     <AbsoluteLayout
         android:layout_width="wrap_content"
