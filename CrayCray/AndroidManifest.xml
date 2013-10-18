@@ -2,6 +2,7 @@
     package="se.chalmers.dat255.craycray"
     android:versionCode="1"
     android:versionName="1.0" >
+    <uses-permission android:name="android.permission.VIBRATE"></uses-permission>
 
     <uses-sdk
         android:minSdkVersion="16"
