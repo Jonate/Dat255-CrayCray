@@ -30,11 +30,14 @@ import se.chalmers.dat255.craycray.database.DatabaseAdapter;
 import se.chalmers.dat255.craycray.database.DatabaseConstants;
 import se.chalmers.dat255.craycray.model.DatabaseException;
 import se.chalmers.dat255.craycray.model.NeedsModel;
-import se.chalmers.dat255.craycray.notifications.NotificationSender;
+import se.chalmers.dat255.craycray.notifications.NotificationCreator;
 import se.chalmers.dat255.craycray.util.Constants;
 import se.chalmers.dat255.craycray.util.TimeUtil;
 import android.app.Activity;
 import android.app.AlertDialog;
+import android.app.Notification;
+import android.app.NotificationManager;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Color;
@@ -44,7 +47,6 @@ import android.os.Handler;
 import android.os.Message;
 import android.os.Vibrator;
 import android.util.Log;
-import android.view.Menu;
 import android.view.View;
 import android.widget.ImageButton;
 import android.widget.ImageView;
@@ -96,12 +98,15 @@ public class MainActivity extends Activity {
 
 	private boolean cleanability = true;
 	private boolean isDrunk = false;
-
-	private boolean hasSentIllNoti = false;
-	private boolean hasSentDirtyNoti = false;
+	private boolean hasAnnouncedDeath = false;
 
 	private DatabaseAdapter dbA;
-	private NotificationSender notifications = new NotificationSender(this);
+
+	private NotificationCreator notiCreator;
+	private NotificationManager notiManager;
+	private Notification deadNoti;
+	private Notification illNoti;
+	private Notification dirtyNoti;
 
 
 	// A Handler to take care of updates in UI-thread
@@ -128,6 +133,8 @@ public class MainActivity extends Activity {
 			if (msg.what == DEAD){
 				announceDeath();
 				model.minAllNeeds();
+				activatedButtons(false);
+
 			}
 
 
@@ -135,15 +142,19 @@ public class MainActivity extends Activity {
 	};
 
 	@Override
-	protected void onCreate(Bundle savedInstanceState) {
+	protected synchronized void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
+
+		isActive = true;
+
 		vib = (Vibrator) this.getSystemService(VIBRATOR_SERVICE);
 		setContentView(R.layout.activity_main);
 		fade=(View) findViewById(R.id.fade);
 		model = NeedsModel.getInstance();
 		dbA = DatabaseAdapter.getInstance(getBaseContext());
 
-		isActive = true;
+		notiCreator = new NotificationCreator(this);
+		notiManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
 
 		initUi();
 		
@@ -272,13 +283,14 @@ public class MainActivity extends Activity {
 								// Then checks if the count has reached zero and in that case CrayCray dies.
 								if(model.isIll()){
 									if(!hasWindowFocus()){
-										if(!hasSentIllNoti){
-											notifications.sendIllNotification();
-											hasSentIllNoti = true;
+										if(illNoti == null){
+											illNoti = notiCreator.createIllNotification();
+											notiManager.notify(Constants.ILL_NOTI, illNoti);
 										}
 									}
 									model.setIllCount(model.getIllCount() - 1);
 								}
+
 
 								System.out.println("PRINT IN THREAD:");
 								System.out.println("Hunger" + model.getHungerLevel());
@@ -288,17 +300,18 @@ public class MainActivity extends Activity {
 								System.out.println("Poo" + model.getPooLevel());
 								System.out.println("Ill" + model.getIllCount());
 
-								// if CrayCray is dirty send a dirty-notification
+								// if CrayCray is dirty and program not in focus
+								// send a dirty-notification
 								if (model.getCleanLevel() < 50) {
-									if(!hasSentDirtyNoti){
-										if (!hasWindowFocus()) {
-											notifications.sendDirtyNotification();
-											hasSentDirtyNoti = true;
+									if(!hasWindowFocus()){
+										if (dirtyNoti == null) {
+											dirtyNoti = notiCreator.createDirtyNotification();
+											notiManager.notify(Constants.DIRTY_NOTI, dirtyNoti);
 										}
 									}
 								}
 
-								//if CrayCray is drunk show drunkpicture
+								//if CrayCray is drunk show drunkpicture as long as the drunkCount counts
 								if(isDrunk){
 									setCrayExpression(DRUNK, 0);
 									setDrunkCount(drunkCount -1);
@@ -337,7 +350,7 @@ public class MainActivity extends Activity {
 		t.start();
 	}
 
-	private void initUi() {
+	private synchronized void initUi() {
 
 		// Button - variables set to xml ID
 		russianButton = (ImageButton) findViewById(R.id.russianButton);
@@ -377,11 +390,24 @@ public class MainActivity extends Activity {
 
 
 	@Override
-	public void onStart() {
+	public synchronized void onStart() {
 		super.onStart();
 		if(!t.isAlive()){
 			t.run();
 		}
+		notiManager.cancelAll();
+	}
+	
+	@Override
+	public synchronized void onResume() {
+		super.onResume();
+		notiManager.cancelAll();
+	}
+	
+	@Override
+	public synchronized void onRestart() {
+		super.onRestart();
+		notiManager.cancelAll();
 	}
 
 
@@ -389,7 +415,7 @@ public class MainActivity extends Activity {
 	 * Updates the database if the application is shut down
 	 */
 	@Override
-	public void onDestroy() {
+	public synchronized void onDestroy() {
 		super.onDestroy();
 		Log.w("Database", "DESTROY!!!!!");
 		try{
@@ -449,7 +475,7 @@ public class MainActivity extends Activity {
 			model.setCleanLevel(model.getCleanLevel() + Constants.CLEANLEVELINCREASE);
 			if (model.getCleanLevel() > 50) {
 				setCrayExpression(-1, -1);
-				hasSentDirtyNoti = false;
+				dirtyNoti = null;
 			}
 
 			handler.sendMessage(handler.obtainMessage());
@@ -501,7 +527,7 @@ public class MainActivity extends Activity {
 		if (model.isIll()) {
 			cleanability = true;
 			model.setIllness(false);
-			hasSentIllNoti = false;
+			illNoti = null;
 			model.setIllCount(Constants.ILL_COUNT);
 			handler.sendMessage(handler.obtainMessage());
 
@@ -516,7 +542,7 @@ public class MainActivity extends Activity {
 	 * Called when user clicks to play russian roulette
 	 * @param view
 	 */
-	public void playRussianRoulette(View view){
+	public synchronized void playRussianRoulette(View view){
 		vib.vibrate(50);
 		createRussianAlert().show();
 	}
@@ -525,28 +551,28 @@ public class MainActivity extends Activity {
 	 * Called when user clicks to drink Happy Potion
 	 * @param view
 	 */
-	public void happyPotion(View view){
+	public synchronized void happyPotion(View view){
 		vib.vibrate(50);
 		//setDrunkExpression for some period of time
 		isDrunk = true;
 		model.setCuddleLevel(model.getCuddleLevel()+ Constants.CUDDLELEVELINCREASE*10);
 	}
 
-	private void setDrunkCount(int count){
+	private synchronized void setDrunkCount(int count){
 		drunkCount = count;
 	}
 
 	/**
 	 * Displays the instructions-pop up 
 	 */
-	public void howToPlay(View view) {
+	public synchronized void howToPlay(View view) {
 		createInstructionsAlert().show();
 	}
 
 	/**
 	 * Displays the new game-pop up 
 	 */
-	public void newGame(View view){
+	public synchronized void newGame(View view){
 		createNewGameAlert().show();
 	}
 
@@ -673,7 +699,7 @@ public class MainActivity extends Activity {
 	/**
 	 * Creates a pop-up with a death announcement
 	 */
-	public AlertDialog.Builder createDeathAlert() {
+	public synchronized AlertDialog.Builder createDeathAlert() {
 
 		AlertDialog.Builder alertDialog = new AlertDialog.Builder(this);
 		alertDialog.setTitle("Game Over");
@@ -701,7 +727,7 @@ public class MainActivity extends Activity {
 	/**
 	 * Creates a pop-up with instructions about how to play
 	 */
-	public AlertDialog.Builder createInstructionsAlert(){
+	public synchronized AlertDialog.Builder createInstructionsAlert(){
 
 		isActive = false;
 		AlertDialog.Builder alertDialog = new AlertDialog.Builder(this);
@@ -722,7 +748,7 @@ public class MainActivity extends Activity {
 	 * Creates a pop-up asking if the user really wants to
 	 * start a new game.
 	 */
-	public AlertDialog.Builder createNewGameAlert(){
+	public synchronized AlertDialog.Builder createNewGameAlert(){
 		isActive = false;
 		AlertDialog.Builder alertDialog = new AlertDialog.Builder(this);
 		alertDialog.setTitle("New Game");
@@ -751,7 +777,7 @@ public class MainActivity extends Activity {
 	 * Creates a pop-up asking if the user really wants to
 	 * play Russian Roulette.
 	 */
-	public AlertDialog.Builder createRussianAlert(){
+	public synchronized AlertDialog.Builder createRussianAlert(){
 
 		isActive = false;
 		AlertDialog.Builder alertDialog = new AlertDialog.Builder(this);
@@ -780,7 +806,7 @@ public class MainActivity extends Activity {
 	 * If the the program is not active a notification will
 	 * be sent instead.
 	 */
-	public void announceDeath() {
+	public synchronized void announceDeath() {
 		setCrayExpression(HUNGER, 0);
 		String message = model.getDeathCause();
 
@@ -789,12 +815,14 @@ public class MainActivity extends Activity {
 
 		}else{
 			if (!hasWindowFocus()) {
-				notifications.sendDeadNotification();
-				createDeathAlert().setMessage(message).show();
+				deadNoti = notiCreator.createDeadNotification();
+				notiManager.notify(Constants.DEAD_NOTI, deadNoti);
+//				createDeathAlert().setMessage(message).show();
 			}else {
 				createDeathAlert().setMessage(message).show();
 			}
 		}
+		hasAnnouncedDeath = true;
 	}
 
 
@@ -812,6 +840,7 @@ public class MainActivity extends Activity {
 				//				}
 				isActive = true;
 			}
+
 		}
 	}
 

@@ -27,8 +27,6 @@ public class Constants {
 
 	//For playing Russian Roulette
 	public final static int RUSSIAN_REQUEST_CODE = 1;
-	public final static boolean RUSSIAN_WIN = true;
-	public final static boolean RUSSIAN_LOOSE = false;
 	public final static String RUSSIAN_KEY = "key";
 	
 	//Death causes
@@ -36,4 +34,8 @@ public class Constants {
 	public final static String ILLNESS_DEATH = "OMG! CrayCray died of illness";
 	public final static String RUSSIAN_DEATH = "Bad luck! CrayCray lost Russian Roulette (haha *buhu*)";
 
+	//Notifications
+	public final static int DEAD_NOTI = 0;
+	public final static int DIRTY_NOTI = 1;
+	public final static int ILL_NOTI = 2;
 }
