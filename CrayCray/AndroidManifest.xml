@@ -10,7 +10,7 @@
 
     <instrumentation 
         android:name="android.test.InstrumentationTestRunner"
-    	android:targetPackage="se.chalmers.dat255.craycray.test"
+    	android:targetPackage="se.chalmers.dat255.craycray"
     	android:label="CrayCray tests" />
     
     <application
