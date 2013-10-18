@@ -376,7 +376,7 @@ public class MainActivity extends Activity {
 		cuddleBar.getProgressDrawable().setColorFilter(
 				Color.parseColor("#FF3366"), Mode.MULTIPLY);
 		cleanBar.getProgressDrawable().setColorFilter(
-				Color.parseColor("#66FFFF"), Mode.MULTIPLY);
+				Color.parseColor("#09CDDA"), Mode.MULTIPLY);
 		energyBar.getProgressDrawable().setColorFilter(
 				Color.parseColor("#FFFF66"), Mode.MULTIPLY);
 		

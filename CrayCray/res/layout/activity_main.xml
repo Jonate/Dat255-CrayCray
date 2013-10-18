@@ -47,6 +47,54 @@
         android:layout_below="@id/cleanBar"
         android:max="100" />
 
+    <TextView
+        android:id="@+id/foodBarText"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentTop="true"
+        android:layout_marginLeft="10dp"
+        android:textStyle="bold"
+        android:textColor="#FFFFFF"
+        android:text="HUNGER"
+        android:textSize="15dp" />
+
+    <TextView
+        android:id="@+id/cuddleBarText"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentLeft="true"
+        android:layout_below="@id/foodBarText"
+        android:layout_marginLeft="10dp"
+        android:textStyle="bold"
+        android:textColor="#FFFFFF"
+        android:text="HAPPINESS"
+        android:textSize="15dp" />
+
+    <TextView
+        android:id="@+id/cleanBarText"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentLeft="true"
+        android:layout_below="@id/cuddleBarText"
+        android:layout_marginLeft="10dp"
+        android:textStyle="bold"
+        android:textColor="#FFFFFF"
+        android:text="CLEANNESS"
+        android:textSize="15dp" />
+
+    <TextView
+        android:id="@+id/energyBarText"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentLeft="true"
+        android:layout_below="@id/cleanBarText"
+        android:layout_marginLeft="10dp"
+        android:textStyle="bold"
+        android:textColor="#FFFFFF"
+        android:text="ENERGY"
+        android:textSize="15dp" />
+
     <RelativeLayout
         android:id="@+id/buttonHolder"
         android:layout_width="wrap_content"
