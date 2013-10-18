@@ -13,7 +13,6 @@ import android.content.Intent;
  */
 public class NotificationSender {
 
-	private Class c;
 	private Context ctx;
 
 	private final int DEAD_NOTI = 0;
@@ -26,8 +25,6 @@ public class NotificationSender {
 	 */
 	public NotificationSender(Context ctx){
 		this.ctx = ctx;
-		c = ctx.getClass();
-
 	}
 
 	/**
@@ -36,7 +33,7 @@ public class NotificationSender {
 	 */
 	public void sendDeadNotification(){	
 		//Set activity shown when clicked.
-		Intent intent = new Intent(ctx, c);
+		Intent intent = new Intent(ctx, MainActivity.class);
 		PendingIntent pIntent = PendingIntent.getActivity(ctx, DEAD_NOTI, intent, Intent.FLAG_ACTIVITY_NEW_TASK);
 
 		//Make notification.
@@ -50,8 +47,8 @@ public class NotificationSender {
 		noti.flags = Notification.FLAG_AUTO_CANCEL;
 
 		//Send notification.
-		NotificationManager notificationManager = (NotificationManager) ctx.getSystemService(Context.NOTIFICATION_SERVICE);
-		notificationManager.notify(DEAD_NOTI, noti);
+		NotificationManager notiManager = (NotificationManager) ctx.getSystemService(Context.NOTIFICATION_SERVICE);
+		notiManager.notify(DEAD_NOTI, noti);
 
 	}
 
@@ -74,8 +71,8 @@ public class NotificationSender {
 		noti.flags = Notification.FLAG_AUTO_CANCEL;
 
 		//Send notification.
-		NotificationManager notificationManager = (NotificationManager) ctx.getSystemService(Context.NOTIFICATION_SERVICE);
-		notificationManager.notify(DIRTY_NOTI, noti);
+		NotificationManager notiManager = (NotificationManager) ctx.getSystemService(Context.NOTIFICATION_SERVICE);
+		notiManager.notify(DIRTY_NOTI, noti);
 	}
 	
 	/**
@@ -97,21 +94,17 @@ public class NotificationSender {
 		noti.flags = Notification.FLAG_AUTO_CANCEL;
 
 		//Send notification.
-		NotificationManager notificationManager = (NotificationManager) ctx.getSystemService(Context.NOTIFICATION_SERVICE);
-		notificationManager.notify(ILL_NOTI, noti);
+		NotificationManager notiManager = (NotificationManager) ctx.getSystemService(Context.NOTIFICATION_SERVICE);
+		notiManager.notify(ILL_NOTI, noti);
 	}
 	
 	/**
-	 * Removes the ill notification from notification bar if it exists
+	 * Removes all notifications from Notification Bar
 	 */
-	public void removeIllNotification(){
-		
+	public void removeAllNotis(){
+		NotificationManager notiManager = (NotificationManager) ctx.getSystemService(Context.NOTIFICATION_SERVICE);
+		notiManager.cancelAll();
 	}
 	
-	/**
-	 * Removes the dirty notification from notification bar if it exists
-	 */
-	public void removeDirtyNotification(){
-		
-	}
+
 }

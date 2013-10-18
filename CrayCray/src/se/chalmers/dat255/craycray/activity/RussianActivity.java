@@ -8,6 +8,7 @@ import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
+import android.os.Vibrator;
 import android.view.Menu;
 import android.view.View;
 import android.widget.ImageView;
@@ -18,10 +19,12 @@ public class RussianActivity extends Activity {
 	NeedsModel model = NeedsModel.getInstance();
 	
 	ImageView crayView;
+	Vibrator vib;
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
+		vib = (Vibrator) this.getSystemService(VIBRATOR_SERVICE);
 		rModel = new RussianRouletteModel();
 		setContentView(R.layout.activity_russian);
 		crayView = (ImageView) findViewById(R.id.scaredCrayCray);
@@ -41,6 +44,7 @@ public class RussianActivity extends Activity {
 	 * @param view
 	 */
 	public void playRussian(View view){
+		vib.vibrate(500);
 		Log.w("russian", "inside playrussian");
 		Intent intent = new Intent();
 

@@ -3,6 +3,7 @@ package se.chalmers.dat255.craycray.databasetest;
 import android.test.AndroidTestCase;
 import android.test.RenamingDelegatingContext;
 import se.chalmers.dat255.craycray.database.DatabaseAdapter;
+import se.chalmers.dat255.craycray.model.DatabaseException;
 
 public class DatabaseAdapterTest extends AndroidTestCase{
 
@@ -11,23 +12,21 @@ public class DatabaseAdapterTest extends AndroidTestCase{
 	public void setUp(){
 		
 		RenamingDelegatingContext context = new RenamingDelegatingContext(getContext(), "test_"); 
-		adapter = new DatabaseAdapter(context);
+		adapter = DatabaseAdapter.getInstance(context);
 		assertNotNull(adapter);
 	
 	}
 	
-	public void addValueTest(){
-		
-		System.out.println("in addValueTest");
-//		assertTrue(adapter.getValue("test1")==0);
-		assertEquals(0 ,adapter.getValue("test1")); 
-//		assertTrue(adapter.addValue("test1", 3)==1);
-//		assertTrue(adapter.addValue("test2", 4)==1);
-//		assertTrue(adapter.addValue("test3", 5)==2);
+	public void addValueTest() throws DatabaseException{
 	
+		assertTrue(adapter.getValue("test1")==0);
+		//assertTrue(adapter.addValue("test1", 3)==1);
+		//assertTrue(adapter.addValue("test2", 4)==1);
+		//assertTrue(adapter.addValue("test3", 5)==2);
+		
 	}
 	
-	public void getValueTest(){
+	public void getValueTest() throws DatabaseException{
 		
 		assertTrue(adapter.getValue("test1")==0);
 		adapter.addValue("test3", 5);
@@ -38,7 +37,7 @@ public class DatabaseAdapterTest extends AndroidTestCase{
 	
 	}
 	
-	public void updateValueTest(){
+	public void updateValueTest() throws DatabaseException{
 		
 		assertTrue(adapter.getValue("test1")==0);
 		adapter.addValue("test3", 5);

@@ -18,5 +18,10 @@ public class DatabaseConstants {
 	public static String CUDDLE="Cuddle";
 	public static String CLEAN="Clean";
 	public static String POO="Poo";
+	public static String ENERGY="Energy";
+	public static String SLEEPING="Sleeping";
+	public static String ILL="Ill";
+	public static String POOPED="Pooped";
+	public static String ILL_COUNT="IllCount";
 
 }
