@@ -13,6 +13,7 @@ import android.content.Intent;
  */
 public class NotificationSender {
 
+	private Class c;
 	private Context ctx;
 
 	private final int DEAD_NOTI = 0;
@@ -23,8 +24,9 @@ public class NotificationSender {
 	 * Creates a NotificationSender with the given Context.
 	 * @param context
 	 */
-	public NotificationSender(Context context){
-		this.ctx = context;
+	public NotificationSender(Context ctx){
+		this.ctx = ctx;
+		c = ctx.getClass();
 
 	}
 
@@ -34,7 +36,7 @@ public class NotificationSender {
 	 */
 	public void sendDeadNotification(){	
 		//Set activity shown when clicked.
-		Intent intent = new Intent(ctx, MainActivity.class);
+		Intent intent = new Intent(ctx, c);
 		PendingIntent pIntent = PendingIntent.getActivity(ctx, DEAD_NOTI, intent, Intent.FLAG_ACTIVITY_NEW_TASK);
 
 		//Make notification.

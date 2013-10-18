@@ -28,33 +28,25 @@ package se.chalmers.dat255.craycray.activity;
 import se.chalmers.dat255.craycray.R;
 import se.chalmers.dat255.craycray.database.DatabaseAdapter;
 import se.chalmers.dat255.craycray.database.DatabaseConstants;
-import se.chalmers.dat255.craycray.model.DeadException;
 import se.chalmers.dat255.craycray.model.NeedsModel;
 import se.chalmers.dat255.craycray.notifications.NotificationSender;
 import se.chalmers.dat255.craycray.util.Constants;
 import se.chalmers.dat255.craycray.util.TimeUtil;
-import android.app.ActionBar.LayoutParams;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.PorterDuff.Mode;
-import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import android.util.Log;
-import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.View;
-import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
-import android.widget.PopupWindow;
 import android.widget.ProgressBar;
-import android.widget.TextView;
 
 public class MainActivity extends Activity {
 
@@ -92,6 +84,8 @@ public class MainActivity extends Activity {
 	private final int ENERGY = 4;
 	private final int DRUNK = 5;
 
+	private final int DEAD = 6;
+
 	private final int POO = 1;
 	private final int NOPOO = 2;
 
@@ -124,11 +118,9 @@ public class MainActivity extends Activity {
 			// force imageview to update
 			crayView.invalidate();
 
-			if (msg.obj instanceof DeadException) {
-
-				DeadException e = (DeadException) msg.obj;
-				announceDeath(e);
-				activatedButtons(false);
+			if (msg.what == DEAD){
+				announceDeath();
+				model.minAllNeeds();
 			}
 
 		}
@@ -144,57 +136,8 @@ public class MainActivity extends Activity {
 		dbA = new DatabaseAdapter(getBaseContext());
 
 		isActive = true;
-		Log.w("russian", "testing testing");
 
-		// Button - variables set to xml ID
-		feedButton = (ImageButton) findViewById(R.id.feedButton);
-		cleanButton = (ImageButton) findViewById(R.id.cleanButton);
-		cuddleButton = (ImageButton) findViewById(R.id.cuddleButton);
-		energyButton = (ImageButton) findViewById(R.id.energyButton);
-		removePooButton = (ImageButton) findViewById(R.id.removePooButton);
-		cureButton = (ImageButton) findViewById(R.id.cureButton);
-		happypotionButton = (ImageButton) findViewById(R.id.happypotionButton);
-		russianButton = (ImageButton) findViewById(R.id.russianButton);
-		aboutButton = (ImageButton) findViewById(R.id.aboutButton);
-		newGameButton = (ImageButton)findViewById(R.id.newGameButton);
-
-		// Sets correct image to the buttons
-		feedButton.setImageResource(R.drawable.button_food);
-		cleanButton.setImageResource(R.drawable.button_clean);
-		cuddleButton.setImageResource(R.drawable.button_happiness);
-		energyButton.setImageResource(R.drawable.button_energy);
-		removePooButton.setImageResource(R.drawable.button_poo);
-		cureButton.setImageResource(R.drawable.button_cure);
-		happypotionButton.setImageResource(R.drawable.button_alcohol);
-		russianButton.setImageResource(R.drawable.button_roulette);
-		aboutButton.setImageResource(R.drawable.button_about);
-		newGameButton.setImageResource(R.drawable.button_restart);
-
-
-		//Bar - variables set to xml ID
-		foodBar = (ProgressBar) findViewById(R.id.foodBar);
-		cuddleBar = (ProgressBar) findViewById(R.id.cuddleBar);
-		cleanBar = (ProgressBar) findViewById(R.id.cleanBar);
-		energyBar = (ProgressBar) findViewById(R.id.energyBar);
-		crayView = (ImageView) findViewById(R.id.crayCray);
-
-		// Sets the color of the progressbar
-		foodBar.getProgressDrawable().setColorFilter(
-				Color.parseColor("#33FF99"), Mode.MULTIPLY);
-		cuddleBar.getProgressDrawable().setColorFilter(
-				Color.parseColor("#FF3366"), Mode.MULTIPLY);
-		cleanBar.getProgressDrawable().setColorFilter(
-				Color.parseColor("#66FFFF"), Mode.MULTIPLY);
-		energyBar.getProgressDrawable().setColorFilter(
-				Color.parseColor("#FFFF66"), Mode.MULTIPLY);
-
-		model = NeedsModel.getInstance();
-
-		// sets the latest values of the progressbars
-		foodBar.setProgress(model.getHungerLevel());
-		cuddleBar.setProgress(model.getCuddleLevel());
-		cleanBar.setProgress(model.getCleanLevel());
-		energyBar.setProgress(model.getEnergyLevel());
+		initUi();
 
 		if(t == null){
 			t = new Thread(new Runnable() {
@@ -250,19 +193,7 @@ public class MainActivity extends Activity {
 											hasSentIllNoti = true;
 										}
 									}
-
-									try{
-										model.setIllCount(model.getIllCount() - 1);
-										model.killWhenIll();
-									} catch(Exception e){
-										if (e instanceof DeadException) {
-											System.out.println("DEAD BY ILLNESS");
-											Message msg = Message.obtain();
-											msg.obj = e;
-											handler.sendMessage(msg);
-											break;
-										}
-									}
+									model.setIllCount(model.getIllCount() - 1);
 								}
 
 								System.out.println("PRINT IN THREAD:");
@@ -285,10 +216,9 @@ public class MainActivity extends Activity {
 								//if CrayCray is drunk show drunkpicture
 								if(isDrunk){
 									setCrayExpression(DRUNK, 0);
+									setDrunkCount(drunkCount -1);
 								}
-								//decrease drunkCount
-								setDrunkCount(drunkCount -1);
-								//when drunkCount is 0 decide what picture to show
+								//when drunkCount is 0 decide what picture to show and reset
 								if(drunkCount == 0){
 									isDrunk = false;
 									model.setEnergyLevel(model.getEnergyLevel() - 1 );
@@ -298,17 +228,19 @@ public class MainActivity extends Activity {
 									drunkCount = Constants.MAX_DRUNK_COUNT;
 								}
 
+								if(!model.isAlive()){
+									Message msg = Message.obtain();
+									msg.what = DEAD;
+									handler.sendMessage(msg);
+									break;
+								}
 
 								handler.sendMessage(handler.obtainMessage());
 								Thread.sleep(800);
 							}
+
 						} catch (Exception e) {
-							if (e instanceof DeadException) {
-								Message msg = Message.obtain();
-								msg.obj = e;
-								handler.sendMessage(msg);
-								break;
-							}
+
 						}
 					}
 				}
@@ -317,6 +249,7 @@ public class MainActivity extends Activity {
 		}	
 
 		t.start();
+
 
 		// checks if the database exists
 		if (dbA.getValue("Firsttime") == -1) {
@@ -333,22 +266,67 @@ public class MainActivity extends Activity {
 			Log.w("Database",
 					differenceInSeconds + ", "
 							+ dbA.getValue(DatabaseConstants.HUNGER));
-			try {
-				model.setHungerLevel(dbA.getValue(DatabaseConstants.HUNGER)
-						+ differenceInSeconds * (-1));
-				model.setCuddleLevel(dbA.getValue(DatabaseConstants.CUDDLE)
-						+ differenceInSeconds * (-3));
-				model.setCleanLevel(dbA.getValue(DatabaseConstants.CLEAN)
-						+ differenceInSeconds * (-2));
-				model.setPooLevel(dbA.getValue(DatabaseConstants.POO));
-			} catch (DeadException e) {
-				if (e instanceof DeadException) {
-					Message msg = Message.obtain();
-					msg.obj = e;
-					handler.sendMessage(msg);
-				}
-			}
+			model.setHungerLevel(dbA.getValue(DatabaseConstants.HUNGER)
+					+ differenceInSeconds * (-1));
+			model.setCuddleLevel(dbA.getValue(DatabaseConstants.CUDDLE)
+					+ differenceInSeconds * (-3));
+			model.setCleanLevel(dbA.getValue(DatabaseConstants.CLEAN)
+					+ differenceInSeconds * (-2));
+			model.setPooLevel(dbA.getValue(DatabaseConstants.POO));
 		}
+	}
+
+
+	private void initUi() {
+
+		// Button - variables set to xml ID
+		feedButton = (ImageButton) findViewById(R.id.feedButton);
+		cleanButton = (ImageButton) findViewById(R.id.cleanButton);
+		cuddleButton = (ImageButton) findViewById(R.id.cuddleButton);
+		energyButton = (ImageButton) findViewById(R.id.energyButton);
+		removePooButton = (ImageButton) findViewById(R.id.removePooButton);
+		cureButton = (ImageButton) findViewById(R.id.cureButton);
+		happypotionButton = (ImageButton) findViewById(R.id.happypotionButton);
+		russianButton = (ImageButton) findViewById(R.id.russianButton);
+		aboutButton = (ImageButton) findViewById(R.id.aboutButton);
+		newGameButton = (ImageButton)findViewById(R.id.newGameButton);
+
+
+		// Sets correct image to the buttons
+		feedButton.setImageResource(R.drawable.button_food);
+		cleanButton.setImageResource(R.drawable.button_clean);
+		cuddleButton.setImageResource(R.drawable.button_happiness);
+		energyButton.setImageResource(R.drawable.button_energy);
+		removePooButton.setImageResource(R.drawable.button_poo);
+		cureButton.setImageResource(R.drawable.button_cure);
+		happypotionButton.setImageResource(R.drawable.button_alcohol);
+		russianButton.setImageResource(R.drawable.button_roulette);
+		aboutButton.setImageResource(R.drawable.button_about);
+		newGameButton.setImageResource(R.drawable.button_restart);
+
+
+		//Bar - variables set to xml ID
+		foodBar = (ProgressBar) findViewById(R.id.foodBar);
+		cuddleBar = (ProgressBar) findViewById(R.id.cuddleBar);
+		cleanBar = (ProgressBar) findViewById(R.id.cleanBar);
+		energyBar = (ProgressBar) findViewById(R.id.energyBar);
+		crayView = (ImageView) findViewById(R.id.crayCray);
+
+		// Sets the color of the progressbar
+		foodBar.getProgressDrawable().setColorFilter(
+				Color.parseColor("#33FF99"), Mode.MULTIPLY);
+		cuddleBar.getProgressDrawable().setColorFilter(
+				Color.parseColor("#FF3366"), Mode.MULTIPLY);
+		cleanBar.getProgressDrawable().setColorFilter(
+				Color.parseColor("#66FFFF"), Mode.MULTIPLY);
+		energyBar.getProgressDrawable().setColorFilter(
+				Color.parseColor("#FFFF66"), Mode.MULTIPLY);
+
+		// sets the latest values of the progressbars
+		foodBar.setProgress(model.getHungerLevel());
+		cuddleBar.setProgress(model.getCuddleLevel());
+		cleanBar.setProgress(model.getCleanLevel());
+		energyBar.setProgress(model.getEnergyLevel());
 	}
 
 
@@ -360,12 +338,6 @@ public class MainActivity extends Activity {
 		}
 	}
 
-	@Override
-	public boolean onCreateOptionsMenu(Menu menu) {
-		// Inflate the menu; this adds items to the action bar if it is present.
-		getMenuInflater().inflate(R.menu.main, menu);
-		return true;
-	}
 
 	/**
 	 * Updates the database if the application is shut down
@@ -384,12 +356,9 @@ public class MainActivity extends Activity {
 	 * increases hungerlevel by 5
 	 */
 	public synchronized void feed(View view) {
-		try {
-			model.setHungerLevel(model.getHungerLevel() + 5);
 
-		} catch (DeadException e) {
-			// handled elsewhere?
-		}
+		model.setHungerLevel(model.getHungerLevel() + 5);
+
 		if (model.getHungerLevel() > 50) {
 			setCrayExpression(-1, -1);
 		}
@@ -730,51 +699,50 @@ public class MainActivity extends Activity {
 	 * If the the program is not active a notification will
 	 * be sent instead.
 	 */
-	public void announceDeath(DeadException e) {
+	public void announceDeath() {
 		setCrayExpression(HUNGER, 0);
-		if (!hasWindowFocus()) {
-			notifications.sendDeadNotification();
-		} else {
-			String message = e.getDeathCause();
+		String message = model.getDeathCause();
+
+		if(message == Constants.RUSSIAN_DEATH){
 			createDeathAlert().setMessage(message).show();
-
-		}
-		model.minAllNeeds();
-	}
-
-
-	@Override
-	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-
-		// Check which request we're responding to
-		if (requestCode == Constants.RUSSIAN_REQUEST_CODE) {
-			if (resultCode == RESULT_OK) {
-				Bundle bundle = data.getExtras();
-				boolean result = bundle.getBoolean("key");
-				if(result == Constants.RUSSIAN_LOOSE){
-					Log.w("russian", "result = loose in onactivityres");
-					DeadException e = new DeadException(Constants.RUSSIAN_DEATH);
-					Message msg = Message.obtain();
-					msg.obj = e;
-					handler.sendMessage(msg);
-
-					Log.w("russian", "handler message with dedex sent in onactivityresult");
-				}
+		}else{
+			if (!hasWindowFocus()) {
+				notifications.sendDeadNotification();
+				createDeathAlert().setMessage(message).show();
+			}else {
+				createDeathAlert().setMessage(message).show();
 			}
 		}
-		isActive = true;
 	}
 
-	public synchronized void activatedButtons(boolean state){
-		feedButton.setClickable(state);
-		cuddleButton.setClickable(state);
-		cleanButton.setClickable(state);
-		energyButton.setClickable(state);
-		removePooButton.setClickable(state);
-		cureButton.setClickable(state);
-		happypotionButton.setClickable(state);
-		russianButton.setClickable(state);
+
+
+@Override
+protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+
+	// Check which request we're responding to
+	if (requestCode == Constants.RUSSIAN_REQUEST_CODE) {
+		if (resultCode == RESULT_OK) {
+			//				if(!model.isAlive()){
+			//					Message msg = Message.obtain();
+			//					msg.what = DEAD;
+			//					handler.sendMessage(msg);
+			//				}
+			isActive = true;
+		}
 	}
+}
+
+public synchronized void activatedButtons(boolean state){
+	feedButton.setClickable(state);
+	cuddleButton.setClickable(state);
+	cleanButton.setClickable(state);
+	energyButton.setClickable(state);
+	removePooButton.setClickable(state);
+	cureButton.setClickable(state);
+	happypotionButton.setClickable(state);
+	russianButton.setClickable(state);
+}
 
 }
 
