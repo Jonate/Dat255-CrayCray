@@ -32,7 +32,7 @@ public class DatabaseAdapter {
 	 * @param value 
 	 * @return the rowindex of the value added
 	 */
-	public long addValue(String id, int value){  
+	public long addValue(String id, double value){  
 		ContentValues values = new ContentValues();  
 		values.put(NEED_ID, id);  
 		values.put(NEED_VALUE, value);  
@@ -61,7 +61,7 @@ public class DatabaseAdapter {
 	 * @param value the new value
 	 * @return the rowindex of the updated value
 	 */
-	public long updateValue(String id, int value){  
+	public long updateValue(String id, double value){  
 		ContentValues values = new ContentValues();
 		values.put(NEED_VALUE, value);  
 		return database.update(NEED_TABLE, values, NEED_ID+" =?" ,new String[]{id});  
