@@ -207,23 +207,50 @@ public class NeedsModelTest extends AndroidTestCase{
 		assertTrue(model.getPooLevel() == 0);
 
 	}
-	
-	/*public void minAllNeedsTest() throws DeadException{
+	/**
+	 * Test if all needs are maximized
+	 */
+	public void maxAllNeedsTest(){
 		NeedsModel model = NeedsModel.getInstance();
-		model.setHungerLevel(0);
 		
-		assertTrue(model.getHungerLevel() == Constants.NEED_LEVEL_MIN);
+		model.setCuddleLevel(100);
+		assertTrue(model.getCuddleLevel() == Constants.NEED_LEVEL_MAX);
+		
+		model.setCleanLevel(100);
+		assertTrue(model.getCleanLevel() == Constants.NEED_LEVEL_MAX);
+		
+		model.setEnergyLevel(100);
+		assertTrue(model.getEnergyLevel() == Constants.NEED_LEVEL_MAX);
+		
+		model.setPooLevel(100);
+		assertTrue(model.getPooLevel() == Constants.NEED_LEVEL_MAX);
+		
+		model.setHungerLevel(100);
+		assertTrue(model.getHungerLevel() == Constants.NEED_LEVEL_MAX);
 	}
-	*/
 	
-	
-	
-	
-	
-	
-	
-	
-	
+	/**
+	 * Test if all needs are minimized 
+	 */
+	public void minAllNeedsTest(){
+		NeedsModel model = NeedsModel.getInstance();
+				
+		model.setCuddleLevel(0);
+		assertTrue(model.getCuddleLevel() == Constants.NEED_LEVEL_MIN);
+		
+		model.setCleanLevel(0);
+		assertTrue(model.getCleanLevel() == Constants.NEED_LEVEL_MIN);
+		
+		model.setHungerLevel(100);
+		assertTrue(model.getHungerLevel() == Constants.NEED_LEVEL_MAX);
+		
+		model.setEnergyLevel(0);
+		assertTrue(model.getEnergyLevel() == Constants.NEED_LEVEL_MIN);
+		
+		model.setPooLevel(0);
+		assertTrue(model.getPooLevel() == Constants.NEED_LEVEL_MIN);
+		
+	}
 	
 	
 
