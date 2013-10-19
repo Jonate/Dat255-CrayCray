@@ -54,6 +54,8 @@ import android.widget.ProgressBar;
 
 public class MainActivity extends Activity {
 
+	private MainActivity main = this;
+
 	private boolean isActive;
 
 	// The buttons of the application
@@ -81,16 +83,16 @@ public class MainActivity extends Activity {
 	private View fade;
 	private Vibrator vib;
 
-	private final int HUNGER = 1;
-	private final int CLEANNESS = 2;
-	private final int HAPPINESS = 3;
-	private final int ENERGY = 4;
-	private final int DRUNK = 5;
-
-	private final int DEAD = 6;
-
-	private final int POO = 1;
-	private final int NOPOO = 2;
+//	private final int HUNGER = 1;
+//	private final int CLEANNESS = 2;
+//	private final int HAPPINESS = 3;
+//	private final int ENERGY = 4;
+//	private final int DRUNK = 5;
+//
+//	private final int DEAD = 6;
+//
+//	private final int POO = 1;
+//	private final int NOPOO = 2;
 
 	private int drunkCount = Constants.MAX_DRUNK_COUNT;
 
@@ -106,7 +108,6 @@ public class MainActivity extends Activity {
 	private Notification illNoti;
 	private Notification dirtyNoti;
 
-	private MainActivity main = this;
 
 	// A Handler to take care of updates in UI-thread
 	// When sendMessage method is called, this is where the message is sent
@@ -121,6 +122,12 @@ public class MainActivity extends Activity {
 			cuddleBar.setProgress((int)model.getCuddleLevel());
 			cleanBar.setProgress((int)model.getCleanLevel());
 			energyBar.setProgress((int)model.getEnergyLevel());
+			
+			//Set correct color of the bar
+			setProgressColor(foodBar);
+			setProgressColor(cuddleBar);
+			setProgressColor(cleanBar);
+			setProgressColor(energyBar);
 
 			// force imageview to update
 			crayView.invalidate();
@@ -129,7 +136,7 @@ public class MainActivity extends Activity {
 				setUpDatabase();
 
 			} 
-			if (msg.what == DEAD){
+			if (msg.what == Constants.DEAD){
 				announceDeath();
 				model.minAllNeeds();
 				activatedButtons(false);
@@ -153,9 +160,9 @@ public class MainActivity extends Activity {
 
 		notiCreator = new NotificationCreator(this);
 		notiManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
-		
+
 		initUi();
-		
+
 
 		try{
 			Log.w("Database", "TRYYY");
@@ -164,22 +171,21 @@ public class MainActivity extends Activity {
 			int differenceInSeconds = TimeUtil.compareTime(dbA
 					.getStringValue(DatabaseConstants.TIME));
 			Log.w("Database", "DifferenceInSeconds"+ differenceInSeconds+" "+  Constants.THREAD_SLEEP_SEC);
-			model.setHungerLevel(dbA.getValue(DatabaseConstants.HUNGER) + differenceInSeconds 
-					* Constants.HUNGERLEVELDECREASE * Constants.THREAD_SLEEP_SEC);
-			model.setCuddleLevel(dbA.getValue(DatabaseConstants.CUDDLE) + differenceInSeconds 
-					* Constants.CUDDLELEVELDECREASE * Constants.THREAD_SLEEP_SEC);
-			model.setCleanLevel(dbA.getValue(DatabaseConstants.CLEAN) + differenceInSeconds 
-					* Constants.CLEANLEVELDECREASE * Constants.THREAD_SLEEP_SEC);
-			model.setPooLevel(dbA.getValue(DatabaseConstants.POO) + differenceInSeconds 
-					* Constants.POOLEVELDECREASE * Constants.THREAD_SLEEP_SEC);
+			model.setHungerLevel(dbA.getValue(DatabaseConstants.HUNGER) + differenceInSeconds/Constants.THREAD_SLEEP_SEC 
+					* Constants.HUNGERLEVELDECREASE );
+			model.setCuddleLevel(dbA.getValue(DatabaseConstants.CUDDLE) + differenceInSeconds/Constants.THREAD_SLEEP_SEC 
+					* Constants.CUDDLELEVELDECREASE);
+			model.setCleanLevel(dbA.getValue(DatabaseConstants.CLEAN) + differenceInSeconds/Constants.THREAD_SLEEP_SEC 
+					* Constants.CLEANLEVELDECREASE);
+			model.setPooLevel(dbA.getValue(DatabaseConstants.POO) + differenceInSeconds/Constants.THREAD_SLEEP_SEC 
+					* Constants.POOLEVELDECREASE);
 
 			// Checks if CrayCray was healthy or ill at the last shutdown 
 			// and give it the same value again.
 			if(dbA.getValue(DatabaseConstants.ILL)==0){
 				model.setIllness(false);
 			}else{
-				model.setIllCount(dbA.getValue(DatabaseConstants.ILL_COUNT) - differenceInSeconds
-						* Constants.THREAD_SLEEP_SEC);
+				model.setIllCount(dbA.getValue(DatabaseConstants.ILL_COUNT) - differenceInSeconds/Constants.THREAD_SLEEP_SEC);
 				model.setIllness(true);
 			}
 
@@ -194,12 +200,12 @@ public class MainActivity extends Activity {
 			// Checks if CrayCray was awake or not when the app was closed the last time.
 			if(dbA.getValue(DatabaseConstants.SLEEPING)==0){
 				double energy = dbA.getValue(DatabaseConstants.ENERGY) 
-						+ differenceInSeconds * Constants.ENERGYLEVELDECREASE;
+						+ differenceInSeconds/Constants.THREAD_SLEEP_SEC * Constants.ENERGYLEVELDECREASE;
 				// The energy level is set to 1 if it has reached a value of zero or lower
 				// because CrayCray can't automatically go to sleep when the application is 
 				// dead. The user needs to be able to feed or cure CrayCray the next time 
 				// the app is started before he goes to sleep.
-				if(energy <= 0){
+				if(energy <= Constants.NEED_LEVEL_MIN){
 					model.setEnergyLevel(1);
 
 				} else {
@@ -208,7 +214,7 @@ public class MainActivity extends Activity {
 				}
 			} else {
 				double energy = dbA.getValue(DatabaseConstants.ENERGY) 
-						+ differenceInSeconds * Constants.ENERGYLEVELINCREASE;
+						+ differenceInSeconds/Constants.THREAD_SLEEP_SEC * Constants.ENERGYLEVELINCREASE;
 				if(energy >= Constants.NEED_LEVEL_MAX){
 					model.setEnergyLevel(Constants.NEED_LEVEL_MAX);
 					model.setSleep(false);
@@ -228,8 +234,8 @@ public class MainActivity extends Activity {
 			}
 		}
 
-		
-		
+
+
 
 		if(t == null){
 			t = new Thread(new Runnable() {
@@ -249,7 +255,7 @@ public class MainActivity extends Activity {
 								model.setCuddleLevel(model.getCuddleLevel() + Constants.CUDDLELEVELDECREASE);
 								model.setPooLevel(model.getPooLevel() + Constants.POOLEVELDECREASE);
 
-								setCrayExpression(ENERGY, model.getEnergyLevel());
+								setCrayExpression(Constants.ENERGY, model.getEnergyLevel());
 
 								//Check if user should be able to clean CrayCray
 								drawPooImage(model.getPooLevel());
@@ -266,11 +272,11 @@ public class MainActivity extends Activity {
 								} else {
 									fade.setAlpha(0F);
 									fade.invalidate();
-									
+
 									model.setEnergyLevel(model.getEnergyLevel() + Constants.ENERGYLEVELDECREASE);
-									setCrayExpression(HAPPINESS, model.getCuddleLevel());
-									setCrayExpression(HUNGER, model.getHungerLevel());
-									setCrayExpression(CLEANNESS, model.getCleanLevel());
+									setCrayExpression(Constants.HAPPINESS, model.getCuddleLevel());
+									setCrayExpression(Constants.HUNGER, model.getHungerLevel());
+									setCrayExpression(Constants.CLEANNESS, model.getCleanLevel());
 
 									activatedButtons(true);
 
@@ -311,22 +317,22 @@ public class MainActivity extends Activity {
 
 								//if CrayCray is drunk show drunkpicture as long as the drunkCount counts
 								if(isDrunk){
-									setCrayExpression(DRUNK, 0);
+									setCrayExpression(Constants.DRUNK, Constants.DEFAULT_LEVEL);
 									setDrunkCount(drunkCount -1);
 								}
 								//when drunkCount is 0 decide what picture to show and reset
 								if(drunkCount == 0){
 									isDrunk = false;
 									model.setEnergyLevel(model.getEnergyLevel() + Constants.ENERGYLEVELDECREASE );
-									setCrayExpression(HAPPINESS, model.getCuddleLevel());
-									setCrayExpression(HUNGER, model.getHungerLevel());
-									setCrayExpression(CLEANNESS, model.getCleanLevel());
+									setCrayExpression(Constants.HAPPINESS, model.getCuddleLevel());
+									setCrayExpression(Constants.HUNGER, model.getHungerLevel());
+									setCrayExpression(Constants.CLEANNESS, model.getCleanLevel());
 									drunkCount = Constants.MAX_DRUNK_COUNT;
 								}
 
 								if(!model.isAlive()){
 									Message msg = Message.obtain();
-									msg.what = DEAD;
+									msg.what = Constants.DEAD;
 									handler.sendMessage(msg);
 									break;
 								}
@@ -372,22 +378,12 @@ public class MainActivity extends Activity {
 		energyBar = (ProgressBar) findViewById(R.id.energyBar);
 		crayView = (ImageView) findViewById(R.id.crayCray);
 
-		// Sets the color of the progressbar
-		foodBar.getProgressDrawable().setColorFilter(
-				Color.parseColor("#33FF99"), Mode.MULTIPLY);
-		cuddleBar.getProgressDrawable().setColorFilter(
-				Color.parseColor("#FF3366"), Mode.MULTIPLY);
-		cleanBar.getProgressDrawable().setColorFilter(
-				Color.parseColor("#66FFFF"), Mode.MULTIPLY);
-		energyBar.getProgressDrawable().setColorFilter(
-				Color.parseColor("#FFFF66"), Mode.MULTIPLY);
-		
 		// sets the latest values of the progressbars
 		foodBar.setProgress((int)model.getHungerLevel());
 		cuddleBar.setProgress((int)model.getCuddleLevel());
 		cleanBar.setProgress((int)model.getCleanLevel());
 		energyBar.setProgress((int)model.getEnergyLevel());
-		
+
 		//fade - variables set to xml ID
 		fade=(View) findViewById(R.id.fade);
 	}
@@ -401,13 +397,13 @@ public class MainActivity extends Activity {
 		}
 		notiManager.cancelAll();
 	}
-	
+
 	@Override
 	public synchronized void onResume() {
 		super.onResume();
 		notiManager.cancelAll();
 	}
-	
+
 	@Override
 	public synchronized void onRestart() {
 		super.onRestart();
@@ -457,7 +453,7 @@ public class MainActivity extends Activity {
 	}
 
 	/**
-	 * increases hungerlevel by constant HUNGERLEVELINCREASE,
+	 * increases hungerlevel by constant HUNGERLEVELINCREASE
 	 * sets CrayCrays expression accordingly and vibrates.
 	 */
 	public synchronized void feed(View view) {
@@ -466,13 +462,13 @@ public class MainActivity extends Activity {
 		model.setHungerLevel(model.getHungerLevel() + Constants.HUNGERLEVELINCREASE);
 
 		if (model.getHungerLevel() > 50) {
-			setCrayExpression(-1, -1);
+			setCrayExpression(Constants.DEFAULT, Constants.DEFAULT_LEVEL);
 		}
 		handler.sendMessage(handler.obtainMessage());
 	}
 
 	/**
-	 * increases cleanlevel by constant CLEANLEVELINCREASE,
+	 * increases cleanlevel by constant CLEANLEVELINCREASE
 	 * sets CrayCrays expression accordingly and vibrates.
 	 */
 	public synchronized void clean(View view) {
@@ -480,11 +476,24 @@ public class MainActivity extends Activity {
 		if (cleanability) {
 			model.setCleanLevel(model.getCleanLevel() + Constants.CLEANLEVELINCREASE);
 			if (model.getCleanLevel() > 50) {
-				setCrayExpression(-1, -1);
+				setCrayExpression(Constants.DEFAULT, Constants.DEFAULT_LEVEL);
 				dirtyNoti = null;
 			}
 
 			handler.sendMessage(handler.obtainMessage());
+		}
+	}
+	
+	private synchronized void setProgressColor(ProgressBar bar){
+		if(bar.getProgress()<15){
+			bar.getProgressDrawable().setColorFilter(
+					Color.parseColor("#FF3333"), Mode.MULTIPLY);
+		}else if(bar.getProgress() <40){
+			bar.getProgressDrawable().setColorFilter(
+					Color.parseColor("#FFFF66"), Mode.MULTIPLY);
+		}else{
+			bar.getProgressDrawable().setColorFilter(
+					Color.parseColor("#33FF99"), Mode.MULTIPLY);
 		}
 	}
 
@@ -500,7 +509,7 @@ public class MainActivity extends Activity {
 	}
 
 	/**
-	 * increases energylevel and vibrates. 
+	 * increases energylevel
 	 */
 	public synchronized void sleep(View view) {
 		vib.vibrate(50);
@@ -510,7 +519,6 @@ public class MainActivity extends Activity {
 
 	/**
 	 * removes poo from screen and increses poolevel by 100
-	 * and vibrates.
 	 * 
 	 * @param view
 	 */
@@ -527,7 +535,7 @@ public class MainActivity extends Activity {
 	}
 
 	/**
-	 * cures the pet if it is ill,
+	 * cures the pet if it is ill
 	 * sets CrayCrays expression accordingly and vibrates.
 	 * @param view
 	 */
@@ -540,9 +548,9 @@ public class MainActivity extends Activity {
 			model.setIllCount(Constants.ILL_COUNT);
 			handler.sendMessage(handler.obtainMessage());
 
-			setCrayExpression(CLEANNESS, model.getCleanLevel());
-			setCrayExpression(HUNGER, model.getHungerLevel());
-			setCrayExpression(HAPPINESS, model.getCuddleLevel());
+			setCrayExpression(Constants.CLEANNESS, model.getCleanLevel());
+			setCrayExpression(Constants.HUNGER, model.getHungerLevel());
+			setCrayExpression(Constants.HAPPINESS, model.getCuddleLevel());
 
 		}
 	}
@@ -558,7 +566,7 @@ public class MainActivity extends Activity {
 	}
 
 	/**
-	 * Entoxicates CrayCray and increases cuddle level and vibrates.
+	 * Entoxicates CrayCray and increases cuddle level and vibrates
 	 * @param view
 	 */
 	public synchronized void happyPotion(View view){
@@ -597,11 +605,11 @@ public class MainActivity extends Activity {
 	 */
 	public synchronized void drawPooImage(double level) {
 		pooImage = (ImageView) findViewById(R.id.pooImage);
-		if (level <= 100 && level > 50) {
-			setPoo(NOPOO);
+		if (level <= Constants.NEED_LEVEL_MAX && level > 50) {
+			setPoo(Constants.NOPOO);
 			handler.sendMessage(handler.obtainMessage());
 		} else if ((level <= 50 && level >= 20) && (!model.hasPooped())) {
-			setPoo(POO);
+			setPoo(Constants.POO);
 			cleanability = false;
 			model.setHasPooped(true);
 			handler.sendMessage(handler.obtainMessage());
@@ -620,12 +628,12 @@ public class MainActivity extends Activity {
 		int image;
 		switch (pooOrNot) {
 
-		case POO:
+		case Constants.POO:
 			image = R.drawable.poo;
 			pooImage.setImageResource(image);
 			break;
 
-		case NOPOO:
+		case Constants.NOPOO:
 			image = R.drawable.invisible;
 			pooImage.setImageResource(image);
 			break;
@@ -647,8 +655,8 @@ public class MainActivity extends Activity {
 	public synchronized void setCrayExpression(int mode, double level) {
 
 		switch (mode) {
-		case ENERGY:
-			if(level >= 100){
+		case Constants.ENERGY:
+			if(level >= Constants.NEED_LEVEL_MAX){
 				model.setSleep(false);
 
 			}else if (level == 0 || model.isSleeping()) {
@@ -658,7 +666,7 @@ public class MainActivity extends Activity {
 			break;
 
 			// check dirtyLvl
-		case CLEANNESS:
+		case Constants.CLEANNESS:
 			if (level >20 && level < 50) {
 				crayView.setImageResource(R.drawable.dirty_baby);
 			}
@@ -670,8 +678,8 @@ public class MainActivity extends Activity {
 			break;
 
 			// check hungryLvl
-		case HUNGER:
-			if (level == 0) {
+		case Constants.HUNGER:
+			if (level == Constants.NEED_LEVEL_MIN) {
 				crayView.setImageResource(R.drawable.dead_baby);
 
 			} else if (model.isIll()) {
@@ -685,7 +693,7 @@ public class MainActivity extends Activity {
 			break;
 
 			// check cuddleLvl
-		case HAPPINESS:
+		case Constants.HAPPINESS:
 			if (level > 70) {
 				crayView.setImageResource(R.drawable.happy_baby);
 
@@ -696,7 +704,7 @@ public class MainActivity extends Activity {
 			}
 			break;
 
-		case DRUNK:
+		case Constants.DRUNK:
 			crayView.setImageResource(R.drawable.wasted_baby);
 			break;
 
@@ -820,7 +828,7 @@ public class MainActivity extends Activity {
 	 * be sent instead.
 	 */
 	public synchronized void announceDeath() {
-		setCrayExpression(HUNGER, 0);
+		setCrayExpression(Constants.HUNGER, Constants.DEFAULT_LEVEL);
 		String message = model.getDeathCause();
 
 		if(message == Constants.RUSSIAN_DEATH){
@@ -888,7 +896,6 @@ public class MainActivity extends Activity {
 			return;
 		}
 	}
-
 	/**
 	 * Activate or deactivate all buttons.
 	 * @param state
