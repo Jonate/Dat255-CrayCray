@@ -43,6 +43,10 @@ public class DatabaseAdapter {
 			return instance;
 		}
 	}
+	
+	/**
+	 * Reset the databese.
+	 */
 	public void resetDatabase(){
 		ctx.deleteDatabase(DatabaseConstants.DATABASE_NAME);
 		
@@ -119,7 +123,7 @@ public class DatabaseAdapter {
 	}
 
 	/**
-	 * 
+	 * Get the value associated with the id.
 	 * @param id
 	 * @return the value
 	 * @throws DatabaseException if the id does not exist
@@ -141,7 +145,7 @@ public class DatabaseAdapter {
 	}
 
 	/**
-	 * 
+	 * Get the value associated with the id in String representation.
 	 * @param id
 	 * @return the value, returns null if the id does not exist
 	 */

@@ -48,28 +48,26 @@
         android:max="100" />
 
     <TextView
-        android:id="@+id/foodBarText"
+        android:id="@+id/hungerBarText"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentLeft="true"
         android:layout_alignParentTop="true"
-        android:layout_marginLeft="10dp"
-        android:textStyle="bold"
-        android:textColor="#FFFFFF"
-        android:text="HUNGER"
-        android:textSize="15dp" />
+        android:layout_marginLeft="5dp"
+        android:text="Hunger"
+        android:textColor="#333333"
+        android:textStyle="bold" />
 
     <TextView
         android:id="@+id/cuddleBarText"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentLeft="true"
-        android:layout_below="@id/foodBarText"
-        android:layout_marginLeft="10dp"
-        android:textStyle="bold"
-        android:textColor="#FFFFFF"
-        android:text="HAPPINESS"
-        android:textSize="15dp" />
+        android:layout_below="@id/hungerBarText"
+        android:layout_marginLeft="5dp"
+        android:text="Happiness"
+        android:textColor="#333333"
+        android:textStyle="bold" />
 
     <TextView
         android:id="@+id/cleanBarText"
@@ -77,11 +75,11 @@
         android:layout_height="wrap_content"
         android:layout_alignParentLeft="true"
         android:layout_below="@id/cuddleBarText"
-        android:layout_marginLeft="10dp"
-        android:textStyle="bold"
-        android:textColor="#FFFFFF"
-        android:text="CLEANNESS"
-        android:textSize="15dp" />
+        android:layout_marginLeft="5dp"
+        android:layout_marginTop="2dp"
+        android:text="Cleanness"
+        android:textColor="#333333"
+        android:textStyle="bold" />
 
     <TextView
         android:id="@+id/energyBarText"
@@ -89,11 +87,10 @@
         android:layout_height="wrap_content"
         android:layout_alignParentLeft="true"
         android:layout_below="@id/cleanBarText"
-        android:layout_marginLeft="10dp"
-        android:textStyle="bold"
-        android:textColor="#FFFFFF"
-        android:text="ENERGY"
-        android:textSize="15dp" />
+        android:layout_marginLeft="5dp"
+        android:text="Energy"
+        android:textColor="#333333"
+        android:textStyle="bold" />
 
     <RelativeLayout
         android:id="@+id/buttonHolder"
@@ -171,7 +168,7 @@
         android:layout_height="wrap_content"
         android:layout_above="@id/removePooButton"
         android:layout_alignParentLeft="true"
-        android:layout_marginLeft="30dp"
+        android:layout_marginLeft="25dp"
         android:layout_marginTop="15dp"
         android:background="@null"
         android:hapticFeedbackEnabled="true"

@@ -6,6 +6,9 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 
+/**
+ * Splash screen containing the companys logo.
+ */
 public class SplashScreen extends Activity {
 
 	// Splash screen timer
