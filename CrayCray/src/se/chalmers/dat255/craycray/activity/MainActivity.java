@@ -122,6 +122,12 @@ public class MainActivity extends Activity {
 			cuddleBar.setProgress((int)model.getCuddleLevel());
 			cleanBar.setProgress((int)model.getCleanLevel());
 			energyBar.setProgress((int)model.getEnergyLevel());
+			
+			//Set correct color of the bar
+			setProgressColor(foodBar);
+			setProgressColor(cuddleBar);
+			setProgressColor(cleanBar);
+			setProgressColor(energyBar);
 
 			// force imageview to update
 			crayView.invalidate();
@@ -372,16 +378,6 @@ public class MainActivity extends Activity {
 		energyBar = (ProgressBar) findViewById(R.id.energyBar);
 		crayView = (ImageView) findViewById(R.id.crayCray);
 
-		// Sets the color of the progressbar
-		foodBar.getProgressDrawable().setColorFilter(
-				Color.parseColor("#33FF99"), Mode.MULTIPLY);
-		cuddleBar.getProgressDrawable().setColorFilter(
-				Color.parseColor("#FF3366"), Mode.MULTIPLY);
-		cleanBar.getProgressDrawable().setColorFilter(
-				Color.parseColor("#66FFFF"), Mode.MULTIPLY);
-		energyBar.getProgressDrawable().setColorFilter(
-				Color.parseColor("#FFFF66"), Mode.MULTIPLY);
-
 		// sets the latest values of the progressbars
 		foodBar.setProgress((int)model.getHungerLevel());
 		cuddleBar.setProgress((int)model.getCuddleLevel());
@@ -485,6 +481,19 @@ public class MainActivity extends Activity {
 			}
 
 			handler.sendMessage(handler.obtainMessage());
+		}
+	}
+	
+	private synchronized void setProgressColor(ProgressBar bar){
+		if(bar.getProgress()<15){
+			bar.getProgressDrawable().setColorFilter(
+					Color.parseColor("#FF3333"), Mode.MULTIPLY);
+		}else if(bar.getProgress() <40){
+			bar.getProgressDrawable().setColorFilter(
+					Color.parseColor("#FFFF66"), Mode.MULTIPLY);
+		}else{
+			bar.getProgressDrawable().setColorFilter(
+					Color.parseColor("#33FF99"), Mode.MULTIPLY);
 		}
 	}
 
