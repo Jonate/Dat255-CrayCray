@@ -10,6 +10,8 @@ public class DatabaseConstants {
 	
 	public static final String DATABASE_CREATE = "create table CrayCrayNeeds " +
 			"( _id String primary key, value text not null);";
+
+	public static final String FIRST_OF_TIME = "FirstOfTime";
 	
 	
 	
