@@ -122,6 +122,13 @@ public class MainActivity extends Activity {
 			cuddleBar.setProgress((int)model.getCuddleLevel());
 			cleanBar.setProgress((int)model.getCleanLevel());
 			energyBar.setProgress((int)model.getEnergyLevel());
+			
+			//Set correct color of the bar
+			setProgressColor(foodBar);
+			setProgressColor(cuddleBar);
+			setProgressColor(cleanBar);
+			setProgressColor(energyBar);
+
 
 			// force imageview to update
 			crayView.invalidate();
@@ -154,9 +161,9 @@ public class MainActivity extends Activity {
 
 		notiCreator = new NotificationCreator(this);
 		notiManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
-		
+
 		initUi();
-		
+
 
 		try{
 			Log.w("Database", "TRYYY");
@@ -229,8 +236,8 @@ public class MainActivity extends Activity {
 			}
 		}
 
-		
-		
+
+
 
 		if(t == null){
 			t = new Thread(new Runnable() {
@@ -249,7 +256,8 @@ public class MainActivity extends Activity {
 								model.setCleanLevel(model.getCleanLevel() + Constants.CLEANLEVELDECREASE);
 								model.setCuddleLevel(model.getCuddleLevel() + Constants.CUDDLELEVELDECREASE);
 								model.setPooLevel(model.getPooLevel() + Constants.POOLEVELDECREASE);
-
+								
+								
 								setCrayExpression(ENERGY, model.getEnergyLevel());
 
 								//Check if user should be able to clean CrayCray
@@ -267,7 +275,7 @@ public class MainActivity extends Activity {
 								} else {
 									fade.setAlpha(0F);
 									fade.invalidate();
-									
+
 									model.setEnergyLevel(model.getEnergyLevel() + Constants.ENERGYLEVELDECREASE);
 									setCrayExpression(HAPPINESS, model.getCuddleLevel());
 									setCrayExpression(HUNGER, model.getHungerLevel());
@@ -370,24 +378,27 @@ public class MainActivity extends Activity {
 		energyBar = (ProgressBar) findViewById(R.id.energyBar);
 		crayView = (ImageView) findViewById(R.id.crayCray);
 
-		// Sets the color of the progressbar
-		foodBar.getProgressDrawable().setColorFilter(
-				Color.parseColor("#33FF99"), Mode.MULTIPLY);
-		cuddleBar.getProgressDrawable().setColorFilter(
-				Color.parseColor("#FF3366"), Mode.MULTIPLY);
-		cleanBar.getProgressDrawable().setColorFilter(
-				Color.parseColor("#66FFFF"), Mode.MULTIPLY);
-		energyBar.getProgressDrawable().setColorFilter(
-				Color.parseColor("#FFFF66"), Mode.MULTIPLY);
-		
 		// sets the latest values of the progressbars
 		foodBar.setProgress((int)model.getHungerLevel());
 		cuddleBar.setProgress((int)model.getCuddleLevel());
 		cleanBar.setProgress((int)model.getCleanLevel());
 		energyBar.setProgress((int)model.getEnergyLevel());
-		
+
 		//fade - variables set to xml ID
 		fade=(View) findViewById(R.id.fade);
+	}
+
+	private synchronized void setProgressColor(ProgressBar bar){
+		if(bar.getProgress()<15){
+			bar.getProgressDrawable().setColorFilter(
+					Color.parseColor("#FF3333"), Mode.MULTIPLY);
+		}else if(bar.getProgress() <40){
+			bar.getProgressDrawable().setColorFilter(
+					Color.parseColor("#FFFF66"), Mode.MULTIPLY);
+		}else{
+			bar.getProgressDrawable().setColorFilter(
+					Color.parseColor("#33FF99"), Mode.MULTIPLY);
+		}
 	}
 
 
@@ -399,13 +410,13 @@ public class MainActivity extends Activity {
 		}
 		notiManager.cancelAll();
 	}
-	
+
 	@Override
 	public synchronized void onResume() {
 		super.onResume();
 		notiManager.cancelAll();
 	}
-	
+
 	@Override
 	public synchronized void onRestart() {
 		super.onRestart();
@@ -819,7 +830,7 @@ public class MainActivity extends Activity {
 			if (!hasWindowFocus()) {
 				deadNoti = notiCreator.createDeadNotification();
 				notiManager.notify(Constants.DEAD_NOTI, deadNoti);
-//				createDeathAlert().setMessage(message).show();
+				//				createDeathAlert().setMessage(message).show();
 			}else {
 				createDeathAlert().setMessage(message).show();
 			}
