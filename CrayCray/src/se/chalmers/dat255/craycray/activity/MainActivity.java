@@ -616,12 +616,13 @@ public class MainActivity extends Activity {
 		if (level <= Constants.NEED_LEVEL_MAX && level > 50) {
 			setPoo(Constants.NOPOO);
 			handler.sendMessage(handler.obtainMessage());
-		} else if ((level <= 50 && level >= 20) && (!model.hasPooped())) {
+		} else if ((level <= 50 ) && (!model.hasPooped())) {
 			setPoo(Constants.POO);
 			cleanability = false;
 			model.setHasPooped(true);
 			handler.sendMessage(handler.obtainMessage());
-		} else if (level < 20) {
+		}
+		if (level < 20) {
 			model.setCleanLevel(model.getCleanLevel() + Constants.CLEANLEVELDECREASE);
 		}
 	}
