@@ -81,16 +81,16 @@ public class MainActivity extends Activity {
 	private View fade;
 	private Vibrator vib;
 
-	private final int HUNGER = 1;
-	private final int CLEANNESS = 2;
-	private final int HAPPINESS = 3;
-	private final int ENERGY = 4;
-	private final int DRUNK = 5;
-
-	private final int DEAD = 6;
-
-	private final int POO = 1;
-	private final int NOPOO = 2;
+//	private final int HUNGER = 1;
+//	private final int CLEANNESS = 2;
+//	private final int HAPPINESS = 3;
+//	private final int ENERGY = 4;
+//	private final int DRUNK = 5;
+//
+//	private final int DEAD = 6;
+//
+//	private final int POO = 1;
+//	private final int NOPOO = 2;
 
 	private int drunkCount = Constants.MAX_DRUNK_COUNT;
 
@@ -129,7 +129,7 @@ public class MainActivity extends Activity {
 				setUpDatabase();
 
 			} 
-			if (msg.what == DEAD){
+			if (msg.what == Constants.DEAD){
 				announceDeath();
 				model.minAllNeeds();
 				activatedButtons(false);
@@ -199,7 +199,7 @@ public class MainActivity extends Activity {
 				// because CrayCray can't automatically go to sleep when the application is 
 				// dead. The user needs to be able to feed or cure CrayCray the next time 
 				// the app is started before he goes to sleep.
-				if(energy <= 0){
+				if(energy <= Constants.NEED_LEVEL_MIN){
 					model.setEnergyLevel(1);
 
 				} else {
@@ -249,7 +249,7 @@ public class MainActivity extends Activity {
 								model.setCuddleLevel(model.getCuddleLevel() + Constants.CUDDLELEVELDECREASE);
 								model.setPooLevel(model.getPooLevel() + Constants.POOLEVELDECREASE);
 
-								setCrayExpression(ENERGY, model.getEnergyLevel());
+								setCrayExpression(Constants.ENERGY, model.getEnergyLevel());
 
 								//Check if user should be able to clean CrayCray
 								drawPooImage(model.getPooLevel());
@@ -268,9 +268,9 @@ public class MainActivity extends Activity {
 									fade.invalidate();
 									
 									model.setEnergyLevel(model.getEnergyLevel() + Constants.ENERGYLEVELDECREASE);
-									setCrayExpression(HAPPINESS, model.getCuddleLevel());
-									setCrayExpression(HUNGER, model.getHungerLevel());
-									setCrayExpression(CLEANNESS, model.getCleanLevel());
+									setCrayExpression(Constants.HAPPINESS, model.getCuddleLevel());
+									setCrayExpression(Constants.HUNGER, model.getHungerLevel());
+									setCrayExpression(Constants.CLEANNESS, model.getCleanLevel());
 
 									activatedButtons(true);
 
@@ -311,22 +311,22 @@ public class MainActivity extends Activity {
 
 								//if CrayCray is drunk show drunkpicture as long as the drunkCount counts
 								if(isDrunk){
-									setCrayExpression(DRUNK, 0);
+									setCrayExpression(Constants.DRUNK, Constants.DEFAULT_LEVEL);
 									setDrunkCount(drunkCount -1);
 								}
 								//when drunkCount is 0 decide what picture to show and reset
 								if(drunkCount == 0){
 									isDrunk = false;
 									model.setEnergyLevel(model.getEnergyLevel() + Constants.ENERGYLEVELDECREASE );
-									setCrayExpression(HAPPINESS, model.getCuddleLevel());
-									setCrayExpression(HUNGER, model.getHungerLevel());
-									setCrayExpression(CLEANNESS, model.getCleanLevel());
+									setCrayExpression(Constants.HAPPINESS, model.getCuddleLevel());
+									setCrayExpression(Constants.HUNGER, model.getHungerLevel());
+									setCrayExpression(Constants.CLEANNESS, model.getCleanLevel());
 									drunkCount = Constants.MAX_DRUNK_COUNT;
 								}
 
 								if(!model.isAlive()){
 									Message msg = Message.obtain();
-									msg.what = DEAD;
+									msg.what = Constants.DEAD;
 									handler.sendMessage(msg);
 									break;
 								}
@@ -466,7 +466,7 @@ public class MainActivity extends Activity {
 		model.setHungerLevel(model.getHungerLevel() + Constants.HUNGERLEVELINCREASE);
 
 		if (model.getHungerLevel() > 50) {
-			setCrayExpression(-1, -1);
+			setCrayExpression(Constants.DEFAULT, Constants.DEFAULT_LEVEL);
 		}
 		handler.sendMessage(handler.obtainMessage());
 	}
@@ -480,7 +480,7 @@ public class MainActivity extends Activity {
 		if (cleanability) {
 			model.setCleanLevel(model.getCleanLevel() + Constants.CLEANLEVELINCREASE);
 			if (model.getCleanLevel() > 50) {
-				setCrayExpression(-1, -1);
+				setCrayExpression(Constants.DEFAULT, Constants.DEFAULT_LEVEL);
 				dirtyNoti = null;
 			}
 
@@ -540,9 +540,9 @@ public class MainActivity extends Activity {
 			model.setIllCount(Constants.ILL_COUNT);
 			handler.sendMessage(handler.obtainMessage());
 
-			setCrayExpression(CLEANNESS, model.getCleanLevel());
-			setCrayExpression(HUNGER, model.getHungerLevel());
-			setCrayExpression(HAPPINESS, model.getCuddleLevel());
+			setCrayExpression(Constants.CLEANNESS, model.getCleanLevel());
+			setCrayExpression(Constants.HUNGER, model.getHungerLevel());
+			setCrayExpression(Constants.HAPPINESS, model.getCuddleLevel());
 
 		}
 	}
@@ -597,11 +597,11 @@ public class MainActivity extends Activity {
 	 */
 	public synchronized void drawPooImage(double level) {
 		pooImage = (ImageView) findViewById(R.id.pooImage);
-		if (level <= 100 && level > 50) {
-			setPoo(NOPOO);
+		if (level <= Constants.NEED_LEVEL_MAX && level > 50) {
+			setPoo(Constants.NOPOO);
 			handler.sendMessage(handler.obtainMessage());
 		} else if ((level <= 50 && level >= 20) && (!model.hasPooped())) {
-			setPoo(POO);
+			setPoo(Constants.POO);
 			cleanability = false;
 			model.setHasPooped(true);
 			handler.sendMessage(handler.obtainMessage());
@@ -620,12 +620,12 @@ public class MainActivity extends Activity {
 		int image;
 		switch (pooOrNot) {
 
-		case POO:
+		case Constants.POO:
 			image = R.drawable.poo;
 			pooImage.setImageResource(image);
 			break;
 
-		case NOPOO:
+		case Constants.NOPOO:
 			image = R.drawable.invisible;
 			pooImage.setImageResource(image);
 			break;
@@ -647,8 +647,8 @@ public class MainActivity extends Activity {
 	public synchronized void setCrayExpression(int mode, double level) {
 
 		switch (mode) {
-		case ENERGY:
-			if(level >= 100){
+		case Constants.ENERGY:
+			if(level >= Constants.NEED_LEVEL_MAX){
 				model.setSleep(false);
 
 			}else if (level == 0 || model.isSleeping()) {
@@ -658,7 +658,7 @@ public class MainActivity extends Activity {
 			break;
 
 			// check dirtyLvl
-		case CLEANNESS:
+		case Constants.CLEANNESS:
 			if (level >20 && level < 50) {
 				crayView.setImageResource(R.drawable.dirty_baby);
 			}
@@ -670,8 +670,8 @@ public class MainActivity extends Activity {
 			break;
 
 			// check hungryLvl
-		case HUNGER:
-			if (level == 0) {
+		case Constants.HUNGER:
+			if (level == Constants.NEED_LEVEL_MIN) {
 				crayView.setImageResource(R.drawable.dead_baby);
 
 			} else if (model.isIll()) {
@@ -685,7 +685,7 @@ public class MainActivity extends Activity {
 			break;
 
 			// check cuddleLvl
-		case HAPPINESS:
+		case Constants.HAPPINESS:
 			if (level > 70) {
 				crayView.setImageResource(R.drawable.happy_baby);
 
@@ -696,7 +696,7 @@ public class MainActivity extends Activity {
 			}
 			break;
 
-		case DRUNK:
+		case Constants.DRUNK:
 			crayView.setImageResource(R.drawable.wasted_baby);
 			break;
 
@@ -820,7 +820,7 @@ public class MainActivity extends Activity {
 	 * be sent instead.
 	 */
 	public synchronized void announceDeath() {
-		setCrayExpression(HUNGER, 0);
+		setCrayExpression(Constants.HUNGER, Constants.DEFAULT_LEVEL);
 		String message = model.getDeathCause();
 
 		if(message == Constants.RUSSIAN_DEATH){

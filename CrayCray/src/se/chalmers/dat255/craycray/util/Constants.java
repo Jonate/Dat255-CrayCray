@@ -5,6 +5,19 @@ package se.chalmers.dat255.craycray.util;
  */
 public class Constants {
 	
+	//For facial expressions
+	public final static int DEFAULT = -1;
+	public final static long DEFAULT_LEVEL = 0;
+	public final static int HUNGER = 1;
+	public final static int CLEANNESS = 2;
+	public final static int HAPPINESS = 3;
+	public final static int ENERGY = 4;
+	public final static int DRUNK = 5;
+	public final static int DEAD = 6;
+
+	public final static int POO = 1;
+	public final static int NOPOO = 2;
+	
 	//For the thread
 	public final static long THREAD_SLEEP = 500;
 	public final static double THREAD_SLEEP_SEC = THREAD_SLEEP/1000.0;
