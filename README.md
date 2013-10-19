@@ -33,4 +33,4 @@ The license file LICENSE.txt can be find in the root of the project.
 * Hanna Materne
 * Patricia Paulsson
 
-Built at Chalmers Univeristy of Technology, 2013.
+Built at Chalmers University of Technology, 2013.
