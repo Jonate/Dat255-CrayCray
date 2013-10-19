@@ -31,8 +31,7 @@ public class NotificationCreator {
 	public Notification createDeadNotification(){	
 		//Set activity shown when clicked.
 		Intent intent = new Intent(ctx, MainActivity.class);
-		intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_SINGLE_TOP);
-		PendingIntent pIntent = PendingIntent.getActivity(ctx, Constants.DEAD_NOTI, intent, 0);
+		PendingIntent pIntent = PendingIntent.getActivity(ctx, Constants.DEAD_NOTI, intent, Intent.FLAG_ACTIVITY_NEW_TASK);
 
 		//Make notification.
 		Notification noti = new Notification.Builder(ctx)
@@ -54,8 +53,7 @@ public class NotificationCreator {
 	public Notification createDirtyNotification(){
 		//Set activity shown when clicked.
 		Intent intent = new Intent(ctx, MainActivity.class);
-		intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_SINGLE_TOP);
-		PendingIntent pIntent = PendingIntent.getActivity(ctx, Constants.DIRTY_NOTI, intent, 0);
+		PendingIntent pIntent = PendingIntent.getActivity(ctx, Constants.DIRTY_NOTI, intent, Intent.FLAG_ACTIVITY_NEW_TASK);
 		//Make notification.
 		Notification noti = new Notification.Builder(ctx)
 		.setContentTitle("I'm Dirty")
@@ -76,8 +74,7 @@ public class NotificationCreator {
 	public Notification createIllNotification(){
 		//Set activity shown when clicked.
 		Intent intent = new Intent(ctx, MainActivity.class);
-		intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_SINGLE_TOP);
-		PendingIntent pIntent = PendingIntent.getActivity(ctx, Constants.ILL_NOTI, intent, 0 );
+		PendingIntent pIntent = PendingIntent.getActivity(ctx, Constants.ILL_NOTI, intent, Intent.FLAG_ACTIVITY_NEW_TASK);
 		//Make notification.
 		Notification noti = new Notification.Builder(ctx)
 		.setContentTitle("I'm feeling sick :(")
