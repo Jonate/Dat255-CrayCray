@@ -3,7 +3,6 @@ package se.chalmers.dat255.craycray.modeltest;
 import android.test.AndroidTestCase;
 
 import se.chalmers.dat255.craycray.model.RussianRouletteModel;
-
 /**
  * A class for testing the class RussianRouletteModel
  *
@@ -22,6 +21,10 @@ public class RussianRouletteModelTest extends AndroidTestCase {
 			assertTrue(random <= 5 && random >= 0);
 		}
 		
+	}
+	
+	public void playTest(){
+		int random = rModel.getRandom();
 	}
 	
 }

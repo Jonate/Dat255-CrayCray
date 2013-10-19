@@ -12,6 +12,7 @@ import android.test.AndroidTestCase;
 
 public class NeedsModelTest extends AndroidTestCase{
 
+	private static boolean isAlive = true;
 	public void singletonTest() {
 		
 		NeedsModel model = NeedsModel.getInstance();
@@ -233,6 +234,7 @@ public class NeedsModelTest extends AndroidTestCase{
 	 * Test if all needs are minimized 
 	 */
 	public void minAllNeedsTest(){
+		
 		NeedsModel model = NeedsModel.getInstance();
 				
 		model.setCuddleLevel(0);
@@ -241,9 +243,6 @@ public class NeedsModelTest extends AndroidTestCase{
 		model.setCleanLevel(0);
 		assertTrue(model.getCleanLevel() == Constants.NEED_LEVEL_MIN);
 		
-		model.setHungerLevel(100);
-		assertTrue(model.getHungerLevel() == Constants.NEED_LEVEL_MAX);
-		
 		model.setEnergyLevel(0);
 		assertTrue(model.getEnergyLevel() == Constants.NEED_LEVEL_MIN);
 		
@@ -251,7 +250,10 @@ public class NeedsModelTest extends AndroidTestCase{
 		assertTrue(model.getPooLevel() == Constants.NEED_LEVEL_MIN);
 		
 	}
-	
-	
+	public void killTest(){
+		isAlive=false;
+		assertFalse(isAlive);
+		
+	}
 
 }
