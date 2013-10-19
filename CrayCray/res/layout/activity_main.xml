@@ -47,51 +47,6 @@
         android:layout_below="@id/cleanBar"
         android:max="100" />
 
-    <TextView
-        android:id="@+id/hungerBarText"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentTop="true"
-        android:layout_marginLeft="5dp"
-        android:text="Hunger"
-        android:textColor="#333333"
-        android:textStyle="bold" />
-
-    <TextView
-        android:id="@+id/cuddleBarText"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentLeft="true"
-        android:layout_below="@id/hungerBarText"
-        android:layout_marginLeft="5dp"
-        android:text="Happiness"
-        android:textColor="#333333"
-        android:textStyle="bold" />
-
-    <TextView
-        android:id="@+id/cleanBarText"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentLeft="true"
-        android:layout_below="@id/cuddleBarText"
-        android:layout_marginLeft="5dp"
-        android:layout_marginTop="2dp"
-        android:text="Cleanness"
-        android:textColor="#333333"
-        android:textStyle="bold" />
-
-    <TextView
-        android:id="@+id/energyBarText"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentLeft="true"
-        android:layout_below="@id/cleanBarText"
-        android:layout_marginLeft="5dp"
-        android:text="Energy"
-        android:textColor="#333333"
-        android:textStyle="bold" />
-
     <RelativeLayout
         android:id="@+id/buttonHolder"
         android:layout_width="wrap_content"
