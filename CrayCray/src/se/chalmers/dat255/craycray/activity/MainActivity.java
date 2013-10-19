@@ -164,14 +164,14 @@ public class MainActivity extends Activity {
 			int differenceInSeconds = TimeUtil.compareTime(dbA
 					.getStringValue(DatabaseConstants.TIME));
 			Log.w("Database", "DifferenceInSeconds"+ differenceInSeconds+" "+  Constants.THREAD_SLEEP_SEC);
-			model.setHungerLevel(dbA.getValue(DatabaseConstants.HUNGER) + differenceInSeconds 
-					* Constants.HUNGERLEVELDECREASE * Constants.THREAD_SLEEP_SEC);
+			model.setHungerLevel(dbA.getValue(DatabaseConstants.HUNGER) + differenceInSeconds  
+					/  Constants.THREAD_SLEEP_SEC * Constants.HUNGERLEVELDECREASE);
 			model.setCuddleLevel(dbA.getValue(DatabaseConstants.CUDDLE) + differenceInSeconds 
-					* Constants.CUDDLELEVELDECREASE * Constants.THREAD_SLEEP_SEC);
+					/  Constants.THREAD_SLEEP_SEC * Constants.CUDDLELEVELDECREASE);
 			model.setCleanLevel(dbA.getValue(DatabaseConstants.CLEAN) + differenceInSeconds 
-					* Constants.CLEANLEVELDECREASE * Constants.THREAD_SLEEP_SEC);
+					/  Constants.THREAD_SLEEP_SEC * Constants.CLEANLEVELDECREASE );
 			model.setPooLevel(dbA.getValue(DatabaseConstants.POO) + differenceInSeconds 
-					* Constants.POOLEVELDECREASE * Constants.THREAD_SLEEP_SEC);
+					/  Constants.THREAD_SLEEP_SEC * Constants.POOLEVELDECREASE );
 
 			// Checks if CrayCray was healthy or ill at the last shutdown 
 			// and give it the same value again.
@@ -179,7 +179,7 @@ public class MainActivity extends Activity {
 				model.setIllness(false);
 			}else{
 				model.setIllCount(dbA.getValue(DatabaseConstants.ILL_COUNT) - differenceInSeconds
-						* Constants.THREAD_SLEEP_SEC);
+						/ Constants.THREAD_SLEEP_SEC);
 				model.setIllness(true);
 			}
 
@@ -194,7 +194,7 @@ public class MainActivity extends Activity {
 			// Checks if CrayCray was awake or not when the app was closed the last time.
 			if(dbA.getValue(DatabaseConstants.SLEEPING)==0){
 				double energy = dbA.getValue(DatabaseConstants.ENERGY) 
-						+ differenceInSeconds * Constants.ENERGYLEVELDECREASE;
+						+ differenceInSeconds / Constants.THREAD_SLEEP_SEC * Constants.ENERGYLEVELDECREASE;
 				// The energy level is set to 1 if it has reached a value of zero or lower
 				// because CrayCray can't automatically go to sleep when the application is 
 				// dead. The user needs to be able to feed or cure CrayCray the next time 
@@ -208,7 +208,7 @@ public class MainActivity extends Activity {
 				}
 			} else {
 				double energy = dbA.getValue(DatabaseConstants.ENERGY) 
-						+ differenceInSeconds * Constants.ENERGYLEVELINCREASE;
+						+ differenceInSeconds / Constants.THREAD_SLEEP_SEC * Constants.ENERGYLEVELINCREASE;
 				if(energy >= Constants.NEED_LEVEL_MAX){
 					model.setEnergyLevel(Constants.NEED_LEVEL_MAX);
 					model.setSleep(false);
@@ -419,8 +419,8 @@ public class MainActivity extends Activity {
 	 * Updates the database if the application is shut down
 	 */
 	@Override
-	public synchronized void onDestroy() {
-		super.onDestroy();
+	public synchronized void onStop() {
+		super.onStop();
 		Log.w("Database", "DESTROY!!!!!");
 		try{
 			dbA.updateValue(DatabaseConstants.HUNGER, model.getHungerLevel());
