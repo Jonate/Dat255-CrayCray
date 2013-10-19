@@ -102,6 +102,8 @@ public class MainActivity extends Activity {
 
 	private DatabaseAdapter dbA;
 
+	private double old;
+	
 	private NotificationCreator notiCreator;
 	private NotificationManager notiManager;
 	private Notification deadNoti;
@@ -147,6 +149,8 @@ public class MainActivity extends Activity {
 		}
 	};
 
+	
+
 	@Override
 	protected synchronized void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -179,6 +183,9 @@ public class MainActivity extends Activity {
 					* Constants.CLEANLEVELDECREASE);
 			model.setPooLevel(dbA.getValue(DatabaseConstants.POO) + differenceInSeconds/Constants.THREAD_SLEEP_SEC 
 					* Constants.POOLEVELDECREASE);
+			
+			old = TimeUtil.compareTime(dbA
+					.getStringValue(DatabaseConstants.FIRST_OF_TIME));
 
 			// Checks if CrayCray was healthy or ill at the last shutdown 
 			// and give it the same value again.
@@ -338,7 +345,8 @@ public class MainActivity extends Activity {
 								}
 
 								handler.sendMessage(handler.obtainMessage());
-
+								
+								old=old-Constants.THREAD_SLEEP_SEC;
 								Thread.sleep(Constants.THREAD_SLEEP);
 							}
 
@@ -872,7 +880,9 @@ public class MainActivity extends Activity {
 			dbA.addValue(DatabaseConstants.ILL_COUNT, model.getIllCount());
 			dbA.addStringValue(DatabaseConstants.TIME,
 					TimeUtil.getCurrentTime());
-
+			dbA.addStringValue(DatabaseConstants.FIRST_OF_TIME,
+					TimeUtil.getCurrentTime());
+			
 			// if the boolean values are true their value in the database will be 1
 			// if not, the value will be 0
 			if(model.isSleeping()){
