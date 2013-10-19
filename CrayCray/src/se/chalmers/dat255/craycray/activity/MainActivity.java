@@ -54,7 +54,7 @@ import android.widget.ProgressBar;
 
 public class MainActivity extends Activity {
 
-	MainActivity main = this;
+	private MainActivity main = this;
 
 	private boolean isActive;
 
@@ -154,9 +154,9 @@ public class MainActivity extends Activity {
 
 		notiCreator = new NotificationCreator(this);
 		notiManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
-		
+
 		initUi();
-		
+
 
 		try{
 			Log.w("Database", "TRYYY");
@@ -165,22 +165,21 @@ public class MainActivity extends Activity {
 			int differenceInSeconds = TimeUtil.compareTime(dbA
 					.getStringValue(DatabaseConstants.TIME));
 			Log.w("Database", "DifferenceInSeconds"+ differenceInSeconds+" "+  Constants.THREAD_SLEEP_SEC);
-			model.setHungerLevel(dbA.getValue(DatabaseConstants.HUNGER) + differenceInSeconds 
-					* Constants.HUNGERLEVELDECREASE * Constants.THREAD_SLEEP_SEC);
-			model.setCuddleLevel(dbA.getValue(DatabaseConstants.CUDDLE) + differenceInSeconds 
-					* Constants.CUDDLELEVELDECREASE * Constants.THREAD_SLEEP_SEC);
-			model.setCleanLevel(dbA.getValue(DatabaseConstants.CLEAN) + differenceInSeconds 
-					* Constants.CLEANLEVELDECREASE * Constants.THREAD_SLEEP_SEC);
-			model.setPooLevel(dbA.getValue(DatabaseConstants.POO) + differenceInSeconds 
-					* Constants.POOLEVELDECREASE * Constants.THREAD_SLEEP_SEC);
+			model.setHungerLevel(dbA.getValue(DatabaseConstants.HUNGER) + differenceInSeconds/Constants.THREAD_SLEEP_SEC 
+					* Constants.HUNGERLEVELDECREASE );
+			model.setCuddleLevel(dbA.getValue(DatabaseConstants.CUDDLE) + differenceInSeconds/Constants.THREAD_SLEEP_SEC 
+					* Constants.CUDDLELEVELDECREASE);
+			model.setCleanLevel(dbA.getValue(DatabaseConstants.CLEAN) + differenceInSeconds/Constants.THREAD_SLEEP_SEC 
+					* Constants.CLEANLEVELDECREASE);
+			model.setPooLevel(dbA.getValue(DatabaseConstants.POO) + differenceInSeconds/Constants.THREAD_SLEEP_SEC 
+					* Constants.POOLEVELDECREASE);
 
 			// Checks if CrayCray was healthy or ill at the last shutdown 
 			// and give it the same value again.
 			if(dbA.getValue(DatabaseConstants.ILL)==0){
 				model.setIllness(false);
 			}else{
-				model.setIllCount(dbA.getValue(DatabaseConstants.ILL_COUNT) - differenceInSeconds
-						* Constants.THREAD_SLEEP_SEC);
+				model.setIllCount(dbA.getValue(DatabaseConstants.ILL_COUNT) - differenceInSeconds/Constants.THREAD_SLEEP_SEC);
 				model.setIllness(true);
 			}
 
@@ -195,7 +194,7 @@ public class MainActivity extends Activity {
 			// Checks if CrayCray was awake or not when the app was closed the last time.
 			if(dbA.getValue(DatabaseConstants.SLEEPING)==0){
 				double energy = dbA.getValue(DatabaseConstants.ENERGY) 
-						+ differenceInSeconds * Constants.ENERGYLEVELDECREASE;
+						+ differenceInSeconds/Constants.THREAD_SLEEP_SEC * Constants.ENERGYLEVELDECREASE;
 				// The energy level is set to 1 if it has reached a value of zero or lower
 				// because CrayCray can't automatically go to sleep when the application is 
 				// dead. The user needs to be able to feed or cure CrayCray the next time 
@@ -209,7 +208,7 @@ public class MainActivity extends Activity {
 				}
 			} else {
 				double energy = dbA.getValue(DatabaseConstants.ENERGY) 
-						+ differenceInSeconds * Constants.ENERGYLEVELINCREASE;
+						+ differenceInSeconds/Constants.THREAD_SLEEP_SEC * Constants.ENERGYLEVELINCREASE;
 				if(energy >= Constants.NEED_LEVEL_MAX){
 					model.setEnergyLevel(Constants.NEED_LEVEL_MAX);
 					model.setSleep(false);
@@ -229,8 +228,8 @@ public class MainActivity extends Activity {
 			}
 		}
 
-		
-		
+
+
 
 		if(t == null){
 			t = new Thread(new Runnable() {
@@ -267,7 +266,7 @@ public class MainActivity extends Activity {
 								} else {
 									fade.setAlpha(0F);
 									fade.invalidate();
-									
+
 									model.setEnergyLevel(model.getEnergyLevel() + Constants.ENERGYLEVELDECREASE);
 									setCrayExpression(HAPPINESS, model.getCuddleLevel());
 									setCrayExpression(HUNGER, model.getHungerLevel());
@@ -349,6 +348,9 @@ public class MainActivity extends Activity {
 		t.start();
 	}
 
+	/*
+	 * Initiates the UI.
+	 */
 	private synchronized void initUi() {
 
 		// Button - variables set to xml ID
@@ -379,13 +381,13 @@ public class MainActivity extends Activity {
 				Color.parseColor("#66FFFF"), Mode.MULTIPLY);
 		energyBar.getProgressDrawable().setColorFilter(
 				Color.parseColor("#FFFF66"), Mode.MULTIPLY);
-		
+
 		// sets the latest values of the progressbars
 		foodBar.setProgress((int)model.getHungerLevel());
 		cuddleBar.setProgress((int)model.getCuddleLevel());
 		cleanBar.setProgress((int)model.getCleanLevel());
 		energyBar.setProgress((int)model.getEnergyLevel());
-		
+
 		//fade - variables set to xml ID
 		fade=(View) findViewById(R.id.fade);
 	}
@@ -399,13 +401,13 @@ public class MainActivity extends Activity {
 		}
 		notiManager.cancelAll();
 	}
-	
+
 	@Override
 	public synchronized void onResume() {
 		super.onResume();
 		notiManager.cancelAll();
 	}
-	
+
 	@Override
 	public synchronized void onRestart() {
 		super.onRestart();
@@ -456,6 +458,7 @@ public class MainActivity extends Activity {
 
 	/**
 	 * increases hungerlevel by constant HUNGERLEVELINCREASE
+	 * sets CrayCrays expression accordingly and vibrates.
 	 */
 	public synchronized void feed(View view) {
 		vib.vibrate(50);
@@ -470,6 +473,7 @@ public class MainActivity extends Activity {
 
 	/**
 	 * increases cleanlevel by constant CLEANLEVELINCREASE
+	 * sets CrayCrays expression accordingly and vibrates.
 	 */
 	public synchronized void clean(View view) {
 		vib.vibrate(50);
@@ -486,6 +490,7 @@ public class MainActivity extends Activity {
 
 	/**
 	 * increases cuddlelevel by constant CUDDLELVELINCREASE
+	 * and vibrates.
 	 */
 	public synchronized void cuddle(View view) {
 		model.setCuddleLevel(model.getCuddleLevel() + Constants.CUDDLELEVELINCREASE);
@@ -522,6 +527,7 @@ public class MainActivity extends Activity {
 
 	/**
 	 * cures the pet if it is ill
+	 * sets CrayCrays expression accordingly and vibrates.
 	 * @param view
 	 */
 	public synchronized void cure(View view) {
@@ -542,6 +548,7 @@ public class MainActivity extends Activity {
 
 	/**
 	 * Called when user clicks to play russian roulette
+	 * and vibrates.
 	 * @param view
 	 */
 	public synchronized void playRussianRoulette(View view){
@@ -550,7 +557,7 @@ public class MainActivity extends Activity {
 	}
 
 	/**
-	 * Called when user clicks to drink Happy Potion
+	 * Entoxicates CrayCray and increases cuddle level and vibrates
 	 * @param view
 	 */
 	public synchronized void happyPotion(View view){
@@ -560,6 +567,9 @@ public class MainActivity extends Activity {
 		model.setCuddleLevel(model.getCuddleLevel()+ Constants.CUDDLELEVELINCREASE*10);
 	}
 
+	/*
+	 * Set drunk count
+	 */
 	private synchronized void setDrunkCount(int count){
 		drunkCount = count;
 	}
@@ -805,7 +815,7 @@ public class MainActivity extends Activity {
 
 	/**
 	 * Tells the user CrayCray has died, usually by a pop-up. 
-	 * If the the program is not active a notification will
+	 * If the program is not active a notification will
 	 * be sent instead.
 	 */
 	public synchronized void announceDeath() {
@@ -819,7 +829,6 @@ public class MainActivity extends Activity {
 			if (!hasWindowFocus()) {
 				deadNoti = notiCreator.createDeadNotification();
 				notiManager.notify(Constants.DEAD_NOTI, deadNoti);
-//				createDeathAlert().setMessage(message).show();
 			}else {
 				createDeathAlert().setMessage(message).show();
 			}
@@ -835,17 +844,15 @@ public class MainActivity extends Activity {
 		// Check which request we're responding to
 		if (requestCode == Constants.RUSSIAN_REQUEST_CODE) {
 			if (resultCode == RESULT_OK) {
-				//				if(!model.isAlive()){
-				//					Message msg = Message.obtain();
-				//					msg.what = DEAD;
-				//					handler.sendMessage(msg);
-				//				}
 				isActive = true;
 			}
 
 		}
 	}
 
+	/**
+	 * Set up database with current data.
+	 */
 	public void setUpDatabase(){
 		try{
 			dbA.addValue(DatabaseConstants.HUNGER, model.getHungerLevel());
@@ -880,7 +887,10 @@ public class MainActivity extends Activity {
 			return;
 		}
 	}
-
+	/**
+	 * Activate or deactivate all buttons.
+	 * @param state
+	 */
 	public synchronized void activatedButtons(boolean state){
 		feedButton.setClickable(state);
 		cuddleButton.setClickable(state);
