@@ -43,14 +43,20 @@ public class DatabaseAdapterTest extends AndroidTestCase{
 	
 	}
 	
-	public void getValueTest() throws DatabaseException{
+	public void getValueTest(){
 		
-		assertTrue(adapter.getValue("test1")==0);
-		adapter.addValue("test3", 5);
-		adapter.addValue("test4", 6);
-		adapter.addValue("test5", 7);
-		assertTrue(adapter.getValue("test4")==6);
-		assertTrue(adapter.getValue("adsasd")==-1);
+		
+		try{
+			adapter.getValue("test0");
+			Assert.fail("fail som fan");
+			}
+		catch(DatabaseException d){}
+//		assertTrue(adapter.getValue("test1")==0);
+//		adapter.addValue("test3", 5);
+//		adapter.addValue("test4", 6);
+//		adapter.addValue("test5", 7);
+//		assertTrue(adapter.getValue("test4")==6);
+//		assertTrue(adapter.getValue("adsasd")==-1);
 	
 	}
 	
