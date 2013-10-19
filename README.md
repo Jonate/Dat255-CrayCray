@@ -21,7 +21,7 @@ An Android app/game that is inspired by the original Tamagotchi.
 * Target SDK: **16**
 
 ## License
-The license file license.txt can be find in the root of the project.
+The license file LICENSE.txt can be find in the root of the project.
 
 
 ## Authors
