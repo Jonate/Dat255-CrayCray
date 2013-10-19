@@ -10,14 +10,14 @@ import android.content.Context;
 import android.content.Intent;
 
 /**
- * Sends notifications.
+ * Creates notifications.
  */
 public class NotificationCreator {
 
 	private Context ctx;
 
 	/**
-	 * Creates a NotificationSender with the given Context.
+	 * Creates a NotificationCreator with the given Context.
 	 * @param context
 	 */
 	public NotificationCreator(Context ctx){
@@ -25,7 +25,7 @@ public class NotificationCreator {
 	}
 
 	/**
-	 * Creates and sends a notification telling the user
+	 * Creates a notification telling the user
 	 * CrayCray has died.
 	 */
 	public Notification createDeadNotification(){	
@@ -47,7 +47,7 @@ public class NotificationCreator {
 	}
 
 	/**
-	 * Creates and sends a notification telling the user
+	 * Creates a notification telling the user
 	 * CrayCray is Dirty.
 	 */
 	public Notification createDirtyNotification(){
@@ -68,7 +68,7 @@ public class NotificationCreator {
 	}
 	
 	/**
-	 * Creates and sends a notification telling the user
+	 * Creates a notification telling the user
 	 * CrayCray is Ill.
 	 */
 	public Notification createIllNotification(){
