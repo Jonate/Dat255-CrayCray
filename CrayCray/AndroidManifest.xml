@@ -54,9 +54,11 @@
 
             </intent-filter>
         </activity>
+        <service android:name="se.chalmers.dat255.craycray.service.MusicService"
+        	android:enabled="true" >
+        </service>
 
     </application>
-
 
     <uses-permission android:name="android.permission.VIBRATE" >
     </uses-permission>

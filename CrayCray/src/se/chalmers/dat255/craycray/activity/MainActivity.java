@@ -31,19 +31,23 @@ import se.chalmers.dat255.craycray.database.DatabaseConstants;
 import se.chalmers.dat255.craycray.model.DatabaseException;
 import se.chalmers.dat255.craycray.model.NeedsModel;
 import se.chalmers.dat255.craycray.notifications.NotificationCreator;
+import se.chalmers.dat255.craycray.service.MusicService;
 import se.chalmers.dat255.craycray.util.Constants;
 import se.chalmers.dat255.craycray.util.TimeUtil;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.Notification;
 import android.app.NotificationManager;
+import android.content.ComponentName;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.ServiceConnection;
 import android.graphics.Color;
 import android.graphics.PorterDuff.Mode;
 import android.os.Bundle;
 import android.os.Handler;
+import android.os.IBinder;
 import android.os.Message;
 import android.os.Vibrator;
 import android.util.Log;
@@ -57,6 +61,8 @@ public class MainActivity extends Activity {
 	private MainActivity main = this;
 
 	private boolean isActive;
+	private boolean firstTimeMusic = true;
+	private boolean musicIsPlaying = false;
 
 	// The buttons of the application
 	private ImageButton  feedButton;
@@ -83,17 +89,6 @@ public class MainActivity extends Activity {
 	private View fade;
 	private Vibrator vib;
 
-//	private final int HUNGER = 1;
-//	private final int CLEANNESS = 2;
-//	private final int HAPPINESS = 3;
-//	private final int ENERGY = 4;
-//	private final int DRUNK = 5;
-//
-//	private final int DEAD = 6;
-//
-//	private final int POO = 1;
-//	private final int NOPOO = 2;
-
 	private int drunkCount = Constants.MAX_DRUNK_COUNT;
 
 	private boolean cleanability = true;
@@ -107,6 +102,44 @@ public class MainActivity extends Activity {
 	private Notification deadNoti;
 	private Notification illNoti;
 	private Notification dirtyNoti;
+	
+	private boolean musicIsBound = false;
+	private MusicService musicService;
+	private ServiceConnection sCon = new ServiceConnection(){
+		
+		@Override
+		public void onServiceConnected(ComponentName name, IBinder binder){
+			
+			musicService = ((MusicService.ServiceBinder)binder).getService();
+			
+		}
+
+		@Override
+		public void onServiceDisconnected(ComponentName name) {
+			
+			musicService = null;
+			
+		}
+	};
+	
+	void doBindMusicService(){
+		
+		bindService(new Intent(this, MusicService.class), sCon, Context.BIND_AUTO_CREATE);
+		musicIsBound = true;
+		Log.w("music", "musicIsBound" + musicIsBound);
+		
+	}
+	
+	void doUnbindMusicService(){
+		
+		if(musicIsBound){
+			unbindService(sCon);
+			musicService.stopMusic();
+			musicIsBound = false;
+		}
+	}
+	
+	
 
 
 	// A Handler to take care of updates in UI-thread
@@ -150,7 +183,13 @@ public class MainActivity extends Activity {
 	@Override
 	protected synchronized void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-
+		
+		doBindMusicService();
+		Intent music = new Intent();
+		music.setClass(this, MusicService.class);
+		startService(music);
+		Log.w("music", "serviceintent sent");
+		
 		isActive = true;
 
 		vib = (Vibrator) this.getSystemService(VIBRATOR_SERVICE);
@@ -392,6 +431,9 @@ public class MainActivity extends Activity {
 	@Override
 	public synchronized void onStart() {
 		super.onStart();
+//		if(musicService != null){
+//			musicService.resumeMusic();
+//		}
 		if(!t.isAlive()){
 			t.run();
 		}
@@ -401,6 +443,11 @@ public class MainActivity extends Activity {
 	@Override
 	public synchronized void onResume() {
 		super.onResume();
+//		if(!firstTimeMusic && musicIsPlaying ){
+//			if(musicService != null){
+//				musicService.resumeMusic();
+//			}
+//		}
 		notiManager.cancelAll();
 	}
 
@@ -408,6 +455,19 @@ public class MainActivity extends Activity {
 	public synchronized void onRestart() {
 		super.onRestart();
 		notiManager.cancelAll();
+//		if(musicService != null){
+//			musicService.resumeMusic();
+//		}
+	}
+	
+	@Override
+	public synchronized void onPause(){
+		super.onPause();
+//		if(!firstTimeMusic && musicIsPlaying){
+//			if(musicService != null){
+//				musicService.pauseMusic();
+//			}
+//		}
 	}
 
 
@@ -417,7 +477,10 @@ public class MainActivity extends Activity {
 	@Override
 	public synchronized void onDestroy() {
 		super.onDestroy();
+		//musicService.stopMusic();
+		doUnbindMusicService();
 		Log.w("Database", "DESTROY!!!!!");
+		Log.w("music", "destroy in main");
 		try{
 			dbA.updateValue(DatabaseConstants.HUNGER, model.getHungerLevel());
 			dbA.updateValue(DatabaseConstants.CUDDLE, model.getCuddleLevel());
@@ -574,6 +637,19 @@ public class MainActivity extends Activity {
 		//setDrunkExpression for some period of time
 		isDrunk = true;
 		model.setCuddleLevel(model.getCuddleLevel()+ Constants.CUDDLELEVELINCREASE*10);
+//		if(firstTimeMusic){
+//			Intent music = new Intent();
+//			music.setClass(this, MusicService.class);
+//			startService(music);
+//		}else{
+//			if(musicIsPlaying){
+//				musicService.pauseMusic();
+//				musicIsPlaying = false;
+//			}else{
+//				musicService.resumeMusic();
+//				musicIsPlaying = true;
+//			}
+//		}
 	}
 
 	/*
@@ -782,6 +858,9 @@ public class MainActivity extends Activity {
 				Intent newGame = new Intent(main, MainActivity.class);
 				startActivity(newGame);
 				finish();
+//				Intent music = new Intent();
+//				music.setClass(main, MusicService.class);
+//				startService(music);
 
 			}
 		});
