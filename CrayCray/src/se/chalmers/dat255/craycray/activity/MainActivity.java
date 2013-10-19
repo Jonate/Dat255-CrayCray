@@ -761,7 +761,7 @@ public class MainActivity extends Activity {
 		isActive = false;
 		AlertDialog.Builder alertDialog = new AlertDialog.Builder(this);
 		alertDialog.setTitle("How to play");
-		alertDialog.setMessage("CrayCray is happier alive. You'd better push the buttons and let it know!");
+		alertDialog.setMessage("CrayCray is happier alive. \n\nIf the hungerlevel reaches zero, or if you don't cure it when ill, your sweet CrayCray will die. \n\nYou'd better push the buttons and let it know!");
 		alertDialog.setNeutralButton("Ok",
 				new DialogInterface.OnClickListener() {
 			public void onClick(DialogInterface dialog, int id) {
