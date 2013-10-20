@@ -1,5 +1,6 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/mainView"
     android:layout_width="wrap_content"
     android:layout_height="wrap_content" >
 
@@ -216,11 +217,13 @@
 
     <ImageView
         android:id="@+id/crayCray"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:scaleType="center"
         android:layout_centerHorizontal="true"
-        android:paddingTop="210dp"
-        android:src="@drawable/regular_baby" />
+		android:paddingTop="200dp"
+		android:paddingBottom="50dp"
+        android:src="@drawable/regular_baby" 
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"/>
 
     <ImageView
         android:id="@+id/pooImage"
@@ -254,6 +257,17 @@
         android:onClick="howToPlay"
         android:padding="10dp"
         android:src="@drawable/button_about" />
+    
+    <ImageButton 
+        android:id ="@+id/soundButton"
+       	android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:background="@null"
+        android:hapticFeedbackEnabled="true"
+        android:layout_alignParentBottom="true"
+        android:layout_toLeftOf="@id/aboutButton"
+        android:src="@drawable/button_sound"
+        android:padding="10dp"/>
 
     <AbsoluteLayout
         android:layout_width="fill_parent"

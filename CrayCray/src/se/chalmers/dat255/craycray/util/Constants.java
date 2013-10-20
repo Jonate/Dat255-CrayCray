@@ -54,4 +54,7 @@ public class Constants {
 	public final static int DEAD_NOTI = 0;
 	public final static int DIRTY_NOTI = 1;
 	public final static int ILL_NOTI = 2;
+	
+	//for growth
+	public final static int EVOLVE=10;
 }

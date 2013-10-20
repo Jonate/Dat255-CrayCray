@@ -21,10 +21,10 @@ public class RussianActivity extends Activity {
 
 	RussianRouletteModel rModel;
 	NeedsModel model = NeedsModel.getInstance();
-	
+
 	ImageView crayView;
 	Vibrator vib;
-	
+
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -32,14 +32,24 @@ public class RussianActivity extends Activity {
 		rModel = new RussianRouletteModel();
 		setContentView(R.layout.activity_russian);
 		crayView = (ImageView) findViewById(R.id.scaredCrayCray);
-		if(model.getCleanLevel()<50){
-			crayView.setImageResource(R.drawable.scared_dbaby);
+
+		if(Constants.EVOLVE<this.getIntent().getDoubleExtra("old",0)){
+			if(model.getCleanLevel()<50){
+				crayView.setImageResource(R.drawable.scared_dchild);
+			}else{
+				crayView.setImageResource(R.drawable.scared_child);
+			}
+
 		}else{
-			crayView.setImageResource(R.drawable.scared_baby);
+			if(model.getCleanLevel()<50){
+				crayView.setImageResource(R.drawable.scared_dbaby);
+			}else{
+				crayView.setImageResource(R.drawable.scared_baby);
+			}
 		}
 	}
 
-	
+
 	/*
 	 * Disable back button
 	 */
@@ -61,7 +71,7 @@ public class RussianActivity extends Activity {
 		Log.w("russian", "efter rModel.play()");
 		setResult(RESULT_OK, intent);
 		finish();
-		
+
 		Log.w("russian", "playRussian finished");
 	}
 }

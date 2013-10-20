@@ -48,6 +48,7 @@ import android.os.Message;
 import android.os.Vibrator;
 import android.util.Log;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
@@ -82,17 +83,18 @@ public class MainActivity extends Activity {
 	private Thread t;
 	private View fade;
 	private Vibrator vib;
+	private ViewGroup mainView;
 
-//	private final int HUNGER = 1;
-//	private final int CLEANNESS = 2;
-//	private final int HAPPINESS = 3;
-//	private final int ENERGY = 4;
-//	private final int DRUNK = 5;
-//
-//	private final int DEAD = 6;
-//
-//	private final int POO = 1;
-//	private final int NOPOO = 2;
+	//	private final int HUNGER = 1;
+	//	private final int CLEANNESS = 2;
+	//	private final int HAPPINESS = 3;
+	//	private final int ENERGY = 4;
+	//	private final int DRUNK = 5;
+	//
+	//	private final int DEAD = 6;
+	//
+	//	private final int POO = 1;
+	//	private final int NOPOO = 2;
 
 	private int drunkCount = Constants.MAX_DRUNK_COUNT;
 
@@ -103,7 +105,7 @@ public class MainActivity extends Activity {
 	private DatabaseAdapter dbA;
 
 	private double old;
-	
+
 	private NotificationCreator notiCreator;
 	private NotificationManager notiManager;
 	private Notification deadNoti;
@@ -124,7 +126,7 @@ public class MainActivity extends Activity {
 			cuddleBar.setProgress((int)model.getCuddleLevel());
 			cleanBar.setProgress((int)model.getCleanLevel());
 			energyBar.setProgress((int)model.getEnergyLevel());
-			
+
 			//Set correct color of the bar
 			setProgressColor(foodBar);
 			setProgressColor(cuddleBar);
@@ -133,6 +135,7 @@ public class MainActivity extends Activity {
 
 			// force imageview to update
 			crayView.invalidate();
+			mainView.invalidate();
 
 			if (msg.obj instanceof DatabaseException){
 				setUpDatabase();
@@ -149,7 +152,7 @@ public class MainActivity extends Activity {
 		}
 	};
 
-	
+
 
 	@Override
 	protected synchronized void onCreate(Bundle savedInstanceState) {
@@ -182,7 +185,7 @@ public class MainActivity extends Activity {
 					* Constants.CLEANLEVELDECREASE);
 			model.setPooLevel(dbA.getValue(DatabaseConstants.POO) + differenceInSeconds/Constants.THREAD_SLEEP_SEC 
 					* Constants.POOLEVELDECREASE);
-			
+
 			old = TimeUtil.compareTime(dbA
 					.getStringValue(DatabaseConstants.FIRST_OF_TIME));
 
@@ -195,13 +198,13 @@ public class MainActivity extends Activity {
 				model.setIllness(true);
 			}
 
-//			// Checks if there was poop on the screen at the last shutdown
-//			// and in that case place the poop again.
-//			if(dbA.getValue(DatabaseConstants.POOPED)==0){
-//				model.setHasPooped(false);
-//			}else{
-//				model.setHasPooped(true);
-//			}
+			//			// Checks if there was poop on the screen at the last shutdown
+			//			// and in that case place the poop again.
+			//			if(dbA.getValue(DatabaseConstants.POOPED)==0){
+			//				model.setHasPooped(false);
+			//			}else{
+			//				model.setHasPooped(true);
+			//			}
 
 			// Checks if CrayCray was awake or not when the app was closed the last time.
 			if(dbA.getValue(DatabaseConstants.SLEEPING)==0){
@@ -344,8 +347,8 @@ public class MainActivity extends Activity {
 								}
 
 								handler.sendMessage(handler.obtainMessage());
-								
-								old=old-Constants.THREAD_SLEEP_SEC;
+
+								old=old+Constants.THREAD_SLEEP_SEC;
 								Thread.sleep(Constants.THREAD_SLEEP);
 							}
 
@@ -393,6 +396,7 @@ public class MainActivity extends Activity {
 
 		//fade - variables set to xml ID
 		fade=(View) findViewById(R.id.fade);
+		mainView = (ViewGroup) findViewById(R.id.mainView);
 	}
 
 
@@ -490,7 +494,7 @@ public class MainActivity extends Activity {
 			handler.sendMessage(handler.obtainMessage());
 		}
 	}
-	
+
 	private synchronized void setProgressColor(ProgressBar bar){
 		if(bar.getProgress()<15){
 			bar.getProgressDrawable().setColorFilter(
@@ -615,6 +619,7 @@ public class MainActivity extends Activity {
 		if (level <= Constants.NEED_LEVEL_MAX && level > 50) {
 			setPoo(Constants.NOPOO);
 			handler.sendMessage(handler.obtainMessage());
+			cleanability=true;
 		} else if ((level <= 50 ) && (!model.hasPooped())) {
 			setPoo(Constants.POO);
 			cleanability = false;
@@ -661,23 +666,113 @@ public class MainActivity extends Activity {
 	 *            the value of the level
 	 */
 	public synchronized void setCrayExpression(int mode, double level) {
+		if(old>Constants.EVOLVE){
+			switch (mode) {
+			case Constants.ENERGY:
+				if(level >= Constants.NEED_LEVEL_MAX){
+					model.setSleep(false);
 
-		switch (mode) {
-		case Constants.ENERGY:
-			if(level >= Constants.NEED_LEVEL_MAX){
-				model.setSleep(false);
-
-			}else if (level == 0 || model.isSleeping()) {
-				if(model.getCleanLevel()<50){
-					crayView.setImageResource(R.drawable.sleeping_dbaby);
-				}else{
-					crayView.setImageResource(R.drawable.sleeping_baby);
+				}else if (level == 0 || model.isSleeping()) {
+					if(model.getCleanLevel()<50){
+						crayView.setImageResource(R.drawable.sleeping_dchild);
+					}else{
+						crayView.setImageResource(R.drawable.sleeping_child);
+					}
+					model.setSleep(true);
 				}
-				model.setSleep(true);
-			}
-			break;
+				break;
 
-			// check dirtyLvl
+				// check dirtyLvl
+			case Constants.CLEANNESS:
+				if (level >0 && level < 50) {
+					crayView.setImageResource(R.drawable.regular_dchild);
+				}
+				if (level <= 0) {
+					if(model.getCleanLevel()<50){
+						crayView.setImageResource(R.drawable.sick_dchild);
+					}else{
+						crayView.setImageResource(R.drawable.sick_child);
+					}
+					model.setIllness(true);
+				}
+				break;
+
+				// check hungryLvl
+			case Constants.HUNGER:
+				if (level == Constants.NEED_LEVEL_MIN) {
+					crayView.setImageResource(R.drawable.dead_child);
+
+				} else if (model.isIll()) {
+					if(model.getCleanLevel()<50){
+						crayView.setImageResource(R.drawable.sick_dchild);
+					}else{
+						crayView.setImageResource(R.drawable.sick_child);
+					}
+
+				} else if (level < 50) {
+					if(model.getCleanLevel()<50){
+						crayView.setImageResource(R.drawable.feed_dchild);
+					}else{
+						crayView.setImageResource(R.drawable.feed_child);
+					}
+
+				}
+				break;
+
+				// check cuddleLvl
+			case Constants.HAPPINESS:
+				if (level > 70) {
+					if(model.getCleanLevel()<50){
+						crayView.setImageResource(R.drawable.happy_dchild);
+					}else{
+						crayView.setImageResource(R.drawable.happy_child);
+					}
+
+				} else if(level < 10){
+					if(model.getCleanLevel()<50){
+						crayView.setImageResource(R.drawable.sad_dchild);
+					}else{
+						crayView.setImageResource(R.drawable.sad_child);
+					}
+				}else{
+					if(model.getCleanLevel()<50){
+						crayView.setImageResource(R.drawable.regular_dchild);
+					}else{
+						crayView.setImageResource(R.drawable.regular_child);
+					}
+				}
+				break;
+
+			case Constants.DRUNK:
+				if(model.getCleanLevel()<50){
+					crayView.setImageResource(R.drawable.wasted_dchild);
+				}else{
+					crayView.setImageResource(R.drawable.wasted_child);
+				}
+				break;
+
+			default:
+				crayView.setImageResource(R.drawable.regular_child);
+			}
+			handler.sendMessage(handler.obtainMessage());
+
+		}else{
+			switch (mode) {
+			case Constants.ENERGY:
+				if(level >= Constants.NEED_LEVEL_MAX){
+					model.setSleep(false);
+
+				}else if (level == 0 || model.isSleeping()) {
+					if(model.getCleanLevel()<50){
+						crayView.setImageResource(R.drawable.sleeping_dbaby);
+					}else{
+						crayView.setImageResource(R.drawable.sleeping_baby);
+					}
+					model.setSleep(true);
+				}
+				break;
+
+				// check dirtyLvl
 			case Constants.CLEANNESS:
 				if (level >0 && level < 50) {
 					crayView.setImageResource(R.drawable.regular_dbaby);
@@ -750,8 +845,9 @@ public class MainActivity extends Activity {
 				crayView.setImageResource(R.drawable.regular_baby);
 			}
 			handler.sendMessage(handler.obtainMessage());
-
 		}
+	}
+
 
 
 	/**
@@ -845,6 +941,7 @@ public class MainActivity extends Activity {
 				new DialogInterface.OnClickListener() {
 			public void onClick(DialogInterface dialog, int id) {
 				Intent rusIntent = new Intent(main, RussianActivity.class);
+				rusIntent.putExtra("old", old);
 				startActivityForResult(rusIntent, Constants.RUSSIAN_REQUEST_CODE);
 			}
 		});
@@ -911,7 +1008,7 @@ public class MainActivity extends Activity {
 					TimeUtil.getCurrentTime());
 			dbA.addStringValue(DatabaseConstants.FIRST_OF_TIME,
 					TimeUtil.getCurrentTime());
-			
+
 			// if the boolean values are true their value in the database will be 1
 			// if not, the value will be 0
 			if(model.isSleeping()){
