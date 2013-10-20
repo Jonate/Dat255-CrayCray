@@ -30,7 +30,7 @@ public class NotificationCreator {
 	 */
 	public Notification createDeadNotification(){	
 		//Set activity shown when clicked.
-		Intent intent = new Intent(ctx, MainActivity.class);
+		Intent intent = new Intent(ctx, ctx.getClass());
 		intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_SINGLE_TOP);
 		PendingIntent pIntent = PendingIntent.getActivity(ctx, Constants.DEAD_NOTI, intent, Intent.FLAG_ACTIVITY_LAUNCHED_FROM_HISTORY);
 
@@ -53,7 +53,7 @@ public class NotificationCreator {
 	 */
 	public Notification createDirtyNotification(){
 		//Set activity shown when clicked.
-		Intent intent = new Intent(ctx, MainActivity.class);
+		Intent intent = new Intent(ctx, ctx.getClass());
 		intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_SINGLE_TOP);
 		PendingIntent pIntent = PendingIntent.getActivity(ctx, Constants.DIRTY_NOTI, intent, Intent.FLAG_ACTIVITY_LAUNCHED_FROM_HISTORY);
 		//Make notification.
@@ -75,7 +75,7 @@ public class NotificationCreator {
 	 */
 	public Notification createIllNotification(){
 		//Set activity shown when clicked.
-		Intent intent = new Intent(ctx, MainActivity.class);
+		Intent intent = new Intent(ctx, ctx.getClass());
 		intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_SINGLE_TOP);
 		PendingIntent pIntent = PendingIntent.getActivity(ctx, Constants.ILL_NOTI, intent, Intent.FLAG_ACTIVITY_LAUNCHED_FROM_HISTORY);
 		//Make notification.
