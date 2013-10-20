@@ -6,24 +6,19 @@ import android.database.sqlite.SQLiteOpenHelper;
 import android.util.Log;
 
 /**
- * A class where the database is created
- * 
+ * A class where the database is created 
  */
 public class DatabaseHelper extends SQLiteOpenHelper {
 	
 	private static final int DATABASE_VERSION=1;
-	private static final String DATABASE_NAME= "craycray_needs_database";
-	
-	private static final String DATABASE_CREATE = "create table CrayCrayNeeds " +
-			"( _id String primary key, value text not null);";
 	
 	public DatabaseHelper(Context context){
-		super(context, DATABASE_NAME, null, DATABASE_VERSION);
+		super(context, DatabaseConstants.DATABASE_NAME, null, DATABASE_VERSION);
 	}
 
 	@Override
 	public void onCreate(SQLiteDatabase db) {
-		db.execSQL(DATABASE_CREATE);
+		db.execSQL(DatabaseConstants.DATABASE_CREATE);
 		
 	}
 

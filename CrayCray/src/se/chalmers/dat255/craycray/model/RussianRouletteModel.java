@@ -1,5 +1,7 @@
 package se.chalmers.dat255.craycray.model;
 
+import se.chalmers.dat255.craycray.util.Constants;
+
 /**
  * A class for playing russian roulette with 5/6 chance to win.
  * Manipulates NeedsModel according to result. Win means all
@@ -13,7 +15,7 @@ public class RussianRouletteModel {
 	 * Returns a random number between 0 and 5.
 	 */
 	public int getRandom(){
-		return (int)(Math.random()* 6);
+		return (int)(Math.random()* 4);
 	}
 	
 	/**
@@ -21,13 +23,11 @@ public class RussianRouletteModel {
 	 * according to result. 5/6 chance to win.
 	 *  Win means all needs fullfilled, loosing means dying. 
 	 *  Manipulates NeedsModel according to result.
-	 * @throws DeadException if loose
 	 */
 	public void play(){
 		int random = this.getRandom();
 		if(random == 0){
-			needsModel.diedOfRussian();
-			needsModel.minAllNeeds();
+			needsModel.kill(Constants.RUSSIAN_DEATH);
 		}else{
 			needsModel.maxAllNeeds();
 		}

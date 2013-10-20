@@ -1,5 +1,5 @@
-<?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
+
     package="se.chalmers.dat255.craycray"
     android:versionCode="1"
     android:versionName="1.0" >
@@ -8,36 +8,57 @@
         android:minSdkVersion="16"
         android:targetSdkVersion="16" />
 
-    <instrumentation 
+    <instrumentation
         android:name="android.test.InstrumentationTestRunner"
-    	android:targetPackage="se.chalmers.dat255.craycray.test"
-    	android:label="CrayCray tests" />
-    
+        android:label="CrayCray tests"
+        android:targetPackage="se.chalmers.dat255.craycray" />
+
     <application
         android:allowBackup="true"
-        android:icon="@drawable/ic_launcher"
+        android:icon="@drawable/icon"
         android:label="@string/app_name"
         android:theme="@style/AppTheme" >
-        <uses-library 
-        android:name="android.test.runner" />
+        <uses-library android:name="android.test.runner" />
+
+        <!-- Splash screen activity -->
+        <activity
+            android:name="se.chalmers.dat255.craycray.activity.SplashScreen"
+            android:label="@string/app_name"
+            android:screenOrientation="portrait"
+            android:theme="@android:style/Theme.Black.NoTitleBar.Fullscreen" >
+           
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+            
+        </activity>
+
+
+        <!-- Main activity -->
         <activity
             android:name="se.chalmers.dat255.craycray.activity.MainActivity"
             android:label="@string/app_name"
-            android:screenOrientation="portrait" >
+            android:screenOrientation="portrait"
+            android:theme="@android:style/Theme.Black.NoTitleBar.Fullscreen" >
             <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
-
-                <category android:name="android.intent.category.LAUNCHER" />
+                
             </intent-filter>
         </activity>
-        <activity
-            android:name="se.chalmers.dat255.craycray.GameOverDialog"
-            android:label="@string/title_activity_game_over_dialog" >
-        </activity>
+
         <activity
             android:name="se.chalmers.dat255.craycray.activity.RussianActivity"
-            android:label="@string/title_activity_russian" >
+            android:label="@string/title_activity_russian"
+            android:screenOrientation="portrait" 
+            android:theme="@android:style/Theme.Black.NoTitleBar.Fullscreen">
+            <intent-filter>
+
+            </intent-filter>
         </activity>
+
     </application>
+
+    <uses-permission android:name="android.permission.VIBRATE" >
+    </uses-permission>
 
 </manifest>

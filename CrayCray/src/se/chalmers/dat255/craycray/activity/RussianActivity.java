@@ -1,38 +1,110 @@
 package se.chalmers.dat255.craycray.activity;
 
 import se.chalmers.dat255.craycray.R;
-import se.chalmers.dat255.craycray.model.DeadException;
+import se.chalmers.dat255.craycray.model.NeedsModel;
 import se.chalmers.dat255.craycray.model.RussianRouletteModel;
 import se.chalmers.dat255.craycray.util.Constants;
 import android.app.Activity;
 import android.content.Intent;
+import android.media.MediaPlayer;
 import android.os.Bundle;
+import android.os.Vibrator;
 import android.util.Log;
-import android.view.Menu;
 import android.view.View;
 import android.widget.ImageView;
 
+/**
+ * An Activity for playing a simple game of Russian Roulette 
+ * with 5/6 chance to win. If you loose you die.
+ */
 public class RussianActivity extends Activity {
 
 	RussianRouletteModel rModel;
+	NeedsModel model = NeedsModel.getInstance();
 	
-	ImageView crayView;
+	private ImageView crayView;
+	private Vibrator vib;
+	private MediaPlayer musicPlayer;
+	private int lengthPlayed;
+	private boolean firstTime = true;
+	private boolean isMute;
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
+		
+		//Checks if the user has set the music to mute in MainActivity
+		Intent intent = getIntent();
+		isMute = intent.getBooleanExtra(Constants.EXTRA_MESSAGE, false);
+
+		//If the user has set the music to mute in MainActivity, the musicplayer never is created
+		if(isMute == false){
+			musicPlayer = MediaPlayer.create(this, R.raw.dylan_palme_the_crazies_are_out_tonight);
+			musicPlayer.seekTo(99000);
+			musicPlayer.start();
+		}
+		
+		firstTime = false;
+		vib = (Vibrator) this.getSystemService(VIBRATOR_SERVICE);
 		rModel = new RussianRouletteModel();
 		setContentView(R.layout.activity_russian);
 		crayView = (ImageView) findViewById(R.id.scaredCrayCray);
-	}
 
-	@Override
-	public boolean onCreateOptionsMenu(Menu menu) {
-		// Inflate the menu; this adds items to the action bar if it is present.
-		getMenuInflater().inflate(R.menu.russian, menu);
-		return true;
+		if(Constants.EVOLVE<this.getIntent().getDoubleExtra("old",0)){
+			if(model.getCleanLevel()<50){
+				crayView.setImageResource(R.drawable.scared_dchild);
+			}else{
+				crayView.setImageResource(R.drawable.scared_child);
+			}
+
+		}else{
+			if(model.getCleanLevel()<50){
+				crayView.setImageResource(R.drawable.scared_dbaby);
+			}else{
+				crayView.setImageResource(R.drawable.scared_baby);
+			}
+		}
 	}
 	
+	/*
+	 * When the appication is paused, the music is paused if it exists
+	 */
+	@Override
+	protected void onPause(){
+		super.onPause();
+		if(musicPlayer!= null){
+			musicPlayer.pause();
+			lengthPlayed = musicPlayer.getCurrentPosition();
+		}
+	}
+	
+	/*
+	 * When the application is resumed the music is resumed, if the musicplayer exists
+	 */
+	@Override
+	protected void onResume(){
+		super.onResume();
+		if(musicPlayer != null){
+			if(firstTime){
+				musicPlayer.seekTo(lengthPlayed);
+			}
+			musicPlayer.start();
+		}
+	}
+	
+	/*
+	 *Releases and nullifies the musicplayer, if it exists
+	 */
+	@Override
+	protected void onDestroy(){
+		super.onDestroy();
+		if(musicPlayer!= null){
+			musicPlayer.release();
+			musicPlayer = null;
+		}
+	}
+
+
 	/*
 	 * Disable back button
 	 */
@@ -46,15 +118,13 @@ public class RussianActivity extends Activity {
 	 * @param view
 	 */
 	public void playRussian(View view){
-		Log.w("russian", "inside playrussian");
-		Intent intent = new Intent();
-
+		vib.vibrate(500);
 		rModel.play();
-		Log.w("russian", "efter rModel.play()");
-		intent.putExtra(Constants.RUSSIAN_KEY, Constants.RUSSIAN_WIN);
+		
+		Intent intent = new Intent();
 		setResult(RESULT_OK, intent);
 		finish();
-		
+
 		Log.w("russian", "playRussian finished");
 	}
 }
