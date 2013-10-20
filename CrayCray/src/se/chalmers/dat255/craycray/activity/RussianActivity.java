@@ -32,6 +32,11 @@ public class RussianActivity extends Activity {
 		rModel = new RussianRouletteModel();
 		setContentView(R.layout.activity_russian);
 		crayView = (ImageView) findViewById(R.id.scaredCrayCray);
+		if(model.getCleanLevel()<50){
+			crayView.setImageResource(R.drawable.scared_dbaby);
+		}else{
+			crayView.setImageResource(R.drawable.scared_baby);
+		}
 	}
 
 	

@@ -669,61 +669,90 @@ public class MainActivity extends Activity {
 				model.setSleep(false);
 
 			}else if (level == 0 || model.isSleeping()) {
-				crayView.setImageResource(R.drawable.sleeping_baby);
+				if(model.getCleanLevel()<50){
+					crayView.setImageResource(R.drawable.sleeping_dbaby);
+				}else{
+					crayView.setImageResource(R.drawable.sleeping_baby);
+				}
 				model.setSleep(true);
 			}
 			break;
 
 			// check dirtyLvl
-		case Constants.CLEANNESS:
-			if (level >20 && level < 50) {
-				crayView.setImageResource(R.drawable.regular_dbaby);
-			}
-			if (level <= 20) {
-				System.out.println("baby sick");
-				crayView.setImageResource(R.drawable.sick_baby);
-				model.setIllness(true);
-			}
-			break;
+			case Constants.CLEANNESS:
+				if (level >0 && level < 50) {
+					crayView.setImageResource(R.drawable.regular_dbaby);
+				}
+				if (level <= 0) {
+					if(model.getCleanLevel()<50){
+						crayView.setImageResource(R.drawable.sick_dbaby);
+					}else{
+						crayView.setImageResource(R.drawable.sick_baby);
+					}
+					model.setIllness(true);
+				}
+				break;
 
-			// check hungryLvl
-		case Constants.HUNGER:
-			if (level == Constants.NEED_LEVEL_MIN) {
-				crayView.setImageResource(R.drawable.dead_baby);
+				// check hungryLvl
+			case Constants.HUNGER:
+				if (level == Constants.NEED_LEVEL_MIN) {
+					crayView.setImageResource(R.drawable.dead_baby);
 
-			} else if (model.isIll()) {
-				crayView.setImageResource(R.drawable.sick_baby);
+				} else if (model.isIll()) {
+					if(model.getCleanLevel()<50){
+						crayView.setImageResource(R.drawable.sick_dbaby);
+					}else{
+						crayView.setImageResource(R.drawable.sick_baby);
+					}
 
-			} else if (level < 50) {
-				System.out.println("inside case 1 (hungry)" + level);
-				crayView.setImageResource(R.drawable.feed_baby);
+				} else if (level < 50) {
+					if(model.getCleanLevel()<50){
+						crayView.setImageResource(R.drawable.feed_dbaby);
+					}else{
+						crayView.setImageResource(R.drawable.feed_baby);
+					}
 
-			}
-			break;
+				}
+				break;
 
-			// check cuddleLvl
-		case Constants.HAPPINESS:
-			if (level > 70) {
-				crayView.setImageResource(R.drawable.happy_baby);
+				// check cuddleLvl
+			case Constants.HAPPINESS:
+				if (level > 70) {
+					if(model.getCleanLevel()<50){
+						crayView.setImageResource(R.drawable.happy_dbaby);
+					}else{
+						crayView.setImageResource(R.drawable.happy_baby);
+					}
 
-			} else if(level < 10){
-				crayView.setImageResource(R.drawable.sad_baby);
-			}else{
+				} else if(level < 10){
+					if(model.getCleanLevel()<50){
+						crayView.setImageResource(R.drawable.sad_dbaby);
+					}else{
+						crayView.setImageResource(R.drawable.sad_baby);
+					}
+				}else{
+					if(model.getCleanLevel()<50){
+						crayView.setImageResource(R.drawable.regular_dbaby);
+					}else{
+						crayView.setImageResource(R.drawable.regular_baby);
+					}
+				}
+				break;
+
+			case Constants.DRUNK:
+				if(model.getCleanLevel()<50){
+					crayView.setImageResource(R.drawable.wasted_dbaby);
+				}else{
+					crayView.setImageResource(R.drawable.wasted_baby);
+				}
+				break;
+
+			default:
 				crayView.setImageResource(R.drawable.regular_baby);
 			}
-			break;
+			handler.sendMessage(handler.obtainMessage());
 
-		case Constants.DRUNK:
-			crayView.setImageResource(R.drawable.wasted_baby);
-			break;
-
-		default:
-			System.out.println("inside base-case" + level);
-			crayView.setImageResource(R.drawable.regular_baby);
 		}
-		handler.sendMessage(handler.obtainMessage());
-
-	}	
 
 
 	/**
