@@ -213,6 +213,19 @@
         android:hapticFeedbackEnabled="true"
         android:onClick="feed"
         android:src="@drawable/button_food" />
+    
+    <Button 
+        android:id="@+id/muteButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentLeft="true"
+        android:layout_marginLeft="25dp"
+        android:layout_marginTop="15dp"
+        android:text="MUTE"
+        android:textSize="5sp"
+        android:layout_above="@id/feedButton"
+        android:hapticFeedbackEnabled="true"
+        android:onClick="muteSound"/>
 
     <ImageView
         android:id="@+id/crayCray"

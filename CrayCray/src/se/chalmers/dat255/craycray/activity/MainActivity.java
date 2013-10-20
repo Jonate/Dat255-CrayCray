@@ -31,23 +31,20 @@ import se.chalmers.dat255.craycray.database.DatabaseConstants;
 import se.chalmers.dat255.craycray.model.DatabaseException;
 import se.chalmers.dat255.craycray.model.NeedsModel;
 import se.chalmers.dat255.craycray.notifications.NotificationCreator;
-import se.chalmers.dat255.craycray.service.MusicService;
 import se.chalmers.dat255.craycray.util.Constants;
 import se.chalmers.dat255.craycray.util.TimeUtil;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.Notification;
 import android.app.NotificationManager;
-import android.content.ComponentName;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.content.ServiceConnection;
 import android.graphics.Color;
 import android.graphics.PorterDuff.Mode;
+import android.media.MediaPlayer;
 import android.os.Bundle;
 import android.os.Handler;
-import android.os.IBinder;
 import android.os.Message;
 import android.os.Vibrator;
 import android.util.Log;
@@ -61,9 +58,14 @@ public class MainActivity extends Activity {
 	private MainActivity main = this;
 
 	private boolean isActive;
-	private boolean firstTimeMusic = true;
-	private boolean musicIsPlaying = false;
-
+	 
+	private MediaPlayer musicPlayer;
+	private boolean musicStarted = false;
+	private boolean musicWasPlaying;
+	private boolean mute = false;
+	private int lengthPlayed;
+	private int lengthBeforeRelease;
+	
 	// The buttons of the application
 	private ImageButton  feedButton;
 	private ImageButton  cuddleButton;
@@ -102,45 +104,6 @@ public class MainActivity extends Activity {
 	private Notification deadNoti;
 	private Notification illNoti;
 	private Notification dirtyNoti;
-	
-	private boolean musicIsBound = false;
-	private MusicService musicService;
-	private ServiceConnection sCon = new ServiceConnection(){
-		
-		@Override
-		public void onServiceConnected(ComponentName name, IBinder binder){
-			
-			musicService = ((MusicService.ServiceBinder)binder).getService();
-			
-		}
-
-		@Override
-		public void onServiceDisconnected(ComponentName name) {
-			
-			musicService = null;
-			
-		}
-	};
-	
-	void doBindMusicService(){
-		
-		bindService(new Intent(this, MusicService.class), sCon, Context.BIND_AUTO_CREATE);
-		musicIsBound = true;
-		Log.w("music", "musicIsBound" + musicIsBound);
-		
-	}
-	
-	void doUnbindMusicService(){
-		
-		if(musicIsBound){
-			unbindService(sCon);
-			musicService.stopMusic();
-			musicIsBound = false;
-		}
-	}
-	
-	
-
 
 	// A Handler to take care of updates in UI-thread
 	// When sendMessage method is called, this is where the message is sent
@@ -184,11 +147,8 @@ public class MainActivity extends Activity {
 	protected synchronized void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		
-		doBindMusicService();
-		Intent music = new Intent();
-		music.setClass(this, MusicService.class);
-		startService(music);
-		Log.w("music", "serviceintent sent");
+		musicPlayer = MediaPlayer.create(this, R.raw.goto80_thehit);
+		musicPlayer.setLooping(true);
 		
 		isActive = true;
 
@@ -431,9 +391,6 @@ public class MainActivity extends Activity {
 	@Override
 	public synchronized void onStart() {
 		super.onStart();
-//		if(musicService != null){
-//			musicService.resumeMusic();
-//		}
 		if(!t.isAlive()){
 			t.run();
 		}
@@ -443,11 +400,10 @@ public class MainActivity extends Activity {
 	@Override
 	public synchronized void onResume() {
 		super.onResume();
-//		if(!firstTimeMusic && musicIsPlaying ){
-//			if(musicService != null){
-//				musicService.resumeMusic();
-//			}
-//		}
+		if(musicWasPlaying && !mute){
+			resumeMusic();
+		}
+
 		notiManager.cancelAll();
 	}
 
@@ -455,32 +411,39 @@ public class MainActivity extends Activity {
 	public synchronized void onRestart() {
 		super.onRestart();
 		notiManager.cancelAll();
-//		if(musicService != null){
-//			musicService.resumeMusic();
-//		}
+
 	}
 	
 	@Override
 	public synchronized void onPause(){
 		super.onPause();
-//		if(!firstTimeMusic && musicIsPlaying){
-//			if(musicService != null){
-//				musicService.pauseMusic();
-//			}
+//		if(!mute){
+//			musicPlayer.resumeMusic();
 //		}
+		if(musicPlayer != null){
+			if(musicPlayer.isPlaying()){
+				musicWasPlaying = true;
+				Log.w("music", "SPELAR MUSIK INNNAN ONPAUSE");
+			}else{
+				musicWasPlaying = false;
+			}
+			pauseMusic();
+		}
 	}
 
-
 	/**
-	 * Updates the database if the application is shut down
+	 * Updates the database and releases the MediaPlayer if the application is shut down
 	 */
 	@Override
 	public synchronized void onDestroy() {
 		super.onDestroy();
-		//musicService.stopMusic();
-		doUnbindMusicService();
-		Log.w("Database", "DESTROY!!!!!");
-		Log.w("music", "destroy in main");
+		
+		//Release and nullify the MediaPlayer if not already done in muteSound method
+		if(musicPlayer != null){
+			musicPlayer.release();
+			musicPlayer = null;
+		}
+		
 		try{
 			dbA.updateValue(DatabaseConstants.HUNGER, model.getHungerLevel());
 			dbA.updateValue(DatabaseConstants.CUDDLE, model.getCuddleLevel());
@@ -572,16 +535,41 @@ public class MainActivity extends Activity {
 	}
 
 	/**
-	 * increases energylevel
+	 * Increases energylevel, and if music is playing it is paused.
 	 */
 	public synchronized void sleep(View view) {
 		vib.vibrate(50);
 		model.setSleep(true);
+		if(!mute){
+			pauseMusic();
+		}
+	}
+	
+	/**
+	 * If the mute sound button is enabled the MediaPlayer is released and nullified.
+	 * If the mute sound button is disabled the MediaPlayer is created here.
+	 * @param view
+	 */
+	public synchronized void muteSound(View view){
+		vib.vibrate(50);
+		if(musicPlayer != null){
+			lengthBeforeRelease = musicPlayer.getCurrentPosition();
+		}
+		if(!mute){
+			musicPlayer.release();
+			musicPlayer = null;
+		mute = true;
+		}else{
+			musicPlayer = MediaPlayer.create(this, R.raw.goto80_thehit);
+			musicPlayer.setLooping(true);
+			musicPlayer.seekTo(lengthBeforeRelease);
+		mute = false;
+		}
 
 	}
 
 	/**
-	 * removes poo from screen and increses poolevel by 100
+	 * Removes poo from screen and increses poolevel by 100
 	 * 
 	 * @param view
 	 */
@@ -629,7 +617,7 @@ public class MainActivity extends Activity {
 	}
 
 	/**
-	 * Entoxicates CrayCray and increases cuddle level and vibrates
+	 * Entoxicates CrayCray and increases cuddle level, vibrates and plays music
 	 * @param view
 	 */
 	public synchronized void happyPotion(View view){
@@ -637,21 +625,11 @@ public class MainActivity extends Activity {
 		//setDrunkExpression for some period of time
 		isDrunk = true;
 		model.setCuddleLevel(model.getCuddleLevel()+ Constants.CUDDLELEVELINCREASE*10);
-//		if(firstTimeMusic){
-//			Intent music = new Intent();
-//			music.setClass(this, MusicService.class);
-//			startService(music);
-//		}else{
-//			if(musicIsPlaying){
-//				musicService.pauseMusic();
-//				musicIsPlaying = false;
-//			}else{
-//				musicService.resumeMusic();
-//				musicIsPlaying = true;
-//			}
-//		}
+		if(!mute){
+			startMusic();
+		}
 	}
-
+	
 	/*
 	 * Set drunk count
 	 */
@@ -858,9 +836,6 @@ public class MainActivity extends Activity {
 				Intent newGame = new Intent(main, MainActivity.class);
 				startActivity(newGame);
 				finish();
-//				Intent music = new Intent();
-//				music.setClass(main, MusicService.class);
-//				startService(music);
 
 			}
 		});
@@ -886,8 +861,15 @@ public class MainActivity extends Activity {
 		alertDialog.setPositiveButton("Hell Yeah!",
 				new DialogInterface.OnClickListener() {
 			public void onClick(DialogInterface dialog, int id) {
+				Log.w("mute", "clicked on hell yeah");
 				Intent rusIntent = new Intent(main, RussianActivity.class);
-				startActivityForResult(rusIntent, Constants.RUSSIAN_REQUEST_CODE);
+				Log.w("mute", "russian intent created");
+//				try{
+					startActivityForResult(rusIntent, Constants.RUSSIAN_REQUEST_CODE);
+//				}catch(Exception e){
+//					Log.w("mute", "" + e);
+//				}
+				Log.w("mute", "russian intent sent");
 			}
 		});
 		alertDialog.setNegativeButton("God no!",
@@ -989,6 +971,39 @@ public class MainActivity extends Activity {
 		happypotionButton.setClickable(state);
 		russianButton.setClickable(state);
 	}
+	
+	/**
+	 * Pauses the music if the music is playing, and sets the lengthPlayed to the current position in music.
+	 */
+	public void pauseMusic(){
+		if(musicPlayer.isPlaying() && !mute){
+			musicPlayer.pause();
+			lengthPlayed = musicPlayer.getCurrentPosition();
+		}
+	}
 
+
+	/**
+	 * Resumes the music if the music is not already playing, and the mute button is disabled
+	 */
+	public void resumeMusic(){
+		if(musicPlayer.isPlaying() == false && !mute){
+			musicPlayer.seekTo(lengthPlayed);
+			musicPlayer.start();
+		}
+	}
+	
+	/**
+	 * Starts the music if the mute button is disabled. In case music has already been started, music is resumed instead.
+	 */
+	public void startMusic(){
+		if(!mute){
+			if(!musicStarted){
+				musicPlayer.start();
+			}else{
+				resumeMusic();
+			}
+		}
+	}
 }
 
