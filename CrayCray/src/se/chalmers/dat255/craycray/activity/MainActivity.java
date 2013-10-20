@@ -129,7 +129,9 @@ public class MainActivity extends Activity {
 
 			// force imageview to update
 			crayView.invalidate();
-
+			pooImage.invalidate();
+			
+			
 			if (msg.obj instanceof DatabaseException){
 				setUpDatabase();
 
@@ -194,13 +196,13 @@ public class MainActivity extends Activity {
 				model.setIllness(true);
 			}
 
-//			// Checks if there was poop on the screen at the last shutdown
-//			// and in that case place the poop again.
-//			if(dbA.getValue(DatabaseConstants.POOPED)==0){
-//				model.setHasPooped(false);
-//			}else{
-//				model.setHasPooped(true);
-//			}
+			// Checks if there was poop on the screen at the last shutdown
+			// and in that case place the poop again.
+			if(dbA.getValue(DatabaseConstants.POOPED)==0){
+				model.setHasPooped(false);
+			}else{
+				model.setHasPooped(true);
+			}
 
 			// Checks if CrayCray was awake or not when the app was closed the last time.
 			if(dbA.getValue(DatabaseConstants.SLEEPING)==0){
@@ -392,6 +394,9 @@ public class MainActivity extends Activity {
 
 		//fade - variables set to xml ID
 		fade=(View) findViewById(R.id.fade);
+		
+
+		pooImage = (ImageView) findViewById(R.id.pooImage);
 	}
 
 
@@ -669,7 +674,6 @@ public class MainActivity extends Activity {
 	 * @param level
 	 */
 	public synchronized void drawPooImage(double level) {
-		pooImage = (ImageView) findViewById(R.id.pooImage);
 		if (level <= Constants.NEED_LEVEL_MAX && level > 50) {
 			setPoo(Constants.NOPOO);
 			handler.sendMessage(handler.obtainMessage());
@@ -698,7 +702,7 @@ public class MainActivity extends Activity {
 			image = R.drawable.poo;
 			pooImage.setImageResource(image);
 			break;
-
+ 
 		case Constants.NOPOO:
 			image = R.drawable.invisible;
 			pooImage.setImageResource(image);
