@@ -8,9 +8,7 @@ import android.app.Activity;
 import android.content.Intent;
 import android.media.MediaPlayer;
 import android.os.Bundle;
-import android.util.Log;
 import android.os.Vibrator;
-import android.view.Menu;
 import android.view.View;
 import android.widget.ImageView;
 
@@ -57,6 +55,9 @@ public class RussianActivity extends Activity {
 		}
 	}
 	
+	/*
+	 * When the appication is paused, the music is paused if it exists
+	 */
 	@Override
 	protected void onPause(){
 		super.onPause();
@@ -66,6 +67,9 @@ public class RussianActivity extends Activity {
 		}
 	}
 	
+	/*
+	 * When the application is resumed the music is resumed, if the musicplayer exists
+	 */
 	@Override
 	protected void onResume(){
 		super.onResume();
@@ -77,6 +81,9 @@ public class RussianActivity extends Activity {
 		}
 	}
 	
+	/*
+	 *Releases and nullifies the musicplayer, if it exists
+	 */
 	@Override
 	protected void onDestroy(){
 		super.onDestroy();
