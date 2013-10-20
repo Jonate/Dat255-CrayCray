@@ -15,6 +15,7 @@ public class Constants {
 	public final static int DRUNK = 5;
 	public final static int DEAD = 6;
 
+	//For poo expressions
 	public final static int POO = 1;
 	public final static int NOPOO = 2;
 	
@@ -25,7 +26,7 @@ public class Constants {
 	//For needs
 	public final static double NEED_LEVEL_MAX = 100;
 	public final static double NEED_LEVEL_MIN = 0;
-	public final static int MAX_DRUNK_COUNT = 200;
+	public final static int MAX_DRUNK_COUNT = 7200;
 	public final static int ILL_COUNT = 10800;
 	
 	//For decreasing needlevels
@@ -36,8 +37,8 @@ public class Constants {
 	public final static double CUDDLELEVELDECREASE  = -0.04;
 	
 	//For increasing needlevels
-	public final static double HUNGERLEVELINCREASE = 1.2;
-	public final static double CLEANLEVELINCREASE = 1.3;
+	public final static double HUNGERLEVELINCREASE = 12;
+	public final static double CLEANLEVELINCREASE = 13;
 	public final static double ENERGYLEVELINCREASE = 2.0;
 	public final static double CUDDLELEVELINCREASE = 1.5;
 

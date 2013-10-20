@@ -257,8 +257,8 @@ public class MainActivity extends Activity {
 
 							if(isActive){
 
-								// check if pooImage should be drawn or not
-
+								
+								//update the levels
 								model.setHungerLevel(model.getHungerLevel() + Constants.HUNGERLEVELDECREASE);
 								model.setCleanLevel(model.getCleanLevel() + Constants.CLEANLEVELDECREASE);
 								model.setCuddleLevel(model.getCuddleLevel() + Constants.CUDDLELEVELDECREASE);
@@ -266,6 +266,7 @@ public class MainActivity extends Activity {
 
 								setCrayExpression(Constants.ENERGY, model.getEnergyLevel());
 
+								//Check if pooImage should be drawn or not
 								//Check if user should be able to clean CrayCray
 								drawPooImage(model.getPooLevel());
 								cleanButton.setClickable(cleanability);
@@ -448,7 +449,10 @@ public class MainActivity extends Activity {
 			musicPlayer = null;
 		}
 	}
-
+	
+	/**
+	 * Updates the database with the latest correct values. 
+	 */
 	public synchronized void onStop() {
 		super.onStop();
 		try{
@@ -722,8 +726,14 @@ public class MainActivity extends Activity {
 	 *            the value of the level
 	 */
 	public synchronized void setCrayExpression(int mode, double level) {
+		
+		//Control of CrayCrays age
 		if(old>Constants.EVOLVE){
+			
+		
 			switch (mode) {
+			
+				//check energyLvl
 			case Constants.ENERGY:
 				if(level >= Constants.NEED_LEVEL_MAX){
 					model.setSleep(false);
@@ -798,7 +808,8 @@ public class MainActivity extends Activity {
 					}
 				}
 				break;
-
+				
+				//Sets correct image if CrayCray is "drunk"
 			case Constants.DRUNK:
 				if(model.getCleanLevel()<50){
 					crayView.setImageResource(R.drawable.wasted_dchild);
@@ -814,6 +825,8 @@ public class MainActivity extends Activity {
 
 		}else{
 			switch (mode) {
+			
+			//check energyLvl
 			case Constants.ENERGY:
 				if(level >= Constants.NEED_LEVEL_MAX){
 					model.setSleep(false);
@@ -888,7 +901,7 @@ public class MainActivity extends Activity {
 					}
 				}
 				break;
-
+				//Sets correct image if CrayCray is "drunk"
 			case Constants.DRUNK:
 				if(model.getCleanLevel()<50){
 					crayView.setImageResource(R.drawable.wasted_dbaby);
@@ -903,8 +916,6 @@ public class MainActivity extends Activity {
 			handler.sendMessage(handler.obtainMessage());
 		}
 	}
-
-
 
 	/**
 	 * Creates a pop-up with a death announcement, and the possibility to start a new game.
@@ -1091,6 +1102,7 @@ public class MainActivity extends Activity {
 			return;
 		}
 	}
+	
 	/**
 	 * Activate or deactivate all buttons.
 	 * @param state
