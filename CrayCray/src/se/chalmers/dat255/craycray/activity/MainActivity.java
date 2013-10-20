@@ -42,6 +42,7 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.PorterDuff.Mode;
+import android.media.MediaPlayer;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
@@ -57,8 +58,17 @@ public class MainActivity extends Activity {
 
 	private MainActivity main = this;
 
+	//a boolean to check whether the activity is in focus or not
 	private boolean isActive;
-
+	
+	//Variables to keep track of the musicplayers states
+	private MediaPlayer musicPlayer;
+	private boolean musicStarted = false;
+	private boolean musicWasPlaying;
+	private boolean mute = false;
+	private int lengthPlayed;
+	private int lengthBeforeRelease;
+	
 	// The buttons of the application
 	private ImageButton  feedButton;
 	private ImageButton  cuddleButton;
@@ -85,17 +95,6 @@ public class MainActivity extends Activity {
 	private Vibrator vib;
 	private ViewGroup mainView;
 
-	//	private final int HUNGER = 1;
-	//	private final int CLEANNESS = 2;
-	//	private final int HAPPINESS = 3;
-	//	private final int ENERGY = 4;
-	//	private final int DRUNK = 5;
-	//
-	//	private final int DEAD = 6;
-	//
-	//	private final int POO = 1;
-	//	private final int NOPOO = 2;
-
 	private int drunkCount = Constants.MAX_DRUNK_COUNT;
 
 	private boolean cleanability = true;
@@ -111,7 +110,6 @@ public class MainActivity extends Activity {
 	private Notification deadNoti;
 	private Notification illNoti;
 	private Notification dirtyNoti;
-
 
 	// A Handler to take care of updates in UI-thread
 	// When sendMessage method is called, this is where the message is sent
@@ -136,6 +134,7 @@ public class MainActivity extends Activity {
 			// force imageview to update
 			crayView.invalidate();
 			mainView.invalidate();
+			pooImage.invalidate();
 
 			if (msg.obj instanceof DatabaseException){
 				setUpDatabase();
@@ -157,7 +156,10 @@ public class MainActivity extends Activity {
 	@Override
 	protected synchronized void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-
+		
+		musicPlayer = MediaPlayer.create(this, R.raw.goto80_thehit);
+		musicPlayer.setLooping(true);
+		
 		isActive = true;
 
 		vib = (Vibrator) this.getSystemService(VIBRATOR_SERVICE);
@@ -197,14 +199,13 @@ public class MainActivity extends Activity {
 				model.setIllCount(dbA.getValue(DatabaseConstants.ILL_COUNT) - differenceInSeconds/Constants.THREAD_SLEEP_SEC);
 				model.setIllness(true);
 			}
-
-			//			// Checks if there was poop on the screen at the last shutdown
-			//			// and in that case place the poop again.
-			//			if(dbA.getValue(DatabaseConstants.POOPED)==0){
-			//				model.setHasPooped(false);
-			//			}else{
-			//				model.setHasPooped(true);
-			//			}
+			// Checks if there was poop on the screen at the last shutdown
+			// and in that case place the poop again.
+			if(dbA.getValue(DatabaseConstants.POOPED)==0){
+				model.setHasPooped(false);
+			}else{
+				model.setHasPooped(true);
+			}
 
 			// Checks if CrayCray was awake or not when the app was closed the last time.
 			if(dbA.getValue(DatabaseConstants.SLEEPING)==0){
@@ -235,7 +236,6 @@ public class MainActivity extends Activity {
 
 		} catch(Exception e){
 			if(e instanceof DatabaseException){
-				Log.w("Database", "EXCEPTION");
 
 				Message msg = Message.obtain();
 				msg.obj = e;
@@ -304,15 +304,6 @@ public class MainActivity extends Activity {
 									model.setIllCount(model.getIllCount() - 1);
 								}
 
-
-								System.out.println("PRINT IN THREAD:");
-								System.out.println("Hunger" + model.getHungerLevel());
-								System.out.println("Clean" + model.getCleanLevel());
-								System.out.println("Cuddle" + model.getCuddleLevel());
-								System.out.println("Energy" + model.getEnergyLevel());
-								System.out.println("Poo" + model.getPooLevel());
-								System.out.println("Ill" + model.getIllCount());
-
 								// if CrayCray is dirty and program not in focus
 								// send a dirty-notification
 								if (model.getCleanLevel() < 50) {
@@ -364,7 +355,7 @@ public class MainActivity extends Activity {
 		t.start();
 	}
 
-	/*
+	/**
 	 * Initiates the UI.
 	 */
 	private synchronized void initUi() {
@@ -397,6 +388,8 @@ public class MainActivity extends Activity {
 		//fade - variables set to xml ID
 		fade=(View) findViewById(R.id.fade);
 		mainView = (ViewGroup) findViewById(R.id.mainView);
+		pooImage = (ImageView) findViewById(R.id.pooImage);
+
 	}
 
 
@@ -409,9 +402,14 @@ public class MainActivity extends Activity {
 		notiManager.cancelAll();
 	}
 
+	//Resumes the music, if music was played before leaving application.
 	@Override
 	public synchronized void onResume() {
 		super.onResume();
+		if(musicWasPlaying && !mute){
+			resumeMusic();
+		}
+
 		notiManager.cancelAll();
 	}
 
@@ -419,16 +417,40 @@ public class MainActivity extends Activity {
 	public synchronized void onRestart() {
 		super.onRestart();
 		notiManager.cancelAll();
+
+	}
+	
+	
+	//Pauses the music, if music is played, when application is not in focus.
+	@Override
+	public synchronized void onPause(){
+		super.onPause();
+
+		if(musicPlayer != null){
+			if(musicPlayer.isPlaying()){
+				musicWasPlaying = true;
+				Log.w("music", "SPELAR MUSIK INNNAN ONPAUSE");
+			}else{
+				musicWasPlaying = false;
+			}
+			pauseMusic();
+		}
 	}
 
-
-	/**
-	 * Updates the database if the application is shut down
-	 */
+	//Updates the database and releases the MediaPlayer if the application is shut down
 	@Override
+	public synchronized void onDestroy() {
+		super.onDestroy();
+		
+		//Release and nullify the MediaPlayer if not already done in muteSound method
+		if(musicPlayer != null){
+			musicPlayer.release();
+			musicPlayer = null;
+		}
+	}
+
 	public synchronized void onStop() {
 		super.onStop();
-		Log.w("Database", "DESTROY!!!!!");
 		try{
 			dbA.updateValue(DatabaseConstants.HUNGER, model.getHungerLevel());
 			dbA.updateValue(DatabaseConstants.CUDDLE, model.getCuddleLevel());
@@ -460,7 +482,6 @@ public class MainActivity extends Activity {
 		} catch(Exception e){
 			setUpDatabase();
 		}
-		Log.w("Database","END DESTROY");
 	}
 
 	/**
@@ -494,7 +515,12 @@ public class MainActivity extends Activity {
 			handler.sendMessage(handler.obtainMessage());
 		}
 	}
-
+	
+	/**
+	 * Sets the correct colors of the progressbars, depending on the level of
+	 * the needs.
+	 * @param bar
+	 */
 	private synchronized void setProgressColor(ProgressBar bar){
 		if(bar.getProgress()<15){
 			bar.getProgressDrawable().setColorFilter(
@@ -520,16 +546,43 @@ public class MainActivity extends Activity {
 	}
 
 	/**
-	 * increases energylevel
+	 * Increases energylevel, vibrates, and if music is playing it is paused.
 	 */
 	public synchronized void sleep(View view) {
 		vib.vibrate(50);
 		model.setSleep(true);
+		if(!mute){
+			pauseMusic();
+		}
+	}
+	
+	/**
+	 * If the mute sound button is enabled the MediaPlayer is released and nullified.
+	 * If the mute sound button is disabled the MediaPlayer is created here.
+	 * The current position is saved, and if the MediaPlayer is created again it is set with
+	 * that position.
+	 * @param view
+	 */
+	public synchronized void muteSound(View view){
+		vib.vibrate(50);
+		if(musicPlayer != null){
+			lengthBeforeRelease = musicPlayer.getCurrentPosition();
+		}
+		if(!mute){
+			musicPlayer.release();
+			musicPlayer = null;
+			mute = true;
+		}else{
+			musicPlayer = MediaPlayer.create(this, R.raw.goto80_thehit);
+			musicPlayer.setLooping(true);
+			musicPlayer.seekTo(lengthBeforeRelease);
+			mute = false;
+		}
 
 	}
 
 	/**
-	 * removes poo from screen and increses poolevel by 100
+	 * Vibrates and removes poo from screen, increses poolevel by 100
 	 * 
 	 * @param view
 	 */
@@ -567,8 +620,7 @@ public class MainActivity extends Activity {
 	}
 
 	/**
-	 * Called when user clicks to play russian roulette
-	 * and vibrates.
+	 * Called when user clicks to play russian roulette, and makes the button vibrate.
 	 * @param view
 	 */
 	public synchronized void playRussianRoulette(View view){
@@ -577,7 +629,7 @@ public class MainActivity extends Activity {
 	}
 
 	/**
-	 * Entoxicates CrayCray and increases cuddle level and vibrates
+	 * Intoxicates CrayCray and increases cuddle level, vibrates and plays music
 	 * @param view
 	 */
 	public synchronized void happyPotion(View view){
@@ -585,9 +637,14 @@ public class MainActivity extends Activity {
 		//setDrunkExpression for some period of time
 		isDrunk = true;
 		model.setCuddleLevel(model.getCuddleLevel()+ Constants.CUDDLELEVELINCREASE*10);
+		
+		//plays music if mute not enabled
+		if(!mute && !musicPlayer.isPlaying()){
+			startMusic();
+		}
 	}
-
-	/*
+	
+	/**
 	 * Set drunk count
 	 */
 	private synchronized void setDrunkCount(int count){
@@ -615,7 +672,6 @@ public class MainActivity extends Activity {
 	 * @param level
 	 */
 	public synchronized void drawPooImage(double level) {
-		pooImage = (ImageView) findViewById(R.id.pooImage);
 		if (level <= Constants.NEED_LEVEL_MAX && level > 50) {
 			setPoo(Constants.NOPOO);
 			handler.sendMessage(handler.obtainMessage());
@@ -645,7 +701,7 @@ public class MainActivity extends Activity {
 			image = R.drawable.poo;
 			pooImage.setImageResource(image);
 			break;
-
+ 
 		case Constants.NOPOO:
 			image = R.drawable.invisible;
 			pooImage.setImageResource(image);
@@ -658,7 +714,7 @@ public class MainActivity extends Activity {
 	}
 
 	/**
-	 * set correct image of craycray based on the different levels.
+	 * set correct image of craycray based on the different need levels.
 	 * 
 	 * @param mode
 	 *            which level to check
@@ -851,7 +907,7 @@ public class MainActivity extends Activity {
 
 
 	/**
-	 * Creates a pop-up with a death announcement
+	 * Creates a pop-up with a death announcement, and the possibility to start a new game.
 	 */
 	public synchronized AlertDialog.Builder createDeathAlert() {
 
@@ -940,9 +996,12 @@ public class MainActivity extends Activity {
 		alertDialog.setPositiveButton("Hell Yeah!",
 				new DialogInterface.OnClickListener() {
 			public void onClick(DialogInterface dialog, int id) {
+				
 				Intent rusIntent = new Intent(main, RussianActivity.class);
 				rusIntent.putExtra("old", old);
+				rusIntent.putExtra(Constants.EXTRA_MESSAGE, mute);
 				startActivityForResult(rusIntent, Constants.RUSSIAN_REQUEST_CODE);
+
 			}
 		});
 		alertDialog.setNegativeButton("God no!",
@@ -1046,6 +1105,39 @@ public class MainActivity extends Activity {
 		happypotionButton.setClickable(state);
 		russianButton.setClickable(state);
 	}
+	
+	/**
+	 * Pauses the music if the music is playing, and sets the lengthPlayed to the current position in music.
+	 */
+	public void pauseMusic(){
+		if(musicPlayer.isPlaying() && !mute){
+			musicPlayer.pause();
+			lengthPlayed = musicPlayer.getCurrentPosition();
+		}
+	}
 
+
+	/**
+	 * Resumes the music if the music is not already playing, and the mute button is disabled
+	 */
+	public void resumeMusic(){
+		if(musicPlayer.isPlaying() == false && !mute){
+			musicPlayer.seekTo(lengthPlayed);
+			musicPlayer.start();
+		}
+	}
+	
+	/**
+	 * Starts the music if the mute button is disabled. In case music has already been started, music is resumed instead.
+	 */
+	public void startMusic(){
+		if(!mute){
+			if(!musicStarted){
+				musicPlayer.start();
+			}else{
+				resumeMusic();
+			}
+		}
+	}
 }
 

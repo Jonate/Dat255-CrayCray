@@ -267,7 +267,8 @@
         android:layout_alignParentBottom="true"
         android:layout_toLeftOf="@id/aboutButton"
         android:src="@drawable/button_sound"
-        android:padding="10dp"/>
+        android:padding="10dp"
+        android:onClick="muteSound"/>
 
     <AbsoluteLayout
         android:layout_width="fill_parent"

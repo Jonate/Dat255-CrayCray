@@ -6,10 +6,10 @@ import se.chalmers.dat255.craycray.model.RussianRouletteModel;
 import se.chalmers.dat255.craycray.util.Constants;
 import android.app.Activity;
 import android.content.Intent;
+import android.media.MediaPlayer;
 import android.os.Bundle;
-import android.util.Log;
 import android.os.Vibrator;
-import android.view.Menu;
+import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
 
@@ -21,13 +21,30 @@ public class RussianActivity extends Activity {
 
 	RussianRouletteModel rModel;
 	NeedsModel model = NeedsModel.getInstance();
-
-	ImageView crayView;
-	Vibrator vib;
-
+	
+	private ImageView crayView;
+	private Vibrator vib;
+	private MediaPlayer musicPlayer;
+	private int lengthPlayed;
+	private boolean firstTime = true;
+	private boolean isMute;
+	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
+		
+		//Checks if the user has set the music to mute in MainActivity
+		Intent intent = getIntent();
+		isMute = intent.getBooleanExtra(Constants.EXTRA_MESSAGE, false);
+
+		//If the user has set the music to mute in MainActivity, the musicplayer never is created
+		if(isMute == false){
+			musicPlayer = MediaPlayer.create(this, R.raw.dylan_palme_the_crazies_are_out_tonight);
+			musicPlayer.seekTo(99000);
+			musicPlayer.start();
+		}
+		
+		firstTime = false;
 		vib = (Vibrator) this.getSystemService(VIBRATOR_SERVICE);
 		rModel = new RussianRouletteModel();
 		setContentView(R.layout.activity_russian);
@@ -48,6 +65,44 @@ public class RussianActivity extends Activity {
 			}
 		}
 	}
+	
+	/*
+	 * When the appication is paused, the music is paused if it exists
+	 */
+	@Override
+	protected void onPause(){
+		super.onPause();
+		if(musicPlayer!= null){
+			musicPlayer.pause();
+			lengthPlayed = musicPlayer.getCurrentPosition();
+		}
+	}
+	
+	/*
+	 * When the application is resumed the music is resumed, if the musicplayer exists
+	 */
+	@Override
+	protected void onResume(){
+		super.onResume();
+		if(musicPlayer != null){
+			if(firstTime){
+				musicPlayer.seekTo(lengthPlayed);
+			}
+			musicPlayer.start();
+		}
+	}
+	
+	/*
+	 *Releases and nullifies the musicplayer, if it exists
+	 */
+	@Override
+	protected void onDestroy(){
+		super.onDestroy();
+		if(musicPlayer!= null){
+			musicPlayer.release();
+			musicPlayer = null;
+		}
+	}
 
 
 	/*
@@ -64,11 +119,9 @@ public class RussianActivity extends Activity {
 	 */
 	public void playRussian(View view){
 		vib.vibrate(500);
-		Log.w("russian", "inside playrussian");
-		Intent intent = new Intent();
-
 		rModel.play();
-		Log.w("russian", "efter rModel.play()");
+		
+		Intent intent = new Intent();
 		setResult(RESULT_OK, intent);
 		finish();
 
