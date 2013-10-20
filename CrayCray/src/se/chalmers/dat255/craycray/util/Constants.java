@@ -45,6 +45,9 @@ public class Constants {
 	public final static int RUSSIAN_REQUEST_CODE = 1;
 	public final static String RUSSIAN_KEY = "key";
 	
+	//For sending the mutestate to RussianActivity
+	public final static String EXTRA_MESSAGE = "mutestate";
+	
 	//Death causes
 	public final static String HUNGER_DEATH = "OMG! CrayCray starved to death.";
 	public final static String ILLNESS_DEATH = "OMG! CrayCray died of illness";

@@ -28,21 +28,23 @@ public class RussianActivity extends Activity {
 	private MediaPlayer musicPlayer;
 	private int lengthPlayed;
 	private boolean firstTime = true;
+	private boolean isMute;
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
-		try{
 		super.onCreate(savedInstanceState);
-		}catch(Exception e){
-			Log.w("mute", "oncreate in russian" + e);
+		
+		//Checks if the user has set the music to mute in MainActivity
+		Intent intent = getIntent();
+		isMute = intent.getBooleanExtra(Constants.EXTRA_MESSAGE, false);
+
+		//If the user has set the music to mute in MainActivity, the musicplayer never is created
+		if(isMute == false){
+			musicPlayer = MediaPlayer.create(this, R.raw.dylan_palme_the_crazies_are_out_tonight);
+			musicPlayer.seekTo(99000);
+			musicPlayer.start();
 		}
-		try{
-		musicPlayer = MediaPlayer.create(this, R.raw.dylan_palme_the_crazies_are_out_tonight);
-		musicPlayer.seekTo(99000);
-		musicPlayer.start();
-		}catch(Exception e){
-			Log.w("mute", "music started" + e);
-		}
+		
 		firstTime = false;
 		vib = (Vibrator) this.getSystemService(VIBRATOR_SERVICE);
 		rModel = new RussianRouletteModel();
@@ -64,16 +66,16 @@ public class RussianActivity extends Activity {
 		}
 	}
 	
-//	@Override
-//	protected void onResume(){
-//		super.onResume();
-//		if(musicPlayer != null){
-//			if(firstTime){
-//				musicPlayer.seekTo(lengthPlayed);
-//			}
-//			musicPlayer.start();
-//		}
-//	}
+	@Override
+	protected void onResume(){
+		super.onResume();
+		if(musicPlayer != null){
+			if(firstTime){
+				musicPlayer.seekTo(lengthPlayed);
+			}
+			musicPlayer.start();
+		}
+	}
 	
 	@Override
 	protected void onDestroy(){

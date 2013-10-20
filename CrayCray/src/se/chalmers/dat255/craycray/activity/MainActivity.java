@@ -636,7 +636,7 @@ public class MainActivity extends Activity {
 		//setDrunkExpression for some period of time
 		isDrunk = true;
 		model.setCuddleLevel(model.getCuddleLevel()+ Constants.CUDDLELEVELINCREASE*10);
-		if(!mute){
+		if(!mute && !musicPlayer.isPlaying()){
 			startMusic();
 		}
 	}
@@ -904,6 +904,7 @@ public class MainActivity extends Activity {
 			public void onClick(DialogInterface dialog, int id) {
 				Log.w("mute", "clicked on hell yeah");
 				Intent rusIntent = new Intent(main, RussianActivity.class);
+				rusIntent.putExtra(Constants.EXTRA_MESSAGE, mute);
 				Log.w("mute", "russian intent created");
 //				try{
 					startActivityForResult(rusIntent, Constants.RUSSIAN_REQUEST_CODE);
