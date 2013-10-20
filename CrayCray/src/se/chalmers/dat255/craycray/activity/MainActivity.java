@@ -174,7 +174,6 @@ public class MainActivity extends Activity {
 			Log.w("Database", "AFTER GET");
 			int differenceInSeconds = TimeUtil.compareTime(dbA
 					.getStringValue(DatabaseConstants.TIME));
-			Log.w("Database", "DifferenceInSeconds"+ differenceInSeconds+" "+  Constants.THREAD_SLEEP_SEC);
 			model.setHungerLevel(dbA.getValue(DatabaseConstants.HUNGER) + differenceInSeconds/Constants.THREAD_SLEEP_SEC 
 					* Constants.HUNGERLEVELDECREASE );
 			model.setCuddleLevel(dbA.getValue(DatabaseConstants.CUDDLE) + differenceInSeconds/Constants.THREAD_SLEEP_SEC 
@@ -196,13 +195,13 @@ public class MainActivity extends Activity {
 				model.setIllness(true);
 			}
 
-			// Checks if there was poop on the screen at the last shutdown
-			// and in that case place the poop again.
-			if(dbA.getValue(DatabaseConstants.POOPED)==0){
-				model.setHasPooped(false);
-			}else{
-				model.setHasPooped(true);
-			}
+//			// Checks if there was poop on the screen at the last shutdown
+//			// and in that case place the poop again.
+//			if(dbA.getValue(DatabaseConstants.POOPED)==0){
+//				model.setHasPooped(false);
+//			}else{
+//				model.setHasPooped(true);
+//			}
 
 			// Checks if CrayCray was awake or not when the app was closed the last time.
 			if(dbA.getValue(DatabaseConstants.SLEEPING)==0){
@@ -423,8 +422,8 @@ public class MainActivity extends Activity {
 	 * Updates the database if the application is shut down
 	 */
 	@Override
-	public synchronized void onDestroy() {
-		super.onDestroy();
+	public synchronized void onStop() {
+		super.onStop();
 		Log.w("Database", "DESTROY!!!!!");
 		try{
 			dbA.updateValue(DatabaseConstants.HUNGER, model.getHungerLevel());

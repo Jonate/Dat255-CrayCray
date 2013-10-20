@@ -216,6 +216,8 @@ public class NeedsModel {
 		pooLevel = Constants.NEED_LEVEL_MAX;
 		energyLevel =Constants.NEED_LEVEL_MAX;
 		illCount=Constants.ILL_COUNT;
+		
+		pooped=false;
 
 		ill = false;
 
