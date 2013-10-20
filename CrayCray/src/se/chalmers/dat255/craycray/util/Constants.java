@@ -26,7 +26,7 @@ public class Constants {
 	public final static double NEED_LEVEL_MAX = 100;
 	public final static double NEED_LEVEL_MIN = 0;
 	public final static int MAX_DRUNK_COUNT = 7;
-	public final static int ILL_COUNT = 30;
+	public final static int ILL_COUNT = 200;
 	
 	//For decreasing needlevels
 	public final static double HUNGERLEVELDECREASE = -0.01;

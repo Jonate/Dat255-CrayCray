@@ -49,7 +49,8 @@
         <activity
             android:name="se.chalmers.dat255.craycray.activity.RussianActivity"
             android:label="@string/title_activity_russian"
-            android:screenOrientation="portrait" >
+            android:screenOrientation="portrait" 
+            android:theme="@android:style/Theme.Black.NoTitleBar.Fullscreen">
             <intent-filter>
 
             </intent-filter>

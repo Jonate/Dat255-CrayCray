@@ -99,6 +99,8 @@ public class MainActivity extends Activity {
 
 	private DatabaseAdapter dbA;
 
+	private double old;
+	
 	private NotificationCreator notiCreator;
 	private NotificationManager notiManager;
 	private Notification deadNoti;
@@ -143,6 +145,8 @@ public class MainActivity extends Activity {
 		}
 	};
 
+	
+
 	@Override
 	protected synchronized void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -169,7 +173,6 @@ public class MainActivity extends Activity {
 			Log.w("Database", "AFTER GET");
 			int differenceInSeconds = TimeUtil.compareTime(dbA
 					.getStringValue(DatabaseConstants.TIME));
-			Log.w("Database", "DifferenceInSeconds"+ differenceInSeconds+" "+  Constants.THREAD_SLEEP_SEC);
 			model.setHungerLevel(dbA.getValue(DatabaseConstants.HUNGER) + differenceInSeconds/Constants.THREAD_SLEEP_SEC 
 					* Constants.HUNGERLEVELDECREASE );
 			model.setCuddleLevel(dbA.getValue(DatabaseConstants.CUDDLE) + differenceInSeconds/Constants.THREAD_SLEEP_SEC 
@@ -178,6 +181,9 @@ public class MainActivity extends Activity {
 					* Constants.CLEANLEVELDECREASE);
 			model.setPooLevel(dbA.getValue(DatabaseConstants.POO) + differenceInSeconds/Constants.THREAD_SLEEP_SEC 
 					* Constants.POOLEVELDECREASE);
+			
+			old = TimeUtil.compareTime(dbA
+					.getStringValue(DatabaseConstants.FIRST_OF_TIME));
 
 			// Checks if CrayCray was healthy or ill at the last shutdown 
 			// and give it the same value again.
@@ -188,13 +194,13 @@ public class MainActivity extends Activity {
 				model.setIllness(true);
 			}
 
-			// Checks if there was poop on the screen at the last shutdown
-			// and in that case place the poop again.
-			if(dbA.getValue(DatabaseConstants.POOPED)==0){
-				model.setHasPooped(false);
-			}else{
-				model.setHasPooped(true);
-			}
+//			// Checks if there was poop on the screen at the last shutdown
+//			// and in that case place the poop again.
+//			if(dbA.getValue(DatabaseConstants.POOPED)==0){
+//				model.setHasPooped(false);
+//			}else{
+//				model.setHasPooped(true);
+//			}
 
 			// Checks if CrayCray was awake or not when the app was closed the last time.
 			if(dbA.getValue(DatabaseConstants.SLEEPING)==0){
@@ -274,8 +280,8 @@ public class MainActivity extends Activity {
 
 									model.setEnergyLevel(model.getEnergyLevel() + Constants.ENERGYLEVELDECREASE);
 									setCrayExpression(Constants.HAPPINESS, model.getCuddleLevel());
-									setCrayExpression(Constants.HUNGER, model.getHungerLevel());
 									setCrayExpression(Constants.CLEANNESS, model.getCleanLevel());
+									setCrayExpression(Constants.HUNGER, model.getHungerLevel());
 
 									activatedButtons(true);
 
@@ -337,7 +343,8 @@ public class MainActivity extends Activity {
 								}
 
 								handler.sendMessage(handler.obtainMessage());
-
+								
+								old=old-Constants.THREAD_SLEEP_SEC;
 								Thread.sleep(Constants.THREAD_SLEEP);
 							}
 
@@ -443,7 +450,11 @@ public class MainActivity extends Activity {
 			musicPlayer.release();
 			musicPlayer = null;
 		}
-		
+	}
+
+	public synchronized void onStop() {
+		super.onStop();
+		Log.w("Database", "DESTROY!!!!!");
 		try{
 			dbA.updateValue(DatabaseConstants.HUNGER, model.getHungerLevel());
 			dbA.updateValue(DatabaseConstants.CUDDLE, model.getCuddleLevel());
@@ -662,12 +673,13 @@ public class MainActivity extends Activity {
 		if (level <= Constants.NEED_LEVEL_MAX && level > 50) {
 			setPoo(Constants.NOPOO);
 			handler.sendMessage(handler.obtainMessage());
-		} else if ((level <= 50 && level >= 20) && (!model.hasPooped())) {
+		} else if ((level <= 50 ) && (!model.hasPooped())) {
 			setPoo(Constants.POO);
 			cleanability = false;
 			model.setHasPooped(true);
 			handler.sendMessage(handler.obtainMessage());
-		} else if (level < 20) {
+		}
+		if (level < 20) {
 			model.setCleanLevel(model.getCleanLevel() + Constants.CLEANLEVELDECREASE);
 		}
 	}
@@ -714,61 +726,90 @@ public class MainActivity extends Activity {
 				model.setSleep(false);
 
 			}else if (level == 0 || model.isSleeping()) {
-				crayView.setImageResource(R.drawable.sleeping_baby);
+				if(model.getCleanLevel()<50){
+					crayView.setImageResource(R.drawable.sleeping_dbaby);
+				}else{
+					crayView.setImageResource(R.drawable.sleeping_baby);
+				}
 				model.setSleep(true);
 			}
 			break;
 
 			// check dirtyLvl
-		case Constants.CLEANNESS:
-			if (level >20 && level < 50) {
-				crayView.setImageResource(R.drawable.dirty_baby);
-			}
-			if (level <= 20) {
-				System.out.println("baby sick");
-				crayView.setImageResource(R.drawable.sick_baby);
-				model.setIllness(true);
-			}
-			break;
+			case Constants.CLEANNESS:
+				if (level >0 && level < 50) {
+					crayView.setImageResource(R.drawable.regular_dbaby);
+				}
+				if (level <= 0) {
+					if(model.getCleanLevel()<50){
+						crayView.setImageResource(R.drawable.sick_dbaby);
+					}else{
+						crayView.setImageResource(R.drawable.sick_baby);
+					}
+					model.setIllness(true);
+				}
+				break;
 
-			// check hungryLvl
-		case Constants.HUNGER:
-			if (level == Constants.NEED_LEVEL_MIN) {
-				crayView.setImageResource(R.drawable.dead_baby);
+				// check hungryLvl
+			case Constants.HUNGER:
+				if (level == Constants.NEED_LEVEL_MIN) {
+					crayView.setImageResource(R.drawable.dead_baby);
 
-			} else if (model.isIll()) {
-				crayView.setImageResource(R.drawable.sick_baby);
+				} else if (model.isIll()) {
+					if(model.getCleanLevel()<50){
+						crayView.setImageResource(R.drawable.sick_dbaby);
+					}else{
+						crayView.setImageResource(R.drawable.sick_baby);
+					}
 
-			} else if (level < 50) {
-				System.out.println("inside case 1 (hungry)" + level);
-				crayView.setImageResource(R.drawable.feed_baby);
+				} else if (level < 50) {
+					if(model.getCleanLevel()<50){
+						crayView.setImageResource(R.drawable.feed_dbaby);
+					}else{
+						crayView.setImageResource(R.drawable.feed_baby);
+					}
 
-			}
-			break;
+				}
+				break;
 
-			// check cuddleLvl
-		case Constants.HAPPINESS:
-			if (level > 70) {
-				crayView.setImageResource(R.drawable.happy_baby);
+				// check cuddleLvl
+			case Constants.HAPPINESS:
+				if (level > 70) {
+					if(model.getCleanLevel()<50){
+						crayView.setImageResource(R.drawable.happy_dbaby);
+					}else{
+						crayView.setImageResource(R.drawable.happy_baby);
+					}
 
-			} else if(level < 10){
-				crayView.setImageResource(R.drawable.crying_baby);
-			}else{
+				} else if(level < 10){
+					if(model.getCleanLevel()<50){
+						crayView.setImageResource(R.drawable.sad_dbaby);
+					}else{
+						crayView.setImageResource(R.drawable.sad_baby);
+					}
+				}else{
+					if(model.getCleanLevel()<50){
+						crayView.setImageResource(R.drawable.regular_dbaby);
+					}else{
+						crayView.setImageResource(R.drawable.regular_baby);
+					}
+				}
+				break;
+
+			case Constants.DRUNK:
+				if(model.getCleanLevel()<50){
+					crayView.setImageResource(R.drawable.wasted_dbaby);
+				}else{
+					crayView.setImageResource(R.drawable.wasted_baby);
+				}
+				break;
+
+			default:
 				crayView.setImageResource(R.drawable.regular_baby);
 			}
-			break;
+			handler.sendMessage(handler.obtainMessage());
 
-		case Constants.DRUNK:
-			crayView.setImageResource(R.drawable.wasted_baby);
-			break;
-
-		default:
-			System.out.println("inside base-case" + level);
-			crayView.setImageResource(R.drawable.regular_baby);
 		}
-		handler.sendMessage(handler.obtainMessage());
-
-	}	
 
 
 	/**
@@ -807,7 +848,7 @@ public class MainActivity extends Activity {
 		isActive = false;
 		AlertDialog.Builder alertDialog = new AlertDialog.Builder(this);
 		alertDialog.setTitle("How to play");
-		alertDialog.setMessage("CrayCray is happier alive. You'd better push the buttons and let it know!");
+		alertDialog.setMessage("CrayCray is happier alive. \n\nIf the hungerlevel reaches zero, or if you don't cure it when ill, your sweet CrayCray will die. \n\nYou'd better push the buttons and let it know!");
 		alertDialog.setNeutralButton("Ok",
 				new DialogInterface.OnClickListener() {
 			public void onClick(DialogInterface dialog, int id) {
@@ -933,7 +974,9 @@ public class MainActivity extends Activity {
 			dbA.addValue(DatabaseConstants.ILL_COUNT, model.getIllCount());
 			dbA.addStringValue(DatabaseConstants.TIME,
 					TimeUtil.getCurrentTime());
-
+			dbA.addStringValue(DatabaseConstants.FIRST_OF_TIME,
+					TimeUtil.getCurrentTime());
+			
 			// if the boolean values are true their value in the database will be 1
 			// if not, the value will be 0
 			if(model.isSleeping()){

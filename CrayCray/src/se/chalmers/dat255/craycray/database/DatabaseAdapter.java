@@ -45,7 +45,7 @@ public class DatabaseAdapter {
 	}
 	
 	/**
-	 * Reset the databese.
+	 * Reset the database.
 	 */
 	public void resetDatabase(){
 		ctx.deleteDatabase(DatabaseConstants.DATABASE_NAME);
