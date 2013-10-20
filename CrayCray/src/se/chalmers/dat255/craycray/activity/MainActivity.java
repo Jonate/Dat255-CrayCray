@@ -677,7 +677,7 @@ public class MainActivity extends Activity {
 			// check dirtyLvl
 		case Constants.CLEANNESS:
 			if (level >20 && level < 50) {
-				crayView.setImageResource(R.drawable.dirty_baby);
+				crayView.setImageResource(R.drawable.regular_dbaby);
 			}
 			if (level <= 20) {
 				System.out.println("baby sick");
@@ -707,7 +707,7 @@ public class MainActivity extends Activity {
 				crayView.setImageResource(R.drawable.happy_baby);
 
 			} else if(level < 10){
-				crayView.setImageResource(R.drawable.crying_baby);
+				crayView.setImageResource(R.drawable.sad_baby);
 			}else{
 				crayView.setImageResource(R.drawable.regular_baby);
 			}

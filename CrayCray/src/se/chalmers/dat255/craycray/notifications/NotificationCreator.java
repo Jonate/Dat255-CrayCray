@@ -60,7 +60,7 @@ public class NotificationCreator {
 		Notification noti = new Notification.Builder(ctx)
 		.setContentTitle("I'm Dirty")
 		.setContentText("*hihi*")
-		.setSmallIcon(R.drawable.dirty_baby)
+		.setSmallIcon(R.drawable.regular_dbaby)
 		.setContentIntent(pIntent)
 		.build();	
 		
