@@ -282,8 +282,8 @@ public class MainActivity extends Activity {
 
 									model.setEnergyLevel(model.getEnergyLevel() + Constants.ENERGYLEVELDECREASE);
 									setCrayExpression(Constants.HAPPINESS, model.getCuddleLevel());
-									setCrayExpression(Constants.HUNGER, model.getHungerLevel());
 									setCrayExpression(Constants.CLEANNESS, model.getCleanLevel());
+									setCrayExpression(Constants.HUNGER, model.getHungerLevel());
 
 									activatedButtons(true);
 
